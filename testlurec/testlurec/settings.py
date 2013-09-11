@@ -108,7 +108,7 @@ ROOT_URLCONF = 'testlurec.urls'
 WSGI_APPLICATION = 'testlurec.wsgi.application'
 
 TEMPLATE_DIRS = (
-    '/test/desktop/djangoprojects/testlurec/templates/admin',
+    '/testlurec/templates/admin',
     # Put strings here, like "/home/html/django_templates" or "C:/www/django/templates".
     # Always use forward slashes, even on Windows.
     # Don't forget to use absolute paths, not relative paths.
