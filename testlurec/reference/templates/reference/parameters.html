@@ -1,0 +1,14 @@
+<h1>Parameters</h1>
+
+<h3> <a href="{% url 'reference:createParam' %}">Create Parameter</a></h3>
+
+
+{% if parameters %}
+    <ul>
+    {% for p in parameters %}
+        <li><a href="{% url 'reference:paramDetail' p.id %}">{{ p.commonname }}</a></li>
+    {% endfor %}
+    </ul>
+{% else %}
+    <p>No parameters are available.</p>
+{% endif %}

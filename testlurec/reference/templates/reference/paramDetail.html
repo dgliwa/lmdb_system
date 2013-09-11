@@ -1,0 +1,23 @@
+<h1>{{param.commonname}}</h1>
+<ul>
+    <li>ID:  {{param.id}}</li>
+    {% if param.sciname %}
+        <li>Scientific Name:  {{param.sciname}}</li>
+    {% endif %}
+    <li>Common Name:  {{param.commonname}}</li>
+    {% if param.casnumber %}
+        <li>CAS Number:  {{param.casnumber}}</li>
+    {% endif %}
+    {% if param.epanumber %}
+        <li>EPA Number:  {{param.epanumber}}</li>
+    {% endif %}    
+</ul>
+{% if projects %}
+    <h2>Projects Associated with Event</h2>
+    <ul>
+    {% for project in projects %}
+        <li>{{project.projectname}}</li>
+    {% endfor %}
+    </ul>
+{% else %}
+{% endif %}

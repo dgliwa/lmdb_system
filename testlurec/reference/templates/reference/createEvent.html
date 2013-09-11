@@ -1,0 +1,19 @@
+<form action="{% url 'reference:events' %}" method="post">
+{% csrf_token %}
+Event Name:  <input type="text" name="eventname"><br>
+Event Type:  <input type="text" name="eventtype"><br>
+Event Start Date and Time: <input type="datetime" name="eventstartdate"><br>
+Event End Date and Time:  <input type="datetime" name="eventenddate"><br>
+Number of Participants:  <input type="number" name="eventparticipants"><br>
+Event Description:  <input type="text" name="eventdescription"><br>
+Event Coordinator:  <select name="personid"><br>
+{% for p in people %}
+    <option value="{{ p.id }}">{{p.first_name}} {{p.last_name}}</option>
+{% endfor %}
+</select><br>
+<input type="submit" value="Create Event" />
+</form>
+
+
+
+

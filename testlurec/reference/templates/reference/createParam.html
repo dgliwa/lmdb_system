@@ -1,0 +1,8 @@
+<form action="{% url 'reference:parameters' %}" method="post" id="parameter_form">
+{% csrf_token %}
+Scientific Name:  <input name="sciname" type="text" /><br>
+Common Name:  <input name="commonname" type="text" /><br>
+CAS Number:  <input name="casnumber" type="text" /><br>
+EPA Number:  <input name="epanumber" type="text" /><br>
+
+<input type="submit" value="Save" class="default" name="_save" />

@@ -1,0 +1,19 @@
+<h1>{{event.eventname}}</h1>
+<ul>
+    <li>ID:  {{event.id}}</li>
+    <li>Event Type:  {{event.eventtype}}</li>
+    <li>Start Date and Time:  {{event.eventstartdate}}</li>
+    <li>End Date and Time:  {{event.eventenddate}}</li>
+    <li>Participants:  {{event.eventparticipants}}</li>
+    <li>Event Coordinator:  {{person.first_name}}  {{person.last_name}}</li>
+</ul>
+{% if projects %}
+    <h2>Projects Associated with Event</h2>
+    <ul>
+    {% for project in projects %}
+        <li>{{project.projectname}}</li>
+    {% endfor %}
+    </ul>
+{% else %}
+{% endif %}
+
