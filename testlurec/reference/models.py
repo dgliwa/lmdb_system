@@ -167,7 +167,6 @@ class Project(models.Model):
     permitid = models.IntegerField(null=True, blank=True)
     projectstartdate = models.DateTimeField()
     projectenddate = models.DateTimeField(null=True, blank=True)
-    locationid = models.IntegerField()
     funded = models.SmallIntegerField()
     funder = models.CharField(max_length=255, blank=True)
     personid = models.IntegerField(null=True, blank=True)

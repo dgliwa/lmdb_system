@@ -1,0 +1,14 @@
+<h1>Permits</h1>
+
+<h3> <a href="{% url 'reference:createPermit' %}">Create Permits</a></h3>
+
+
+{% if permits %}
+    <ul>
+    {% for p in permits %}
+        <li><a href="{% url 'reference:permitDetail' p.id %}">{{ p.id }}</a></li>
+    {% endfor %}
+    </ul>
+{% else %}
+    <p>No permits are available.</p>
+{% endif %}

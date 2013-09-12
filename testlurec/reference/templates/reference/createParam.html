@@ -1,4 +1,4 @@
-<form action="{% url 'reference:parameters' %}" method="post" id="parameter_form">
+<form action="{% url 'reference:createParam' %}" method="post" id="parameter_form">
 {% csrf_token %}
 Scientific Name:  <input name="sciname" type="text" /><br>
 Common Name:  <input name="commonname" type="text" /><br>

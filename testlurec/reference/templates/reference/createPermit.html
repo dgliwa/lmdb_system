@@ -1,0 +1,8 @@
+<form action="{% url 'reference:createPermit' %}" method="post" id="parameter_form">
+{% csrf_token %}
+Permit Start Date:  <input name="permitstartdate" type="datetime" /><br>
+Permit End Date:  <input name="permitenddate" type="datetime" /><br>
+Permit Agency:  <input name="permitagency" type="text" /><br>
+Description:  <input name="description" type="text" /><br>
+
+<input type="submit" value="Save" class="default" name="_save" />

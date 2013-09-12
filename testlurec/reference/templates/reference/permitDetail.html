@@ -1,0 +1,13 @@
+<h1>{{permit.id}}</h1>
+<ul>
+    <li>Permit Start Date:  {{permit.permitstartdate}}</li>
+    {% if permit.permitenddate %}
+        <li>Permit End Date:  {{permit.permitenddate}}</li>
+    {% endif %}
+    {% if permit.permitagency %}
+        <li>Permit Agency:  {{permit.permitagency}}</li>
+    {% endif %}
+    {% if permit.description %}
+        <li>Description:  {{permit.description}}</li>
+    {% endif %}    
+</ul>
