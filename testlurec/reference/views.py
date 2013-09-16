@@ -8,6 +8,8 @@ from django.shortcuts import render_to_response,redirect
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import authenticate, login, logout
 
+from forms import ParamForm, PermitForm, EventForm, ProjectForm
+
 import random #will be removed later, need to update database
 
 
@@ -24,7 +26,7 @@ def index(request):
 @login_required(login_url='/login/')
 def eventDetail(request, event_id):
     event = get_object_or_404(Event, pk=event_id)
-    person = get_object_or_404(AuthUser, pk=event.personid)
+    person = get_object_or_404(AuthUser, pk=event.personid.id)
     projects = Project.objects.get_query_set().filter(eventid=event.id)
     return render(request, 'reference/eventDetail.html', {'event' : event, 'person' : person, 'projects' : projects})
     
@@ -41,11 +43,13 @@ def events(request):
 @login_required(login_url='/login/')    
 def createEvent(request):
     if request.POST:  #inserts new event into database
-        e = Event(objectid=random.randint(1,10000), eventname=request.POST['eventname'], eventtype=request.POST['eventtype'], eventstartdate=request.POST['eventstartdate'], eventenddate=request.POST['eventenddate'], eventparticipants=request.POST['eventparticipants'], eventdescription=request.POST['eventdescription'], personid=request.POST['personid'])
-        e.save()
-        return HttpResponseRedirect('/reference/events/')
-    people = AuthUser.objects.values()
-    return render(request, 'reference/createEvent.html', {'people' : people})
+        form = EventForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return HttpResponseRedirect('/reference/events/')
+    else:
+        form = EventForm()
+    return render(request, 'reference/createEvent.html', {'form' : form})
   
 #########################################################################################
 #   END OF FUNCTIONS FOR EVENTS #
@@ -72,11 +76,13 @@ def paramDetail(request, param_id):
 @login_required(login_url='/login/')
 def createParam(request):
     if request.POST:
-        p = Parameter(objectid=random.randint(1,10000), sciname=request.POST['sciname'], commonname=request.POST['commonname'], casnumber=request.POST['casnumber'], epanumber=request.POST['epanumber'])
-        p.save()
-        return HttpResponseRedirect('/reference/parameters/')
-    people = AuthUser.objects.values()
-    return render(request, 'reference/createParam.html', {'people' : people})
+        form = ParamForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return HttpResponseRedirect('/reference/parameters/')
+    else:
+        form = ParamForm()
+    return render(request, 'reference/createParam.html', {'form' : form})
     
 #########################################################################################
 #   END OF FUNCTIONS FOR PARAMETERS #
@@ -98,23 +104,20 @@ def projects(request):
 @login_required(login_url='/login/')
 def projectDetail(request, project_id):
     project = get_object_or_404(Project, pk=project_id)
-    person = get_object_or_404(AuthUser, pk=project.personid)
-    event = get_object_or_404(Event, pk=project.eventid)
+    person = get_object_or_404(AuthUser, pk=project.personid.id)
+    event = get_object_or_404(Event, pk=project.eventid.id)
     return render(request, 'reference/projectDetail.html', {'project' : project, 'person' : person, 'event' : event})
     
 @login_required(login_url='/login/')
 def createProject(request):
     if request.POST:  #inserts new project into database
-        if request.POST['permitid'] == 'null':
-            p = Project(objectid=random.randint(1,10000), projectname=request.POST['projectname'], projectdescription=request.POST['projectdescription'], projectobjective=request.POST['projectobjective'], eventid=request.POST['eventid'], projectstartdate=request.POST['projectstartdate'], projectenddate=request.POST['projectenddate'], funded=request.POST['funded'], funder=request.POST['funder'],  personid=request.POST['personid'])
-        else:
-            p = Project(objectid=random.randint(1,10000), projectname=request.POST['projectname'], projectdescription=request.POST['projectdescription'], projectobjective=request.POST['projectobjective'], eventid=request.POST['eventid'], permitid=request.POST['permitid'], projectstartdate=request.POST['projectstartdate'], projectenddate=request.POST['projectenddate'], funded=request.POST['funded'], funder=request.POST['funder'],  personid=request.POST['personid'])
-        p.save()   
-        return HttpResponseRedirect('/reference/projects/')
-    people = AuthUser.objects.values()
-    events = Event.objects.values()
-    permits = Permit.objects.values()
-    return render(request, 'reference/createProject.html', {'people' : people, 'events' : events, 'permits' : permits})
+        form = ProjectForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return HttpResponseRedirect('/reference/projects/')
+    else:
+        form = ProjectForm()
+    return render(request, 'reference/createProject.html', {'form':form})
     
 #########################################################################################
 #   END OF FUNCTIONS FOR PROJECTS #
@@ -141,10 +144,13 @@ def permitDetail(request, permit_id):
 @login_required(login_url='/login/')
 def createPermit(request):
     if request.POST:
-        p = Permit(objectid=random.randint(1,10000), permitstartdate=request.POST['permitstartdate'], permitenddate=request.POST['permitenddate'], permitagency=request.POST['permitagency'], description=request.POST['description'])
-        p.save()
-        return HttpResponseRedirect('/reference/permits/')
-    return render(request, 'reference/createPermit.html', {})
+        form = PermitForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return HttpResponseRedirect('/reference/permits/')
+    else:
+        form = PermitForm()
+    return render(request, 'reference/createPermit.html', {'form' : form})
 
 #########################################################################################
 #   END OF FUNCTIONS FOR PERMITS #

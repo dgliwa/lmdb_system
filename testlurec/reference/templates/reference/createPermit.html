@@ -1,8 +1,13 @@
 <form action="{% url 'reference:createPermit' %}" method="post" id="parameter_form">
 {% csrf_token %}
-Permit Start Date:  <input name="permitstartdate" type="datetime" /><br>
-Permit End Date:  <input name="permitenddate" type="datetime" /><br>
-Permit Agency:  <input name="permitagency" type="text" /><br>
-Description:  <input name="description" type="text" /><br>
+{{form.non_field_errors}}
+{{form.permitstartdate.errors}}
+Permit Start Date:  {{form.permitstartdate}}<br>
+{{form.permitenddate.errors}}
+Permit End Date:  {{form.permitenddate}}<br>
+{{form.permitagency.errors}}
+Permit Agency:  {{form.permitagency}}<br>
+{{form.description.errors}}
+Description:  {{form.description}}<br>
 
 <input type="submit" value="Save" class="default" name="_save" />

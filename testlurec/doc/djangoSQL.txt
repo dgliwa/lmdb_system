@@ -1,0 +1,423 @@
+-- Table: auth_group
+
+-- DROP TABLE auth_group;
+
+CREATE TABLE auth_group
+(
+  id serial NOT NULL,
+  name character varying(80) NOT NULL,
+  CONSTRAINT auth_group_pkey PRIMARY KEY (id),
+  CONSTRAINT auth_group_name_key UNIQUE (name)
+)
+WITH (
+  OIDS=FALSE
+);
+ALTER TABLE auth_group
+  OWNER TO postgres;
+
+-- Index: auth_group_name_like
+
+-- DROP INDEX auth_group_name_like;
+
+CREATE INDEX auth_group_name_like
+  ON auth_group
+  USING btree
+  (name COLLATE pg_catalog."default" varchar_pattern_ops);
+
+
+
+
+
+
+
+
+
+-- Table: auth_group_permissions
+
+-- DROP TABLE auth_group_permissions;
+
+CREATE TABLE auth_group_permissions
+(
+  id serial NOT NULL,
+  group_id integer NOT NULL,
+  permission_id integer NOT NULL,
+  CONSTRAINT auth_group_permissions_pkey PRIMARY KEY (id),
+  CONSTRAINT auth_group_permissions_permission_id_fkey FOREIGN KEY (permission_id)
+      REFERENCES auth_permission (id) MATCH SIMPLE
+      ON UPDATE NO ACTION ON DELETE NO ACTION DEFERRABLE INITIALLY DEFERRED,
+  CONSTRAINT group_id_refs_id_f4b32aac FOREIGN KEY (group_id)
+      REFERENCES auth_group (id) MATCH SIMPLE
+      ON UPDATE NO ACTION ON DELETE NO ACTION DEFERRABLE INITIALLY DEFERRED,
+  CONSTRAINT auth_group_permissions_group_id_permission_id_key UNIQUE (group_id, permission_id)
+)
+WITH (
+  OIDS=FALSE
+);
+ALTER TABLE auth_group_permissions
+  OWNER TO postgres;
+
+-- Index: auth_group_permissions_group_id
+
+-- DROP INDEX auth_group_permissions_group_id;
+
+CREATE INDEX auth_group_permissions_group_id
+  ON auth_group_permissions
+  USING btree
+  (group_id);
+
+-- Index: auth_group_permissions_permission_id
+
+-- DROP INDEX auth_group_permissions_permission_id;
+
+CREATE INDEX auth_group_permissions_permission_id
+  ON auth_group_permissions
+  USING btree
+  (permission_id);
+
+
+
+
+
+
+
+
+
+
+-- Table: auth_permission
+
+-- DROP TABLE auth_permission;
+
+CREATE TABLE auth_permission
+(
+  id serial NOT NULL,
+  name character varying(50) NOT NULL,
+  content_type_id integer NOT NULL,
+  codename character varying(100) NOT NULL,
+  CONSTRAINT auth_permission_pkey PRIMARY KEY (id),
+  CONSTRAINT content_type_id_refs_id_d043b34a FOREIGN KEY (content_type_id)
+      REFERENCES django_content_type (id) MATCH SIMPLE
+      ON UPDATE NO ACTION ON DELETE NO ACTION DEFERRABLE INITIALLY DEFERRED,
+  CONSTRAINT auth_permission_content_type_id_codename_key UNIQUE (content_type_id, codename)
+)
+WITH (
+  OIDS=FALSE
+);
+ALTER TABLE auth_permission
+  OWNER TO postgres;
+
+-- Index: auth_permission_content_type_id
+
+-- DROP INDEX auth_permission_content_type_id;
+
+CREATE INDEX auth_permission_content_type_id
+  ON auth_permission
+  USING btree
+  (content_type_id);
+
+
+
+
+
+
+
+
+
+
+
+
+
+-- Table: auth_user
+
+-- DROP TABLE auth_user;
+
+CREATE TABLE auth_user
+(
+  id serial NOT NULL,
+  password character varying(128) NOT NULL,
+  last_login timestamp with time zone NOT NULL,
+  is_superuser boolean NOT NULL,
+  username character varying(30) NOT NULL,
+  first_name character varying(30) NOT NULL,
+  last_name character varying(30) NOT NULL,
+  email character varying(75) NOT NULL,
+  is_staff boolean NOT NULL,
+  is_active boolean NOT NULL,
+  date_joined timestamp with time zone NOT NULL,
+  CONSTRAINT auth_user_pkey PRIMARY KEY (id),
+  CONSTRAINT auth_user_username_key UNIQUE (username)
+)
+WITH (
+  OIDS=FALSE
+);
+ALTER TABLE auth_user
+  OWNER TO postgres;
+
+-- Index: auth_user_username_like
+
+-- DROP INDEX auth_user_username_like;
+
+CREATE INDEX auth_user_username_like
+  ON auth_user
+  USING btree
+  (username COLLATE pg_catalog."default" varchar_pattern_ops);
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+-- Table: auth_user_groups
+
+-- DROP TABLE auth_user_groups;
+
+CREATE TABLE auth_user_groups
+(
+  id serial NOT NULL,
+  user_id integer NOT NULL,
+  group_id integer NOT NULL,
+  CONSTRAINT auth_user_groups_pkey PRIMARY KEY (id),
+  CONSTRAINT auth_user_groups_group_id_fkey FOREIGN KEY (group_id)
+      REFERENCES auth_group (id) MATCH SIMPLE
+      ON UPDATE NO ACTION ON DELETE NO ACTION DEFERRABLE INITIALLY DEFERRED,
+  CONSTRAINT user_id_refs_id_40c41112 FOREIGN KEY (user_id)
+      REFERENCES auth_user (id) MATCH SIMPLE
+      ON UPDATE NO ACTION ON DELETE NO ACTION DEFERRABLE INITIALLY DEFERRED,
+  CONSTRAINT auth_user_groups_user_id_group_id_key UNIQUE (user_id, group_id)
+)
+WITH (
+  OIDS=FALSE
+);
+ALTER TABLE auth_user_groups
+  OWNER TO postgres;
+
+-- Index: auth_user_groups_group_id
+
+-- DROP INDEX auth_user_groups_group_id;
+
+CREATE INDEX auth_user_groups_group_id
+  ON auth_user_groups
+  USING btree
+  (group_id);
+
+-- Index: auth_user_groups_user_id
+
+-- DROP INDEX auth_user_groups_user_id;
+
+CREATE INDEX auth_user_groups_user_id
+  ON auth_user_groups
+  USING btree
+  (user_id);
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+-- Table: auth_user_user_permissions
+
+-- DROP TABLE auth_user_user_permissions;
+
+CREATE TABLE auth_user_user_permissions
+(
+  id serial NOT NULL,
+  user_id integer NOT NULL,
+  permission_id integer NOT NULL,
+  CONSTRAINT auth_user_user_permissions_pkey PRIMARY KEY (id),
+  CONSTRAINT auth_user_user_permissions_permission_id_fkey FOREIGN KEY (permission_id)
+      REFERENCES auth_permission (id) MATCH SIMPLE
+      ON UPDATE NO ACTION ON DELETE NO ACTION DEFERRABLE INITIALLY DEFERRED,
+  CONSTRAINT user_id_refs_id_4dc23c39 FOREIGN KEY (user_id)
+      REFERENCES auth_user (id) MATCH SIMPLE
+      ON UPDATE NO ACTION ON DELETE NO ACTION DEFERRABLE INITIALLY DEFERRED,
+  CONSTRAINT auth_user_user_permissions_user_id_permission_id_key UNIQUE (user_id, permission_id)
+)
+WITH (
+  OIDS=FALSE
+);
+ALTER TABLE auth_user_user_permissions
+  OWNER TO postgres;
+
+-- Index: auth_user_user_permissions_permission_id
+
+-- DROP INDEX auth_user_user_permissions_permission_id;
+
+CREATE INDEX auth_user_user_permissions_permission_id
+  ON auth_user_user_permissions
+  USING btree
+  (permission_id);
+
+-- Index: auth_user_user_permissions_user_id
+
+-- DROP INDEX auth_user_user_permissions_user_id;
+
+CREATE INDEX auth_user_user_permissions_user_id
+  ON auth_user_user_permissions
+  USING btree
+  (user_id);
+
+
+
+
+
+
+
+
+
+
+-- Table: django_admin_log
+
+-- DROP TABLE django_admin_log;
+
+CREATE TABLE django_admin_log
+(
+  id serial NOT NULL,
+  action_time timestamp with time zone NOT NULL,
+  user_id integer NOT NULL,
+  content_type_id integer,
+  object_id text,
+  object_repr character varying(200) NOT NULL,
+  action_flag smallint NOT NULL,
+  change_message text NOT NULL,
+  CONSTRAINT django_admin_log_pkey PRIMARY KEY (id),
+  CONSTRAINT django_admin_log_content_type_id_fkey FOREIGN KEY (content_type_id)
+      REFERENCES django_content_type (id) MATCH SIMPLE
+      ON UPDATE NO ACTION ON DELETE NO ACTION DEFERRABLE INITIALLY DEFERRED,
+  CONSTRAINT django_admin_log_user_id_fkey FOREIGN KEY (user_id)
+      REFERENCES auth_user (id) MATCH SIMPLE
+      ON UPDATE NO ACTION ON DELETE NO ACTION DEFERRABLE INITIALLY DEFERRED,
+  CONSTRAINT django_admin_log_action_flag_check CHECK (action_flag >= 0)
+)
+WITH (
+  OIDS=FALSE
+);
+ALTER TABLE django_admin_log
+  OWNER TO postgres;
+
+-- Index: django_admin_log_content_type_id
+
+-- DROP INDEX django_admin_log_content_type_id;
+
+CREATE INDEX django_admin_log_content_type_id
+  ON django_admin_log
+  USING btree
+  (content_type_id);
+
+-- Index: django_admin_log_user_id
+
+-- DROP INDEX django_admin_log_user_id;
+
+CREATE INDEX django_admin_log_user_id
+  ON django_admin_log
+  USING btree
+  (user_id);
+
+
+
+
+
+
+
+
+
+-- Table: django_content_type
+
+-- DROP TABLE django_content_type;
+
+CREATE TABLE django_content_type
+(
+  id serial NOT NULL,
+  name character varying(100) NOT NULL,
+  app_label character varying(100) NOT NULL,
+  model character varying(100) NOT NULL,
+  CONSTRAINT django_content_type_pkey PRIMARY KEY (id),
+  CONSTRAINT django_content_type_app_label_model_key UNIQUE (app_label, model)
+)
+WITH (
+  OIDS=FALSE
+);
+ALTER TABLE django_content_type
+  OWNER TO postgres;
+-- Table: django_session
+
+-- DROP TABLE django_session;
+
+CREATE TABLE django_session
+(
+  session_key character varying(40) NOT NULL,
+  session_data text NOT NULL,
+  expire_date timestamp with time zone NOT NULL,
+  CONSTRAINT django_session_pkey PRIMARY KEY (session_key)
+)
+WITH (
+  OIDS=FALSE
+);
+ALTER TABLE django_session
+  OWNER TO postgres;
+
+-- Index: django_session_expire_date
+
+-- DROP INDEX django_session_expire_date;
+
+CREATE INDEX django_session_expire_date
+  ON django_session
+  USING btree
+  (expire_date);
+
+-- Index: django_session_session_key_like
+
+-- DROP INDEX django_session_session_key_like;
+
+CREATE INDEX django_session_session_key_like
+  ON django_session
+  USING btree
+  (session_key COLLATE pg_catalog."default" varchar_pattern_ops);
+
+
+
+
+
+
+
+
+
+
+
+
+
+-- Table: django_site
+
+-- DROP TABLE django_site;
+
+CREATE TABLE django_site
+(
+  id serial NOT NULL,
+  domain character varying(100) NOT NULL,
+  name character varying(50) NOT NULL,
+  CONSTRAINT django_site_pkey PRIMARY KEY (id)
+)
+WITH (
+  OIDS=FALSE
+);
+ALTER TABLE django_site
+  OWNER TO postgres;

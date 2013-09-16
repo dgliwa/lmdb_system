@@ -34,7 +34,6 @@ class Collection(models.Model):
         db_table = 'collection'
 
 class Event(models.Model):
-    objectid = models.IntegerField(unique=True)
     eventtype = models.CharField(max_length=10)
     eventname = models.CharField(max_length=255)
     eventstartdate = models.DateTimeField()
@@ -43,9 +42,11 @@ class Event(models.Model):
     eventendtime = models.DateTimeField(null=True, blank=True)
     eventparticipants = models.IntegerField(null=True, blank=True)
     eventdescription = models.CharField(max_length=255, blank=True)
-    personid = models.IntegerField()
+    personid = models.ForeignKey('AuthUser', db_column='personid')
     class Meta:
         db_table = 'event'
+    def __unicode__(self):
+        return self.eventname
 
 class EventProject(models.Model):
     rid = models.IntegerField(unique=True)
@@ -126,7 +127,6 @@ class Organism(models.Model):
         db_table = 'organism'
 
 class Parameter(models.Model):
-    objectid = models.IntegerField(unique=True)
     sciname = models.CharField(max_length=255, blank=True)
     commonname = models.CharField(max_length=50)
     casnumber = models.CharField(max_length=10, blank=True)
@@ -150,26 +150,26 @@ class People(models.Model):
         db_table = 'people'
 
 class Permit(models.Model):
-    objectid = models.IntegerField(unique=True)
     permitstartdate = models.DateTimeField(null=True, blank=True)
     permitenddate = models.DateTimeField(null=True, blank=True)
     permitagency = models.CharField(max_length=50, blank=True)
     description = models.CharField(max_length=255, blank=True)
     class Meta:
         db_table = 'permit'
+    def __unicode__(self):
+       return self.id
 
 class Project(models.Model):
-    objectid = models.IntegerField(unique=True)
     projectname = models.CharField(max_length=100)
     projectdescription = models.CharField(max_length=255)
     projectobjective = models.CharField(max_length=255)
-    eventid = models.IntegerField(null=True, blank=True)
-    permitid = models.IntegerField(null=True, blank=True)
+    eventid = models.ForeignKey('Event', db_column='eventid')
+    permitid = models.ForeignKey('Permit', db_column='permitid', null=True)
     projectstartdate = models.DateTimeField()
     projectenddate = models.DateTimeField(null=True, blank=True)
     funded = models.SmallIntegerField()
     funder = models.CharField(max_length=255, blank=True)
-    personid = models.IntegerField(null=True, blank=True)
+    personid = models.ForeignKey('AuthUser', db_column='personid')
     class Meta:
         db_table = 'project'
 
@@ -201,3 +201,5 @@ class AuthUser(models.Model):
     date_joined = models.DateTimeField()
     class Meta:
         db_table = 'auth_user'
+    def __unicode__(self):
+        return self.first_name + " " + self.last_name

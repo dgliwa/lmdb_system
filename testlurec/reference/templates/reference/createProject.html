@@ -1,32 +1,18 @@
 <form action="{% url 'reference:createProject' %}" method="post">
 {% csrf_token %}
-Project Name:  <input type="text" name="projectname"><br>
-Project Description:  <input type="text" name="projectdescription"><br>
-Project Objective:  <input type="text" name="projectobjective"><br>
-Associated Event:  <select name="eventid">
-{% for e in events %}
-    <option value="{{ e.id }}">{{e.eventname}}</option>
-{% endfor %}
-</select>
-<br>
-Permit:  <select name="permitid">
-    <option value=null>None</option>
-{% if permits %}
-    {% for p in permits %}
-        <option value="{{p.id}}">{{p.description}}</option>
-    {% endfor %}
-{% endif %}
-</select><br>
+{{form.non_field_errors}}
 
-Project Start Date and Time: <input type="datetime" name="projectstartdate"><br>
-Project End Date and Time:  <input type="datetime" name="projectenddate"><br>
-Funded:  <input type="radio" name="funded" value="1">Yes  <input type="radio" name="funded" value="0">No<br>
-Funder:  <input type="text" name="funder"><br>
-Project Coordinator:  <select name="personid"><br>
-{% for p in people %}
-    <option value="{{ p.id }}">{{p.first_name}} {{p.last_name}}</option>
-{% endfor %}
-</select><br>
+Project Name:  {{form.projectname}}<br>
+Project Description:  {{form.projectdescription}}<br>
+Project Objective:  {{form.projectobjective}}<br>
+Associated Event:  {{form.eventid}}<br>
+Permit:  {{form.permitid}}<br>
+
+Project Start Date and Time: {{form.projectstartdate}}<br>
+Project End Date and Time:  {{form.projectenddate}}<br>
+Funded:  {{form.funded}} <br>
+Funder:  {{form.funder}}<br>
+Project Coordinator:  {{form.personid}}<br>
 
 <input type="submit" value="Create Project" />
 </form>
