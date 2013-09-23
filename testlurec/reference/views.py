@@ -1,6 +1,6 @@
 from django.shortcuts import render, get_object_or_404
 from django.template import RequestContext, loader
-from reference.models import Event, AuthUser, Project, Parameter, Project, Permit
+from reference.models import Event, Project, Parameter, Project, Permit, People
 
 from django.http import *
 from django.shortcuts import render_to_response,redirect
@@ -26,8 +26,8 @@ def index(request):
 @login_required(login_url='/login/')
 def eventDetail(request, event_id):
     event = get_object_or_404(Event, pk=event_id)
-    person = get_object_or_404(AuthUser, pk=event.personid.id)
-    projects = Project.objects.get_query_set().filter(eventid=event.id)
+    person = get_object_or_404(People, pk=event.personid.objectid)
+    projects = Project.objects.get_query_set().filter(eventid=event.objectid)
     return render(request, 'reference/eventDetail.html', {'event' : event, 'person' : person, 'projects' : projects})
     
 @login_required(login_url='/login/')
@@ -104,8 +104,8 @@ def projects(request):
 @login_required(login_url='/login/')
 def projectDetail(request, project_id):
     project = get_object_or_404(Project, pk=project_id)
-    person = get_object_or_404(AuthUser, pk=project.personid.id)
-    event = get_object_or_404(Event, pk=project.eventid.id)
+    person = get_object_or_404(People, pk=project.personid.objectid)
+    event = get_object_or_404(Event, pk=project.eventid.objectid)
     return render(request, 'reference/projectDetail.html', {'project' : project, 'person' : person, 'event' : event})
     
 @login_required(login_url='/login/')

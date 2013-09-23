@@ -3,7 +3,7 @@
 {% if events %}
     <ul>
     {% for e in events %}
-        <li><a href="{% url 'reference:eventDetail' e.id %}">{{ e.eventname }}</a></li>
+        <li><a href="{% url 'reference:eventDetail' e.objectid %}">{{ e.eventname }}</a></li>
     {% endfor %}
     </ul>
 {% else %}

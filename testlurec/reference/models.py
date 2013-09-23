@@ -1,9 +1,10 @@
 from django.db import models
+from django.contrib.auth.models import User
 
 #models automatically created by the import function of django
 
 class Change(models.Model):
-    objectid = models.IntegerField(unique=True)
+    objectid = models.IntegerField(primary_key=True, unique=True)
     projectid = models.IntegerField()
     locationid = models.IntegerField(null=True, blank=True)
     description = models.CharField(max_length=255)
@@ -21,7 +22,7 @@ class Change(models.Model):
         db_table = 'change'
 
 class Collection(models.Model):
-    objectid = models.IntegerField(unique=True)
+    objectid = models.IntegerField(primary_key=True,unique=True)
     projectid = models.IntegerField()
     organismid = models.IntegerField()
     datecollect = models.DateTimeField()
@@ -34,6 +35,7 @@ class Collection(models.Model):
         db_table = 'collection'
 
 class Event(models.Model):
+    objectid = models.IntegerField(primary_key=True,unique=True)
     eventtype = models.CharField(max_length=10)
     eventname = models.CharField(max_length=255)
     eventstartdate = models.DateTimeField()
@@ -42,13 +44,14 @@ class Event(models.Model):
     eventendtime = models.DateTimeField(null=True, blank=True)
     eventparticipants = models.IntegerField(null=True, blank=True)
     eventdescription = models.CharField(max_length=255, blank=True)
-    personid = models.ForeignKey('AuthUser', db_column='personid')
+    personid = models.ForeignKey('People', db_column='personid')
     class Meta:
         db_table = 'event'
     def __unicode__(self):
         return self.eventname
 
 class EventProject(models.Model):
+    objectid = models.IntegerField(primary_key=True,unique=True)
     rid = models.IntegerField(unique=True)
     eventid = models.IntegerField(null=True, blank=True)
     project_objectid = models.IntegerField(null=True, blank=True)
@@ -58,7 +61,7 @@ class EventProject(models.Model):
 
 
 class Location(models.Model):
-    objectid = models.IntegerField(unique=True)
+    objectid = models.IntegerField(primary_key=True,unique=True)
     name = models.CharField(max_length=50, blank=True)
     description = models.CharField(max_length=255, blank=True)
     pointid = models.IntegerField(null=True, blank=True)
@@ -97,7 +100,7 @@ class LocationSighting(models.Model):
 
 
 class Measurement(models.Model):
-    objectid = models.IntegerField(unique=True)
+    objectid = models.IntegerField(primary_key=True,unique=True)
     parameterid = models.IntegerField()
     projectid = models.IntegerField(null=True, blank=True)
     personid = models.IntegerField()
@@ -114,7 +117,7 @@ class Measurement(models.Model):
         db_table = 'measurement'
 
 class Organism(models.Model):
-    objectid = models.IntegerField(unique=True)
+    objectid = models.IntegerField(primary_key=True,unique=True)
     organismname = models.CharField(max_length=255)
     family = models.CharField(max_length=255, blank=True)
     order_field = models.CharField(max_length=255, db_column='order_', blank=True) # Field renamed because it ended with '_'.
@@ -127,6 +130,7 @@ class Organism(models.Model):
         db_table = 'organism'
 
 class Parameter(models.Model):
+    objectid = models.IntegerField(primary_key=True,unique=True)
     sciname = models.CharField(max_length=255, blank=True)
     commonname = models.CharField(max_length=50)
     casnumber = models.CharField(max_length=10, blank=True)
@@ -135,7 +139,7 @@ class Parameter(models.Model):
         db_table = 'parameter'
 
 class People(models.Model):
-    objectid = models.IntegerField(unique=True)
+    objectid = models.IntegerField(primary_key=True,unique=True)
     title = models.CharField(max_length=10)
     firstname = models.CharField(max_length=50)
     lastname = models.CharField(max_length=50)
@@ -148,18 +152,21 @@ class People(models.Model):
     password = models.CharField(max_length=100, blank=True)
     class Meta:
         db_table = 'people'
+    def __unicode__(self):
+        return self.firstname + " " + self.lastname
 
 class Permit(models.Model):
+    objectid = models.IntegerField(primary_key=True,unique=True)
     permitstartdate = models.DateTimeField(null=True, blank=True)
     permitenddate = models.DateTimeField(null=True, blank=True)
     permitagency = models.CharField(max_length=50, blank=True)
     description = models.CharField(max_length=255, blank=True)
     class Meta:
         db_table = 'permit'
-    def __unicode__(self):
-       return self.id
+
 
 class Project(models.Model):
+    objectid = models.IntegerField(primary_key=True,unique=True)
     projectname = models.CharField(max_length=100)
     projectdescription = models.CharField(max_length=255)
     projectobjective = models.CharField(max_length=255)
@@ -169,13 +176,13 @@ class Project(models.Model):
     projectenddate = models.DateTimeField(null=True, blank=True)
     funded = models.SmallIntegerField()
     funder = models.CharField(max_length=255, blank=True)
-    personid = models.ForeignKey('AuthUser', db_column='personid')
+    personid = models.ForeignKey('People', db_column='personid')
     class Meta:
         db_table = 'project'
 
 
 class Sighting(models.Model):
-    objectid = models.IntegerField(unique=True)
+    objectid = models.IntegerField(primary_key=True,unique=True)
     personid = models.IntegerField()
     organismid = models.IntegerField()
     projectid = models.IntegerField(null=True, blank=True)
@@ -188,7 +195,6 @@ class Sighting(models.Model):
         db_table = 'sighting'
 
 class AuthUser(models.Model):
-    id = models.IntegerField(primary_key=True)
     password = models.CharField(max_length=128)
     last_login = models.DateTimeField()
     is_superuser = models.BooleanField()
@@ -201,5 +207,6 @@ class AuthUser(models.Model):
     date_joined = models.DateTimeField()
     class Meta:
         db_table = 'auth_user'
+        app_label = 'django.contrib.auth'
     def __unicode__(self):
         return self.first_name + " " + self.last_name

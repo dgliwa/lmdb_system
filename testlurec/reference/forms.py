@@ -1,5 +1,6 @@
 from django import forms
-from models import AuthUser, Parameter, Permit, Event, Project
+from models import Parameter, Permit, Event, Project, People
+from django.contrib.auth.models import User
 
 import random
 
@@ -22,13 +23,14 @@ class PermitForm(forms.ModelForm):
         model = Permit
     
 class EventForm(forms.ModelForm):
+    objectid = forms.IntegerField(widget=forms.HiddenInput(), initial=Event.objects.all().order_by('-objectid')[0].objectid+1)
     eventname = forms.CharField()
     eventtype = forms.CharField()
     eventstartdate = forms.DateTimeField()
     eventenddate = forms.DateTimeField()
     eventparticipants = forms.IntegerField()
     eventdescription = forms.CharField()
-    personid = forms.ModelChoiceField(queryset=AuthUser.objects.all())
+    personid = forms.ModelChoiceField(queryset=People.objects.all())
     
     class Meta:
         model = Event
@@ -43,7 +45,7 @@ class ProjectForm(forms.ModelForm):
     projectenddate = forms.DateTimeField()
     funded = forms.IntegerField()
     funder = forms.CharField()
-    personid = forms.ModelChoiceField(queryset=AuthUser.objects.all())
+    personid = forms.ModelChoiceField(queryset=People.objects.all())
     
     class Meta:
         model = Project

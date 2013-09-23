@@ -6,7 +6,7 @@
 {% if permits %}
     <ul>
     {% for p in permits %}
-        <li><a href="{% url 'reference:permitDetail' p.id %}">{{ p.id }}</a></li>
+        <li><a href="{% url 'reference:permitDetail' p.objectid %}">{{ p.id }}</a></li>
     {% endfor %}
     </ul>
 {% else %}

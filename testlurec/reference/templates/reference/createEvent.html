@@ -1,7 +1,15 @@
+<!DOCTYPE html>
+<html>
+<head>
+</head>
 <form action="{% url 'reference:createEvent' %}" method="post">
+{% load staticfiles %}
+<img src="{% static "bootstrap/img/glyphicons-halflings-white.png" %}" alt="My image"/>
+
 {% csrf_token %}
 {{form.non_field_errors}}
-
+{{form.objectid.errors}}
+{{form.objectid}}
 {{form.eventname.errors}}
 Event Name:  {{form.eventname}}<br>
 {{form.eventtype.errors}}
@@ -22,3 +30,4 @@ Event Coordinator:  {{form.personid}}<br>
 
 
 
+</html>

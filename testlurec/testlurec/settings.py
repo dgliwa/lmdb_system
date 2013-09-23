@@ -1,4 +1,5 @@
 # Django settings for testlurec project.
+import os
 
 DEBUG = True
 TEMPLATE_DEBUG = DEBUG
@@ -10,16 +11,31 @@ ADMINS = (
 MANAGERS = ADMINS
 
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql_psycopg2', # Add 'postgresql_psycopg2', 'mysql', 'sqlite3' or 'oracle'.
-        'NAME': 'postgres',                      # Or path to database file if using sqlite3.
-        # The following settings are not used with sqlite3:
-        'USER': 'postgres',
-        'PASSWORD': 'Armadillo44',
-        'HOST': '',                      # Empty for localhost through domain sockets or '127.0.0.1' for localhost through TCP.
-        'PORT': '5432',                      # Set to empty string for default.
+    'default' : {
+         'ENGINE': 'django.db.backends.postgresql_psycopg2', # Add 'postgresql_psycopg2', 'mysql', 'sqlite3' or 'oracle'.
+         'NAME': 'lmdb',                      # Or path to database file if using sqlite3.
+         # The following settings are not used with sqlite3:
+         'USER': 'query',
+         'PASSWORD': 'qu3r7Vs#R',
+         'HOST': '147.126.65.155',                      # Empty for localhost through domain sockets or '127.0.0.1' for localhost through TCP.
+         'PORT': '5434',      
+     },
+    'auth_db': {
+         'ENGINE': 'django.db.backends.postgresql_psycopg2', # Add 'postgresql_psycopg2', 'mysql', 'sqlite3' or 'oracle'.
+         'NAME': 'lurec_lmdb',                      # Or path to database file if using sqlite3.
+         # The following settings are not used with sqlite3:
+         'USER': 'dgliwa',
+         'PASSWORD': 'Armadillo44',
+         'HOST': 'cacwdb.etl.luc.edu',                      # Empty for localhost through domain sockets or '127.0.0.1' for localhost through TCP.
+         'PORT': '5432',                      # Set to empty string for default.
+
+                        # Set to empty string for default.
     }
+   
 }
+
+# Defines database router that will access auth data in lurec db and all other data in arcgis db
+DATABASE_ROUTERS = ['reference.AuthRouter','reference.DefaultRouter']
 
 # Hosts/domain names that are valid for this site; required if DEBUG is False
 # See https://docs.djangoproject.com/en/1.5/ref/settings/#allowed-hosts
@@ -67,8 +83,12 @@ STATIC_ROOT = ''
 # Example: "http://example.com/static/", "http://static.example.com/"
 STATIC_URL = '/static/'
 
+SITE_ROOT = os.path.dirname(os.path.realpath(__file__))
+
 # Additional locations of static files
 STATICFILES_DIRS = (
+     os.path.join(SITE_ROOT, 'static/'),
+
     # Put strings here, like "/home/html/static" or "C:/www/django/static".
     # Always use forward slashes, even on Windows.
     # Don't forget to use absolute paths, not relative paths.
