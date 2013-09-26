@@ -1,14 +1,16 @@
 from django.shortcuts import render, get_object_or_404
 from django.template import RequestContext, loader
-from reference.models import Event, Project, Parameter, Project, Permit, People
+from reference.models import Event, Project, Parameter, Project, Permit, People, Location
 
 from django.http import *
 from django.shortcuts import render_to_response,redirect
 
 from django.contrib.auth.decorators import login_required
+from django.views.decorators.csrf import csrf_exempt, csrf_protect
+
 from django.contrib.auth import authenticate, login, logout
 
-from forms import ParamForm, PermitForm, EventForm, ProjectForm
+from forms import ParamForm, PermitForm, EventForm, ProjectForm, LocationForm
 
 import random #will be removed later, need to update database
 
@@ -37,7 +39,6 @@ def events(request):
     context = RequestContext( request, {
         'events' : events,
     })
-    output = ', '.join([e.get('eventname') for e in events])
     return HttpResponse(template.render(context))
 
 @login_required(login_url='/login/')    
@@ -65,7 +66,6 @@ def parameters(request):
     context = RequestContext( request, {
         'parameters' : parameters,
     })
-    output = ', '.join([p.get('commonname') for p in parameters])
     return HttpResponse(template.render(context))
 
 @login_required(login_url='/login/')
@@ -98,7 +98,6 @@ def projects(request):
     context = RequestContext( request, {
         'projects' : projects,
     })
-    output = ', '.join([p.get('projectname') for p in projects])
     return HttpResponse(template.render(context))
     
 @login_required(login_url='/login/')
@@ -133,7 +132,6 @@ def permits(request):
     context = RequestContext( request, {
         'permits' : permits,
     })
-    output = ', '.join([str(p.get('id')) for p in permits])
     return HttpResponse(template.render(context))
     
 @login_required(login_url='/login/')
@@ -156,5 +154,56 @@ def createPermit(request):
 #   END OF FUNCTIONS FOR PERMITS #
 #
 #########################################################################################
-#   BEGINNING OF FUNCTIONS FOR ... #
+#   BEGINNING OF FUNCTIONS FOR LOCATIONS #
+#########################################################################################
+
+@login_required(login_url='/login/')
+def locations(request):
+    locations = Location.objects.all().order_by('pointid','lineid','areaid')
+    template = loader.get_template('reference/locations.html')
+    context = RequestContext( request, {
+        'locations' : locations,
+    })
+    return HttpResponse(template.render(context))
+    
+@login_required(login_url='/login/')
+def locationDetail(request, location_id):
+    location = get_object_or_404(Location, pk=location_id)
+    return render(request, 'reference/locationDetail.html', {'location' : location})
+
+@login_required(login_url='/login/')
+def createLocationMap(request):
+        return render(request,'reference/createLocationMap.html',{})
+    
+    
+@login_required(login_url='/login/')
+@csrf_exempt
+def createLocation(request):
+
+    @csrf_protect
+    def formValidation(request):
+        if request.POST:
+            form = LocationForm(request.POST)
+            if form.is_valid():
+                form.save()
+                return HttpResponseRedirect('/reference/locations/')
+        else:
+            form = LocationForm()
+        return render(request, 'reference/createLocation.html', {'form', form})    
+
+    if request.POST:
+        if request.POST['indicator']:  ##not working
+            form = LocationForm()
+            form.objectid=request.POST['objectid']  ##not working
+            return render(request, 'reference/createLocation.html', {'form' : form})
+        else:
+            return formValidation(request)
+    else:
+        return HttpResponseRedirect('/reference/locations/create/map/')
+
+
+
+#########################################################################################
+#   END OF FUNCTIONS FOR LOCATIONS #
+#
 #########################################################################################

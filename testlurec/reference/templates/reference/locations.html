@@ -1,0 +1,14 @@
+<h1>Locations</h1>
+
+<h3> <a href="{% url 'reference:createLocationMap' %}">Create Location</a></h3>
+
+
+{% if locations %}
+    <ul>
+    {% for l in locations %}
+        <li><a href="{% url 'reference:locationDetail' l.objectid %}">{{ l.objectid }}</a></li>
+    {% endfor %}
+    </ul>
+{% else %}
+    <p>No locations are available.</p>
+{% endif %}

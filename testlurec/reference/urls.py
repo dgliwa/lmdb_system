@@ -16,5 +16,10 @@ urlpatterns = patterns('',
     url(r'^permits/$', views.permits, name='permits'),
     url(r'^permits/(?P<permit_id>\d+)/$', views.permitDetail, name='permitDetail'),
     url(r'^permits/create/$', views.createPermit, name='createPermit'),
-    
+    url(r'^locations/$', views.locations, name='locations'),
+    url(r'^locations/(?P<location_id>\d+)/$', views.locationDetail, name='locationDetail'),
+    url(r'^locations/create/map/$', views.createLocationMap, name='createLocationMap'),
+    url(r'^locations/create/$', views.createLocation, name='createLocation'),
+
+
 )

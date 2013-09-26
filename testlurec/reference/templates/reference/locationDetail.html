@@ -1,0 +1,13 @@
+<h1>{{location.name}}</h1>
+<ul>
+    <li>ID:  {{location.objectid}}</li>
+    {% if location.pointid %}
+        <li>Point ID:  {{location.pointid}}</li>
+    {% endif %}
+    {% if location.lineid %}
+        <li>Point ID:  {{location.lineid}}</li>
+    {% endif %}
+    {% if location.areaid %}
+        <li>Point ID:  {{location.areaid}}</li>
+    {% endif %}
+</ul>

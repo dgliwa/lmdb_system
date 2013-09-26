@@ -1,10 +1,11 @@
 from django import forms
-from models import Parameter, Permit, Event, Project, People
+from models import Parameter, Permit, Event, Project, People, Location
 from django.contrib.auth.models import User
 
 import random
 
 class ParamForm(forms.ModelForm):
+    objectid = forms.IntegerField(widget=forms.HiddenInput(), initial=Parameter.objects.all().order_by('-objectid')[0].objectid+1)
     sciname = forms.CharField(max_length=100)
     commonname = forms.CharField()
     casnumber = forms.IntegerField()
@@ -14,6 +15,7 @@ class ParamForm(forms.ModelForm):
         model = Parameter
     
 class PermitForm(forms.ModelForm):
+    objectid = forms.IntegerField(widget=forms.HiddenInput(), initial=Permit.objects.all().order_by('-objectid')[0].objectid+1)
     permitstartdate = forms.DateTimeField()
     permitenddate = forms.DateTimeField()
     permitagency = forms.CharField()
@@ -49,3 +51,15 @@ class ProjectForm(forms.ModelForm):
     
     class Meta:
         model = Project
+        
+class LocationForm(forms.ModelForm):
+    objectid = forms.IntegerField(widget=forms.HiddenInput())
+    name = forms.CharField(max_length=50)
+    description = forms.CharField(max_length=255)
+    pointid = forms.IntegerField()
+    lineid = forms.IntegerField()
+    areaid = forms.IntegerField()
+    
+    class Meta:
+        model = Location
+

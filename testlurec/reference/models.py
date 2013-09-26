@@ -194,19 +194,9 @@ class Sighting(models.Model):
     class Meta:
         db_table = 'sighting'
 
-class AuthUser(models.Model):
-    password = models.CharField(max_length=128)
-    last_login = models.DateTimeField()
-    is_superuser = models.BooleanField()
-    username = models.CharField(max_length=30)
-    first_name = models.CharField(max_length=30)
-    last_name = models.CharField(max_length=30)
-    email = models.CharField(max_length=75)
-    is_staff = models.BooleanField()
-    is_active = models.BooleanField()
-    date_joined = models.DateTimeField()
+class LurecPoints(models.Model):
+    objectid = models.IntegerField(primary_key=True, unique=True)
+    description = models.CharField(max_length=255, blank=True)
+    shape = models.TextField(blank=True) # This field type is a guess.
     class Meta:
-        db_table = 'auth_user'
-        app_label = 'django.contrib.auth'
-    def __unicode__(self):
-        return self.first_name + " " + self.last_name
+        db_table = 'lurec_points'

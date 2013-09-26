@@ -1,7 +1,6 @@
 class AuthRouter(object):
     def db_for_read(self, model, ** hints):
         '''Attempts to read auth models go to auth_db.'''
-        print model._meta.app_label
         if model._meta.app_label=='admin' or model._meta.app_label=='contenttypes' or model._meta.app_label == 'auth' or model._meta.app_label == 'sessions' :
             return 'auth_db'
         return None
@@ -10,7 +9,6 @@ class AuthRouter(object):
         """
         Attempts to write auth models go to auth_db.
         """
-        print model._meta.app_label
         if model._meta.app_label=='admin' or model._meta.app_label=='contenttypes' or model._meta.app_label == 'auth' or model._meta.app_label=='sessions':
             return 'auth_db'
         return None
