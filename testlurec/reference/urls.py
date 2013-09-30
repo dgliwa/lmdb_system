@@ -20,6 +20,9 @@ urlpatterns = patterns('',
     url(r'^locations/(?P<location_id>\d+)/$', views.locationDetail, name='locationDetail'),
     url(r'^locations/create/map/$', views.createLocationMap, name='createLocationMap'),
     url(r'^locations/create/$', views.createLocation, name='createLocation'),
+    url(r'^organisms/$', views.organisms, name='organisms'),
+    url(r'^organisms/(?P<location_id>\d+)/$', views.locationDetail, name='organismDetail'),
+    url(r'^organisms/create/$', views.createOrganism, name='createOrganism'),
 
 
 )

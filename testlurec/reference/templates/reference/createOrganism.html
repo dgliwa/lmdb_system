@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+<head>
+</head>
+<form action="{% url 'reference:createOrganism' %}" method="post">
+{% load staticfiles %}
+<img src="{% static "bootstrap/img/glyphicons-halflings-white.png" %}" alt="My image"/>
+
+{% csrf_token %}
+{{form.non_field_errors}}
+{{form.objectid.errors}}
+{{form.objectid}}
+{{form.organismname.errors}}
+Organism Name:  {{form.organismname}}<br>
+{{form.kingdom.errors}}
+Organism Kingdom:  {{form.kingdom}}<br>
+{{form.phylum.errors}}
+Organism Phylum: {{form.phylum}}<br>
+{{form.class_field.errors}}
+Organism Class:  {{form.class_field}}<br>
+{{form.order_field.errors}}
+Organism Order:  {{form.order_field}}<br>
+{{form.family.errors}}
+Organism Family:  {{form.family}}<br>
+{{form.genus.errors}}
+Organism Genus:  {{form.genus}}<br>
+{{form.species.errors}}
+Organism Species:  {{form.species}}<br>
+<input type="submit" value="Create Organism" />
+</form>
+
+
+
+
+</html>

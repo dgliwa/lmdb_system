@@ -1,8 +1,7 @@
 from django import forms
-from models import Parameter, Permit, Event, Project, People, Location
-from django.contrib.auth.models import User
+from models import Parameter, Permit, Event, Project, People, Location, Organism
+from django.forms.extras.widgets import SelectDateWidget
 
-import random
 
 class ParamForm(forms.ModelForm):
     objectid = forms.IntegerField(widget=forms.HiddenInput(), initial=Parameter.objects.all().order_by('-objectid')[0].objectid+1)
@@ -16,8 +15,8 @@ class ParamForm(forms.ModelForm):
     
 class PermitForm(forms.ModelForm):
     objectid = forms.IntegerField(widget=forms.HiddenInput(), initial=Permit.objects.all().order_by('-objectid')[0].objectid+1)
-    permitstartdate = forms.DateTimeField()
-    permitenddate = forms.DateTimeField()
+    permitstartdate = forms.DateTimeField(widget=SelectDateWidget())
+    permitenddate = forms.DateTimeField(widget=SelectDateWidget())
     permitagency = forms.CharField()
     description = forms.CharField()
     
@@ -28,8 +27,8 @@ class EventForm(forms.ModelForm):
     objectid = forms.IntegerField(widget=forms.HiddenInput(), initial=Event.objects.all().order_by('-objectid')[0].objectid+1)
     eventname = forms.CharField()
     eventtype = forms.CharField()
-    eventstartdate = forms.DateTimeField()
-    eventenddate = forms.DateTimeField()
+    eventstartdate = forms.DateTimeField(widget=SelectDateWidget())
+    eventenddate = forms.DateTimeField(widget=SelectDateWidget())
     eventparticipants = forms.IntegerField()
     eventdescription = forms.CharField()
     personid = forms.ModelChoiceField(queryset=People.objects.all())
@@ -43,8 +42,8 @@ class ProjectForm(forms.ModelForm):
     projectobjective = forms.CharField()
     eventid = forms.ModelChoiceField(queryset=Event.objects.all())
     permitid = forms.ModelChoiceField(queryset=Permit.objects.all())
-    projectstartdate = forms.DateTimeField()
-    projectenddate = forms.DateTimeField()
+    projectstartdate = forms.DateTimeField(widget=SelectDateWidget())
+    projectenddate = forms.DateTimeField(widget=SelectDateWidget())
     funded = forms.IntegerField()
     funder = forms.CharField()
     personid = forms.ModelChoiceField(queryset=People.objects.all())
@@ -56,10 +55,24 @@ class LocationForm(forms.ModelForm):
     objectid = forms.IntegerField(widget=forms.HiddenInput())
     name = forms.CharField(max_length=50)
     description = forms.CharField(max_length=255)
-    pointid = forms.IntegerField()
-    lineid = forms.IntegerField()
-    areaid = forms.IntegerField()
+    pointid = forms.IntegerField(widget=forms.TextInput(attrs={'readonly' : 'True'}),required=False)
+    lineid = forms.IntegerField(widget=forms.TextInput(attrs={'readonly' : 'True'}),required=False)
+    areaid = forms.IntegerField(widget=forms.TextInput(attrs={'readonly' : 'True'}),required=False)
     
     class Meta:
         model = Location
+
+class OrganismForm(forms.ModelForm):
+    objectid = forms.IntegerField(widget=forms.HiddenInput())
+    organismname = forms.CharField()
+    family = forms.CharField(max_length=255)
+    order_field = forms.CharField(max_length=255) # Field renamed because it ended with '_'.
+    class_field = forms.CharField(max_length=255) # Field renamed because it was a Python reserved word.
+    phylum = forms.CharField(max_length=255)
+    kingdom = forms.CharField(max_length=255)
+    genus = forms.CharField(max_length=255)
+    species = forms.CharField(max_length=255)
+    class Meta:
+        model = Organism
+
 

@@ -64,6 +64,8 @@
     
     <script>
     var lmdbPointLayer;
+    var lmdbLineLayer;
+    var lmdbPolygonLayer;
     dojo.require("esri.map");
       dojo.require("esri.layers.FeatureLayer");
       dojo.require("esri.layers.FeatureEditResult");
@@ -126,11 +128,11 @@
           mode: FeatureLayer.MODE_SNAPSHOT,
           outFields: ["*"]
         });
-        var lmdbLineLayer = new FeatureLayer("http://147.126.65.155/gis/rest/services/campus/lurec_lmdb/FeatureServer/1", {
+        lmdbLineLayer = new FeatureLayer("http://147.126.65.155/gis/rest/services/campus/lurec_lmdb/FeatureServer/1", {
           mode: FeatureLayer.MODE_SNAPSHOT,
           outFields: ["*"]
         });
-        var lmdbPolygonLayer = new FeatureLayer("http://147.126.65.155/gis/rest/services/campus/lurec_lmdb/FeatureServer/2", {
+        lmdbPolygonLayer = new FeatureLayer("http://147.126.65.155/gis/rest/services/campus/lurec_lmdb/FeatureServer/2", {
           mode: FeatureLayer.MODE_SNAPSHOT,
           outFields: ["*"]
         });
@@ -166,10 +168,80 @@ method = "post"; // Set method to post by default, if not specified.
             
             
             var indicator = document.createElement("input");
-            csrfToken.setAttribute("type", "hidden");
-            csrfToken.setAttribute("name", "indicator");
-            csrfToken.setAttribute("value", "yes");
+            indicator.setAttribute("type", "hidden");
+            indicator.setAttribute("name", "indicator");
+            indicator.setAttribute("value", "yes");
             form.appendChild(indicator);
+
+
+            var type = document.createElement("input");
+            type.setAttribute("type", "hidden");
+            type.setAttribute("name", "type");
+            type.setAttribute("value", "point");
+            form.appendChild(type);
+        
+            var hiddenField = document.createElement("input");
+            hiddenField.setAttribute("type", "hidden");
+            hiddenField.setAttribute("name", 'objectid');
+            hiddenField.setAttribute("value", addResults[0].objectId);
+
+            form.appendChild(hiddenField);
+         
+    
+
+    document.body.appendChild(form);
+    form.submit();
+
+
+
+
+
+
+
+           expressionParam = addResults[0].objectId;
+           myGPExecuteTask(expressionParam);
+           var graphic = featureLayer.graphics[featureLayer.graphics.length - 1];
+           graphic.attributes["additionalinformation"] = graphic.attributes["objectid"];
+            
+          }
+          
+          
+        });
+        
+        
+dojo.connect(lmdbLineLayer, "onEditsComplete", 
+          function(addResults) {
+                   if (addResults.length > 0) {
+            alert("objectid is: " + addResults[0].objectId);
+
+
+method = "post"; // Set method to post by default, if not specified.
+
+    // The rest of this code assumes you are not using a library.
+    // It can be made less wordy if you use one.
+    var form = document.createElement("form");
+    form.setAttribute("method", method);
+    form.setAttribute("action", '..');
+
+            var csrfToken = document.createElement("input");
+            csrfToken.setAttribute("type", "hidden");
+            csrfToken.setAttribute("name", "csrfmiddlewaretoken");
+            csrfToken.setAttribute("value", "{{ csrf_token }}");
+            form.appendChild(csrfToken);
+            
+            
+            var indicator = document.createElement("input");
+            indicator.setAttribute("type", "hidden");
+            indicator.setAttribute("name", "indicator");
+            indicator.setAttribute("value", "yes");
+            form.appendChild(indicator);
+
+
+            var type = document.createElement("input");
+            type.setAttribute("type", "hidden");
+            type.setAttribute("name", "type");
+            type.setAttribute("value", "line");
+            form.appendChild(type);
 
         
             var hiddenField = document.createElement("input");
@@ -195,38 +267,84 @@ method = "post"; // Set method to post by default, if not specified.
            var graphic = featureLayer.graphics[featureLayer.graphics.length - 1];
            graphic.attributes["additionalinformation"] = graphic.attributes["objectid"];
             
+          }
+          
+          
+        });        
+        
+
+
+
+dojo.connect(lmdbPolygonLayer, "onEditsComplete", 
+          function(addResults) {
+                   if (addResults.length > 0) {
+            alert("objectid is: " + addResults[0].objectId);
+
+
+method = "post"; // Set method to post by default, if not specified.
+
+    // The rest of this code assumes you are not using a library.
+    // It can be made less wordy if you use one.
+    var form = document.createElement("form");
+    form.setAttribute("method", method);
+    form.setAttribute("action", '..');
+
+            var csrfToken = document.createElement("input");
+            csrfToken.setAttribute("type", "hidden");
+            csrfToken.setAttribute("name", "csrfmiddlewaretoken");
+            csrfToken.setAttribute("value", "{{ csrf_token }}");
+            form.appendChild(csrfToken);
+            
+            
+            var indicator = document.createElement("input");
+            indicator.setAttribute("type", "hidden");
+            indicator.setAttribute("name", "indicator");
+            indicator.setAttribute("value", "yes");
+            form.appendChild(indicator);
+            
+            
+            var type = document.createElement("input");
+            type.setAttribute("type", "hidden");
+            type.setAttribute("name", "type");
+            type.setAttribute("value", "poly");
+            form.appendChild(type);
+
+        
+            var hiddenField = document.createElement("input");
+            hiddenField.setAttribute("type", "hidden");
+            hiddenField.setAttribute("name", 'objectid');
+            hiddenField.setAttribute("value", addResults[0].objectId);
+
+            form.appendChild(hiddenField);
          
-//          //
-//          
-//          function post_to_url(path, params, method) {
-//     method = "post"; // Set method to post by default, if not specified.
-// 
-//     // The rest of this code assumes you are not using a library.
-//     // It can be made less wordy if you use one.
-//     var form = document.createElement("form");
-//     form.setAttribute("method", method);
-//     form.setAttribute("action", '..');
-// 
-//     
-//         
-//             var hiddenField = document.createElement("input");
-//             hiddenField.setAttribute("type", "hidden");
-//             hiddenField.setAttribute("name", 'objectid);
-//             hiddenField.setAttribute("value", addResults[0].objectId);
-// 
-//             form.appendChild(hiddenField);
-//          
-//     
-// 
-//     document.body.appendChild(form);
-//     form.submit();
-// }
-//          
-//          //
+    
+
+    document.body.appendChild(form);
+    form.submit();
+
+
+
+
+
+
+
+           expressionParam = addResults[0].objectId;
+           myGPExecuteTask(expressionParam);
+           var graphic = featureLayer.graphics[featureLayer.graphics.length - 1];
+           graphic.attributes["additionalinformation"] = graphic.attributes["objectid"];
+            
           }
           
           
         });
+
+
+
+
+
+/////////////////////////
+        
+        
 
         map.addLayers([lmdbPointLayer, lmdbLineLayer, lmdbPolygonLayer]);
 

@@ -1,6 +1,6 @@
 from django.shortcuts import render, get_object_or_404
 from django.template import RequestContext, loader
-from reference.models import Event, Project, Parameter, Project, Permit, People, Location
+from reference.models import Event, Project, Parameter, Project, Permit, People, Location, Organism
 
 from django.http import *
 from django.shortcuts import render_to_response,redirect
@@ -10,9 +10,7 @@ from django.views.decorators.csrf import csrf_exempt, csrf_protect
 
 from django.contrib.auth import authenticate, login, logout
 
-from forms import ParamForm, PermitForm, EventForm, ProjectForm, LocationForm
-
-import random #will be removed later, need to update database
+from forms import ParamForm, PermitForm, EventForm, ProjectForm, LocationForm, OrganismForm
 
 
 @login_required(login_url='/login/')
@@ -189,21 +187,55 @@ def createLocation(request):
                 return HttpResponseRedirect('/reference/locations/')
         else:
             form = LocationForm()
-        return render(request, 'reference/createLocation.html', {'form', form})    
+        return render(request, 'reference/createLocation.html', {'form': form})    
 
     if request.POST:
-        if request.POST['indicator']:  ##not working
+        print request.POST['objectid']
+        if request.POST.has_key('indicator'):
             form = LocationForm()
-            form.objectid=request.POST['objectid']  ##not working
+            form.initial['objectid'] = request.POST['objectid']
+            if request.POST['type'] == 'point':
+                form.initial['pointid'] = request.POST['objectid']
+            if request.POST['type'] == 'line':
+                form.initial['lineid'] = request.POST['objectid']
+            if request.POST['type'] == 'poly':
+                form.initial['areaid'] = request.POST['objectid']
             return render(request, 'reference/createLocation.html', {'form' : form})
         else:
             return formValidation(request)
     else:
         return HttpResponseRedirect('/reference/locations/create/map/')
 
-
+##  !!!! Need to add a sync locations view to allow for locations not tagged to be added to the db !!!! ##
 
 #########################################################################################
 #   END OF FUNCTIONS FOR LOCATIONS #
 #
 #########################################################################################
+#   BEGINNING OF FUNCTIONS FOR ORGANISMS #
+#########################################################################################
+
+@login_required(login_url='/login/')
+def organisms(request):
+    organisms = Organism.objects.all().order_by('kingdom')
+    template = loader.get_template('reference/organisms.html')
+    context = RequestContext( request, {
+        'organisms' : organisms,
+    })
+    return HttpResponse(template.render(context))
+
+@login_required(login_url='/login/')   
+def organismDetail(request, org_id):
+    organism = get_object_or_404(Organism, pk=org_id)
+    return render(request, 'reference/organismDetail.html', {'organism' : organism})
+
+@login_required(login_url='/login/')
+def createOrganism(request):
+    if request.POST:
+        form = OrganismForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return HttpResponseRedirect('/reference/organisms/')
+    else:
+        form = OrganismForm()
+    return render(request, 'reference/createOrganism.html', {'form' : form})

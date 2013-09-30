@@ -1,7 +1,8 @@
 class AuthRouter(object):
     def db_for_read(self, model, ** hints):
         '''Attempts to read auth models go to auth_db.'''
-        if model._meta.app_label=='admin' or model._meta.app_label=='contenttypes' or model._meta.app_label == 'auth' or model._meta.app_label == 'sessions' :
+        # print model._meta.app_label #for debugging
+        if model._meta.app_label == 'sites' or model._meta.app_label=='admin' or model._meta.app_label=='contenttypes' or model._meta.app_label == 'auth' or model._meta.app_label == 'sessions' :
             return 'auth_db'
         return None
     
@@ -9,7 +10,8 @@ class AuthRouter(object):
         """
         Attempts to write auth models go to auth_db.
         """
-        if model._meta.app_label=='admin' or model._meta.app_label=='contenttypes' or model._meta.app_label == 'auth' or model._meta.app_label=='sessions':
+        # print model._meta.app_label #for debugging
+        if model._meta.app_label == 'sites' or model._meta.app_label=='admin' or model._meta.app_label=='contenttypes' or model._meta.app_label == 'auth' or model._meta.app_label=='sessions':
             return 'auth_db'
         return None
 
@@ -17,7 +19,7 @@ class AuthRouter(object):
         """
         Allow relations if a model in the auth app is involved.
         """
-        if obj1._meta.app_label=='admin' or obj2._meta.app_label=='admin' or obj1._meta.app_label=='contenttypes' or obj2._meta.app_label=='contenttypes' or obj1._meta.app_label == 'auth' or obj2._meta.app_label == 'auth' or obj1._meta.app_label =='sessions' or obj2._meta.app_label=='sessions':
+        if obj1._meta.app_label == 'sites' or obj2._meta.app_label == 'sites' or obj1._meta.app_label=='admin' or obj2._meta.app_label=='admin' or obj1._meta.app_label=='contenttypes' or obj2._meta.app_label=='contenttypes' or obj1._meta.app_label == 'auth' or obj2._meta.app_label == 'auth' or obj1._meta.app_label =='sessions' or obj2._meta.app_label=='sessions':
            return True
         return None
 

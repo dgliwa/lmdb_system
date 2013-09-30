@@ -177,3 +177,6 @@ LOGGING = {
         },
     }
 }
+
+# Ensures user has to log in each time application is opened
+SESSION_EXPIRE_AT_BROWSER_CLOSE = True
