@@ -21,8 +21,11 @@ urlpatterns = patterns('',
     url(r'^locations/create/map/$', views.createLocationMap, name='createLocationMap'),
     url(r'^locations/create/$', views.createLocation, name='createLocation'),
     url(r'^organisms/$', views.organisms, name='organisms'),
-    url(r'^organisms/(?P<location_id>\d+)/$', views.locationDetail, name='organismDetail'),
+    url(r'^organisms/(?P<org_id>\d+)/$', views.organismDetail, name='organismDetail'),
     url(r'^organisms/create/$', views.createOrganism, name='createOrganism'),
+    url(r'^organisms/kingdomFilter/(?P<king_id>\w+)/$', views.kingdomFilter, name='kingdomFilter'),
+    url(r'^organisms/phylumFilter/(?P<phyl_id>\w+)/$', views.phylumFilter, name='phylumFilter'),
+
 
 
 )

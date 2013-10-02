@@ -1,6 +1,6 @@
 from django import forms
 from models import Parameter, Permit, Event, Project, People, Location, Organism
-from django.forms.extras.widgets import SelectDateWidget
+from django.forms.extras.widgets import SelectDateWidget, Select
 
 
 class ParamForm(forms.ModelForm):
@@ -63,13 +63,13 @@ class LocationForm(forms.ModelForm):
         model = Location
 
 class OrganismForm(forms.ModelForm):
-    objectid = forms.IntegerField(widget=forms.HiddenInput())
+    objectid = forms.IntegerField(widget=forms.HiddenInput(),initial=Organism.objects.all().order_by('-objectid')[0].objectid+1)
     organismname = forms.CharField()
-    family = forms.CharField(max_length=255)
-    order_field = forms.CharField(max_length=255) # Field renamed because it ended with '_'.
-    class_field = forms.CharField(max_length=255) # Field renamed because it was a Python reserved word.
-    phylum = forms.CharField(max_length=255)
-    kingdom = forms.CharField(max_length=255)
+    family = forms.CharField(widget=Select(attrs={'disabled':'True'})) #last added line!!!!  
+    order_field = forms.CharField(max_length=255) 
+    class_field = forms.CharField(widget=Select(attrs={'disabled':'True'})) # Field renamed because it was a Python reserved word.
+    phylum = forms.CharField(widget=Select(attrs={'disabled':'True'}))
+    kingdom = forms.CharField(widget=Select( choices=(('',''),('Bacteria','Bacteria'),('Archaea','Archaea'),('Protista','Protista'),('Plantae','Plantae'),('Fungi','Fungi'),('Animalia','Animalia'))))
     genus = forms.CharField(max_length=255)
     species = forms.CharField(max_length=255)
     class Meta:

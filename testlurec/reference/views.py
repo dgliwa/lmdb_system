@@ -2,6 +2,8 @@ from django.shortcuts import render, get_object_or_404
 from django.template import RequestContext, loader
 from reference.models import Event, Project, Parameter, Project, Permit, People, Location, Organism
 
+from django.db import connection, transaction
+
 from django.http import *
 from django.shortcuts import render_to_response,redirect
 
@@ -11,7 +13,7 @@ from django.views.decorators.csrf import csrf_exempt, csrf_protect
 from django.contrib.auth import authenticate, login, logout
 
 from forms import ParamForm, PermitForm, EventForm, ProjectForm, LocationForm, OrganismForm
-
+import json
 
 @login_required(login_url='/login/')
 def index(request):
@@ -239,3 +241,17 @@ def createOrganism(request):
     else:
         form = OrganismForm()
     return render(request, 'reference/createOrganism.html', {'form' : form})
+
+def kingdomFilter(request, king_id):
+	from django.core import serializers
+	b = Organism.objects.filter(kingdom=king_id).values('phylum').distinct()  
+	data = json.dumps([dict(phylum = org['phylum']) for org in b])
+	return HttpResponse(data, mimetype="application/javascript")
+	
+def phylumFilter(request, phyl_id):
+	from django.core import serializers
+	b = Organism.objects.filter(phylum=phyl_id).values('class_field').distinct()  
+	data = json.dumps([dict(class_field = org['class_field']) for org in b])
+	return HttpResponse(data, mimetype="application/javascript")
+
+
