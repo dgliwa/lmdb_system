@@ -1,0 +1,33 @@
+<h1>Locations</h1>
+
+<h3> <a href="{% url 'lmdb:createLocationMap' %}">Create Location</a></h3>
+
+
+{% if locations %}
+    <h3>Points</h3>
+    <ul>
+    {% for l in locations %}
+    {% if l.pointid %}
+        <li><a href="{% url 'lmdb:locationDetail' l.objectid %}">{{ l.objectid }}</a></li>
+    {% endif %}
+    {% endfor %}
+    </ul>
+    <h3>Lines</h3>
+    <ul>
+    {% for l in locations %}
+    {% if l.lineid %}
+        <li><a href="{% url 'lmdb:locationDetail' l.objectid %}">{{ l.objectid }}</a></li>
+    {% endif %}
+    {% endfor %}
+    </ul>
+    <h3>Polygons</h3>
+    <ul>
+    {% for l in locations %}
+    {% if l.areaid %}
+        <li><a href="{% url 'lmdb:locationDetail' l.objectid %}">{{ l.objectid }}</a></li>
+    {% endif %}
+    {% endfor %}
+    </ul>
+{% else %}
+    <p>No locations are available.</p>
+{% endif %}

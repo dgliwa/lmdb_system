@@ -1,0 +1,13 @@
+<form action="{% url 'lmdb:createParam' %}" method="post" id="parameter_form">
+{% csrf_token %}
+{{form.non_field_errors}}
+{{form.sciname.errors}}
+Scientific Name:  {{form.sciname}}<br>
+{{form.commonname.errors}}
+Common Name:  {{form.commonname}}<br>
+{{form.casnumber.errors}}
+CAS Number:  {{form.casnumber}}<br>
+{{form.epanumber.errors}}
+EPA Number:  {{form.epanumber}}<br>
+
+<input type="submit" value="Save" class="default" name="_save" />

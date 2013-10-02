@@ -1,0 +1,11 @@
+<h3> <a href="{% url 'lmdb:createEvent' %}">Create Event</a></h3>
+
+{% if events %}
+    <ul>
+    {% for e in events %}
+        <li><a href="{% url 'lmdb:eventDetail' e.objectid %}">{{ e.eventname }}</a></li>
+    {% endfor %}
+    </ul>
+{% else %}
+    <p>No events are available.</p>
+{% endif %}

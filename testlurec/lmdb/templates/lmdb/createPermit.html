@@ -1,0 +1,13 @@
+<form action="{% url 'lmdb:createPermit' %}" method="post" id="parameter_form">
+{% csrf_token %}
+{{form.non_field_errors}}
+{{form.permitstartdate.errors}}
+Permit Start Date:  {{form.permitstartdate}}<br>
+{{form.permitenddate.errors}}
+Permit End Date:  {{form.permitenddate}}<br>
+{{form.permitagency.errors}}
+Permit Agency:  {{form.permitagency}}<br>
+{{form.description.errors}}
+Description:  {{form.description}}<br>
+
+<input type="submit" value="Save" class="default" name="_save" />

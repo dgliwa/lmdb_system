@@ -1,0 +1,14 @@
+<h1>Parameters</h1>
+
+<h3> <a href="{% url 'lmdb:createParam' %}">Create Parameter</a></h3>
+
+
+{% if parameters %}
+    <ul>
+    {% for p in parameters %}
+        <li><a href="{% url 'lmdb:paramDetail' p.objectid %}">{{ p.commonname }}</a></li>
+    {% endfor %}
+    </ul>
+{% else %}
+    <p>No parameters are available.</p>
+{% endif %}

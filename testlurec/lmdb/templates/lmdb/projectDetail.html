@@ -1,0 +1,18 @@
+<h1>{{project.projectname}}</h1>
+<ul>
+    <li>ID:  {{project.objectid}}</li>
+    <li>Project Description:  {{project.projectdescription}}</li>
+    <li>Project Objective:  {{project.projectobjective}}</li>
+    <li>Associated Event:  <a href="{% url 'lmdb:eventDetail' event.objectid %}">{{event.eventname}}</a></li>
+    <li>Permit ID:  {{project.permitid.objectid}}</li>
+    <li>Project Start Date:  {{project.projectstartdate}}</li>
+    <li>Project End Date:  {{project.projectenddate}}</li>
+    <li>Funded:  {% if project.funded == 1 %}
+                     Yes
+                 {% else %}
+                     No
+                 {% endif %}
+    </li>
+    <li>Funder:  {{project.funder}}</li>
+    <li>Project Coordinator:  {{person.firstname}} {{person.lastname}}</li>
+</ul>

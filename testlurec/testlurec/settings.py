@@ -35,7 +35,7 @@ DATABASES = {
 }
 
 # Defines database router that will access auth data in lurec db and all other data in arcgis db
-DATABASE_ROUTERS = ['reference.AuthRouter','reference.DefaultRouter']
+DATABASE_ROUTERS = ['lmdb.AuthRouter','lmdb.DefaultRouter']
 
 # Hosts/domain names that are valid for this site; required if DEBUG is False
 # See https://docs.djangoproject.com/en/1.5/ref/settings/#allowed-hosts
@@ -145,8 +145,7 @@ INSTALLED_APPS = (
     'django.contrib.admin',
     # Uncomment the next line to enable admin documentation:
     'django.contrib.admindocs',
-    'reference',
-    'home',
+    'lmdb',
 )
 
 # A sample logging configuration. The only tangible logging

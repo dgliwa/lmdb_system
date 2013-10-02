@@ -1,0 +1,14 @@
+<h1>Organisms</h1>
+
+<h3> <a href="{% url 'lmdb:createOrganism' %}">Create Organism</a></h3>
+
+
+{% if organisms %}
+    <ul>
+    {% for o in organisms %}
+        <li><a href="{% url 'lmdb:organismDetail' o.objectid %}">{{ o.organismname }}</a></li>
+    {% endfor %}
+    </ul>
+{% else %}
+    <p>No organisms are available.</p>
+{% endif %}
