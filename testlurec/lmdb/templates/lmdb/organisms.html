@@ -1,3 +1,6 @@
+{% extends "base.html" %}
+{% block pageName %}Organisms{% endblock %}
+{% block content %}
 <h1>Organisms</h1>
 
 <h3> <a href="{% url 'lmdb:createOrganism' %}">Create Organism</a></h3>
@@ -12,3 +15,4 @@
 {% else %}
     <p>No organisms are available.</p>
 {% endif %}
+{% endblock %}

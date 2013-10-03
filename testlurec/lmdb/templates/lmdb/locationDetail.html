@@ -1,3 +1,6 @@
+{% extends "base.html" %}
+{% block pageName %}Location Details{% endblock %}
+{% block content %}
 <h1>{{location.name}}</h1>
 <ul>
     <li>ID:  {{location.objectid}}</li>
@@ -15,3 +18,5 @@
         <li>Point ID:  {{location.areaid}}</li>
     {% endif %}
 </ul>
+
+{% endblock %}

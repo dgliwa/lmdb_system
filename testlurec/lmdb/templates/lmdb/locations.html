@@ -1,3 +1,6 @@
+{% extends "base.html" %}
+{% block pageName %}Locations{% endblock %}
+{% block content %}
 <h1>Locations</h1>
 
 <h3> <a href="{% url 'lmdb:createLocationMap' %}">Create Location</a></h3>
@@ -31,3 +34,4 @@
 {% else %}
     <p>No locations are available.</p>
 {% endif %}
+{% endblock %}

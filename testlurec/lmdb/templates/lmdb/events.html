@@ -1,3 +1,6 @@
+{% extends "base.html" %}
+{% block pageName %}Events{% endblock %}
+{% block content %}
 <h3> <a href="{% url 'lmdb:createEvent' %}">Create Event</a></h3>
 
 {% if events %}
@@ -9,3 +12,4 @@
 {% else %}
     <p>No events are available.</p>
 {% endif %}
+{% endblock %}

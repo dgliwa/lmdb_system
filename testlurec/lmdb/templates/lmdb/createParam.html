@@ -1,3 +1,8 @@
+{% extends "base.html" %}
+{% block pageName %}Create Location{% endblock %}
+{% block content %}
+
+
 <form action="{% url 'lmdb:createParam' %}" method="post" id="parameter_form">
 {% csrf_token %}
 {{form.non_field_errors}}
@@ -11,3 +16,4 @@ CAS Number:  {{form.casnumber}}<br>
 EPA Number:  {{form.epanumber}}<br>
 
 <input type="submit" value="Save" class="default" name="_save" />
+{% endblock %}

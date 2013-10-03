@@ -1,10 +1,7 @@
-<!DOCTYPE html>
-<html>
-<head>
-</head>
+{% extends "base.html" %}
+{% block pageName %}Create Event{% endblock %}
+{% block content %}
 <form action="{% url 'lmdb:createEvent' %}" method="post">
-{% load staticfiles %}
-<img src="{% static "bootstrap/img/glyphicons-halflings-white.png" %}" alt="My image"/>
 
 {% csrf_token %}
 {{form.non_field_errors}}
@@ -26,8 +23,4 @@ Event Description:  {{form.eventdescription}}<br>
 Event Coordinator:  {{form.personid}}<br>
 <input type="submit" value="Create Event" />
 </form>
-
-
-
-
-</html>
+{% endblock %}

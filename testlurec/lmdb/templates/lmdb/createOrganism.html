@@ -1,10 +1,9 @@
-<!DOCTYPE html>
-<html>
-<head>
+{% extends "base.html" %}
+{% block pageName %}Create Organism{% endblock %}
+
+{% block customjs %}
  <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7/jquery.js"></script> 
- {% load staticfiles %}
-<link rel="stylesheet" href="{% static "bootstrap/css/bootstrap.css" %}"/>
-<script>
+ <script>
 $(function(){
     $("select#id_kingdom").change(function(){
       $.getJSON("/lmdb/organisms/kingdomFilter/"+$(this).val()+"/", function(j) {
@@ -266,8 +265,9 @@ try{
 
 </script>
 
+{% endblock %}
 
-</head>
+{% block content %}
 
 <table>
 <tr>
@@ -298,7 +298,7 @@ Organism Species:  {{form.species}}<br>
 </td>
 <td style='vertical-align:text-top'><br>
 <br>
-<form style = " margin-bottom: 0px; margin-top: 30px" id="phylumForm" name="phylumForm" onSubmit="return addPhylum()">
+<form style = " margin-bottom: 0px; margin-top: 15px" id="phylumForm" name="phylumForm" onSubmit="return addPhylum()">
 
                             <input type="text" name="newPhylum"/> <input style="margin-bottom: 10px" type="submit" name="submit" value="Add Phylum"/>
                                 </form>         
@@ -318,5 +318,4 @@ Organism Species:  {{form.species}}<br>
 <tr>
 
 
-
-</html>
+{% endblock %}

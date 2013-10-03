@@ -1,3 +1,6 @@
+{% extends "base.html" %}
+{% block pageName %}Permit Detail{% endblock %}
+{% block content %}
 <h1>{{permit.objectid}}</h1>
 <ul>
     <li>Permit Start Date:  {{permit.permitstartdate}}</li>
@@ -11,3 +14,4 @@
         <li>Description:  {{permit.description}}</li>
     {% endif %}    
 </ul>
+{% endblock %}

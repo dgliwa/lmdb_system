@@ -1,4 +1,6 @@
-<h1>Home Page</h1>
-<a href="{% url 'lmdb:logout' %}">Logout</a><br>
+{% extends "base.html" %}
+{% block content %}
 
 <a href="{% url 'lmdb:reference' %}">Reference Data</a>
+
+{% endblock %}

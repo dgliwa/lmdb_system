@@ -1,3 +1,6 @@
+{% extends "base.html" %}
+{% block pageName %}Event Detail{% endblock %}
+{% block content %}
 <h1>{{event.eventname}}</h1>
 <ul>
     <li>ID:  {{event.objectid}}</li>
@@ -16,4 +19,4 @@
     </ul>
 {% else %}
 {% endif %}
-
+{% endblock %}

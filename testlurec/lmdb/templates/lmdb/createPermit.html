@@ -1,3 +1,8 @@
+{% extends "base.html" %}
+{% block pageName %}Create Permit{% endblock %}
+{% block content %}
+
+
 <form action="{% url 'lmdb:createPermit' %}" method="post" id="parameter_form">
 {% csrf_token %}
 {{form.non_field_errors}}
@@ -11,3 +16,4 @@ Permit Agency:  {{form.permitagency}}<br>
 Description:  {{form.description}}<br>
 
 <input type="submit" value="Save" class="default" name="_save" />
+{% endblock %}

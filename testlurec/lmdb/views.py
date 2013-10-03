@@ -52,7 +52,7 @@ def createEvent(request):
         form = EventForm(request.POST)
         if form.is_valid():
             form.save()
-            return HttpResponseRedirect('/lmdb/events/')
+            return HttpResponseRedirect('/lmdb/reference/events/')
     else:
         form = EventForm()
     return render(request, 'lmdb/createEvent.html', {'form' : form})
@@ -84,7 +84,7 @@ def createParam(request):
         form = ParamForm(request.POST)
         if form.is_valid():
             form.save()
-            return HttpResponseRedirect('/lmdb/parameters/')
+            return HttpResponseRedirect('/lmdb/reference/parameters/')
     else:
         form = ParamForm()
     return render(request, 'lmdb/createParam.html', {'form' : form})
@@ -118,7 +118,7 @@ def createProject(request):
         form = ProjectForm(request.POST)
         if form.is_valid():
             form.save()
-            return HttpResponseRedirect('/lmdb/projects/')
+            return HttpResponseRedirect('/lmdb/reference/projects/')
     else:
         form = ProjectForm()
     return render(request, 'lmdb/createProject.html', {'form':form})
@@ -150,7 +150,7 @@ def createPermit(request):
         form = PermitForm(request.POST)
         if form.is_valid():
             form.save()
-            return HttpResponseRedirect('/lmdb/permits/')
+            return HttpResponseRedirect('/lmdb/reference/permits/')
     else:
         form = PermitForm()
     return render(request, 'lmdb/createPermit.html', {'form' : form})
@@ -191,7 +191,7 @@ def createLocation(request):
             form = LocationForm(request.POST)
             if form.is_valid():
                 form.save()
-                return HttpResponseRedirect('/lmdb/locations/')
+                return HttpResponseRedirect('/lmdb/reference/locations/')
         else:
             form = LocationForm()
         return render(request, 'lmdb/createLocation.html', {'form': form})    
@@ -211,7 +211,7 @@ def createLocation(request):
         else:
             return formValidation(request)
     else:
-        return HttpResponseRedirect('/lmdb/locations/create/map/')
+        return HttpResponseRedirect('/lmdb/reference/locations/create/map/')
 
 ##  !!!! Need to add a sync locations view to allow for locations not tagged to be added to the db !!!! ##
 
@@ -242,7 +242,7 @@ def createOrganism(request):
         form = OrganismForm(request.POST)
         if form.is_valid():
             form.save()
-            return HttpResponseRedirect('/lmdb/organisms/')
+            return HttpResponseRedirect('/lmdb/reference/organisms/')
     else:
         form = OrganismForm()
     return render(request, 'lmdb/createOrganism.html', {'form' : form})

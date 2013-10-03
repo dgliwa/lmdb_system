@@ -1,11 +1,6 @@
-<!DOCTYPE html>
-<head>
-
-
-
-
-</head>
-<body>
+{% extends "base.html" %}
+{% block pageName %}Organism Detail{% endblock %}
+{% block content %}
 <h1>{{organism.organismname}}</h1>
 <ul>
     <li>ID:  {{organism.objectid}}</li>
@@ -17,4 +12,4 @@
     <li>Genus:  {{organism.genus}}</li>
     <li>Species: {{organism.species}}</li>
 </ul>
-</body>
+{% endblock %}

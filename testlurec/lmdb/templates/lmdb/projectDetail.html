@@ -1,3 +1,6 @@
+{% extends "base.html" %}
+{% block pageName %}Project Detail{% endblock %}
+{% block content %}
 <h1>{{project.projectname}}</h1>
 <ul>
     <li>ID:  {{project.objectid}}</li>
@@ -16,3 +19,4 @@
     <li>Funder:  {{project.funder}}</li>
     <li>Project Coordinator:  {{person.firstname}} {{person.lastname}}</li>
 </ul>
+{% endblock %}

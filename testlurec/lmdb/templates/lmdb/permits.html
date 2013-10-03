@@ -1,3 +1,6 @@
+{% extends "base.html" %}
+{% block pageName %}Permits{% endblock %}
+{% block content %}
 <h1>Permits</h1>
 
 <h3> <a href="{% url 'lmdb:createPermit' %}">Create Permits</a></h3>
@@ -12,3 +15,4 @@
 {% else %}
     <p>No permits are available.</p>
 {% endif %}
+{% endblock %}
