@@ -1,5 +1,6 @@
 {% extends "base.html" %}
-{% block pageName %}Location Details{% endblock %}
+{% block pageName %}Measurement Detail{% endblock %}
+
 {% block customjs %}
     <link rel="stylesheet" href="http://js.arcgis.com/3.6/js/dojo/dijit/themes/claro/claro.css">
     <link rel="stylesheet" href="http://js.arcgis.com/3.6/js/esri/css/esri.css">
@@ -9,7 +10,6 @@
         width: 100%;
         margin: 0; 
         padding: 0;
-        overflow:hidden;
       }
       #header {
         border:solid 2px #462d44;
@@ -254,28 +254,23 @@ require([
 class ="claro"
 {% endblock %}
 {% block content %}
-<h1>{{location.name}}</h1>
-
- <div data-dojo-type="dijit/layout/BorderContainer" data-dojo-props="gutters:true, design:'headline'" style="width:100%;height:100%;">
+<h1>{{measurement.mname}}</h1>
+<ul>
+    <li>ID:  {{measurement.objectid}}</li>
+    <li>Project:  {{project.projectname}}</li>
+    <li>Parameter Name:  <a href="{% url 'lmdb:paramDetail' parameter.objectid %}">{{parameter.commonname}}</a></li>
+    <li>Measurement Date:  {{measurement.date}}</li>
+    <li>Measurement Method:  {{measurement.mmethod}}</li>
+    <li>Measurement Quantity:  {{measurement.mquant}} {{measurement.munits}}</li>
+    <li>Measurement Medium:  {{measurement.medium}}</li>
+    <li>Location:  <a href="{% url 'lmdb:locationDetail' location.objectid %}">{{location.name}}</a></li>
+    <li>Collector:  {{person.firstname}}  {{person.lastname}}</li>
+    <li>Notes:  {{measurement.notes}}
+</ul>
+<div data-dojo-type="dijit/layout/BorderContainer" data-dojo-props="gutters:true, design:'headline'" style="width:100%;height:100%;">
       <div data-dojo-type="dijit/layout/ContentPane"  id="header" data-dojo-props="region:'top'">
            </div>
       <div id="map" data-dojo-type="dijit/layout/ContentPane" data-dojo-props="region:'center'"></div>
           </div>
-<ul>
-    <li>ID:  {{location.objectid}}</li>
-    {% if location.pointid %}
-        <li>Point ID:  {{location.pointid}}</li>
-    {% endif %}
-    {% if location.description %}
-        <li>Description:  {{location.description}}</li>
-    {% endif %}
-
-    {% if location.lineid %}
-        <li>Line ID:  {{location.lineid}}</li>
-    {% endif %}
-    {% if location.areaid %}
-        <li>Area ID:  {{location.areaid}}</li>
-    {% endif %}
-</ul>
-
 {% endblock %}
+

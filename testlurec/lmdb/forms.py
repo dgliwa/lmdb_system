@@ -1,10 +1,10 @@
 from django import forms
-from models import Parameter, Permit, Event, Project, People, Location, Organism
+from models import Parameter, Permit, Event, Project, People, Location, Organism, Measurement
 from django.forms.extras.widgets import SelectDateWidget, Select
 
 
 class ParamForm(forms.ModelForm):
-    objectid = forms.IntegerField(widget=forms.HiddenInput(), initial=Parameter.objects.all().order_by('-objectid')[0].objectid+1)
+    objectid = forms.IntegerField(widget=forms.HiddenInput())
     sciname = forms.CharField(max_length=100)
     commonname = forms.CharField()
     casnumber = forms.IntegerField()
@@ -14,7 +14,7 @@ class ParamForm(forms.ModelForm):
         model = Parameter
     
 class PermitForm(forms.ModelForm):
-    objectid = forms.IntegerField(widget=forms.HiddenInput(), initial=Permit.objects.all().order_by('-objectid')[0].objectid+1)
+    objectid = forms.IntegerField(widget=forms.HiddenInput())
     permitstartdate = forms.DateTimeField(widget=SelectDateWidget())
     permitenddate = forms.DateTimeField(widget=SelectDateWidget())
     permitagency = forms.CharField()
@@ -24,7 +24,7 @@ class PermitForm(forms.ModelForm):
         model = Permit
     
 class EventForm(forms.ModelForm):
-    objectid = forms.IntegerField(widget=forms.HiddenInput(), initial=Event.objects.all().order_by('-objectid')[0].objectid+1)
+    objectid = forms.IntegerField(widget=forms.HiddenInput())
     eventname = forms.CharField()
     eventtype = forms.CharField()
     eventstartdate = forms.DateTimeField(widget=SelectDateWidget())
@@ -37,9 +37,11 @@ class EventForm(forms.ModelForm):
         model = Event
         
 class ProjectForm(forms.ModelForm):
+    objectid = forms.IntegerField(widget=forms.HiddenInput())
     projectname = forms.CharField()
     projectdescription = forms.CharField()
     projectobjective = forms.CharField()
+    locationid = forms.IntegerField()
     eventid = forms.ModelChoiceField(queryset=Event.objects.all())
     permitid = forms.ModelChoiceField(queryset=Permit.objects.all())
     projectstartdate = forms.DateTimeField(widget=SelectDateWidget())
@@ -63,7 +65,8 @@ class LocationForm(forms.ModelForm):
         model = Location
 
 class OrganismForm(forms.ModelForm):
-    objectid = forms.IntegerField(widget=forms.HiddenInput(),initial=Organism.objects.all().order_by('-objectid')[0].objectid+1)
+    objectid = forms.IntegerField(widget=forms.HiddenInput())
+    print objectid
     organismname = forms.CharField()
     family = forms.CharField(widget=Select(attrs={'disabled':'True'})) #last added line!!!!  
     order_field = forms.CharField(widget=Select(attrs={'disabled':'True'})) 
@@ -75,4 +78,19 @@ class OrganismForm(forms.ModelForm):
     class Meta:
         model = Organism
 
-
+class MeasurementForm(forms.ModelForm):
+    objectid = forms.IntegerField(widget=forms.HiddenInput())
+    parameterid = forms.ModelChoiceField(queryset = Parameter.objects.all())
+    projectid = forms.ModelChoiceField(queryset = Project.objects.all(),required=False)
+    personid = forms.ModelChoiceField(queryset = People.objects.all())
+    locationid = forms.IntegerField()
+    mname = forms.CharField(max_length=255)
+    mmethod = forms.CharField(max_length=255, required=False)
+    mquant = forms.CharField(max_length=255)
+    munits = forms.CharField(max_length=100, required=False)
+    date = forms.DateTimeField(widget=SelectDateWidget())
+    time = forms.DateTimeField(required=False)
+    notes = forms.CharField(max_length=255, required=False)
+    medium = forms.CharField(max_length=50, required=False)
+    class Meta:
+        model = Measurement

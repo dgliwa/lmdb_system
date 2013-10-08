@@ -1,6 +1,6 @@
 from django.shortcuts import render, get_object_or_404
 from django.template import RequestContext, loader
-from lmdb.models import Event, Project, Parameter, Project, Permit, People, Location, Organism
+from lmdb.models import Event, Project, Parameter, Project, Permit, People, Location, Organism, Sighting, Measurement, Change, Collection
 
 from django.db import connection, transaction
 
@@ -12,7 +12,7 @@ from django.views.decorators.csrf import csrf_exempt, csrf_protect
 
 from django.contrib.auth import authenticate, login, logout
 
-from forms import ParamForm, PermitForm, EventForm, ProjectForm, LocationForm, OrganismForm
+from forms import ParamForm, PermitForm, EventForm, ProjectForm, LocationForm, OrganismForm, MeasurementForm
 import json
 
 @login_required(login_url='/login/')
@@ -24,6 +24,12 @@ def index(request):
 def reference(request):
     
     return render(request,'lmdb/reference.html',{})
+
+@login_required(login_url='/login/')
+def data(request):
+    
+    return render(request,'lmdb/data.html',{})
+
 
 
 #########################################################################################
@@ -55,6 +61,7 @@ def createEvent(request):
             return HttpResponseRedirect('/lmdb/reference/events/')
     else:
         form = EventForm()
+        form.initial['objectid'] = Event.objects.all().order_by('-objectid')[0].objectid+1
     return render(request, 'lmdb/createEvent.html', {'form' : form})
   
 #########################################################################################
@@ -87,6 +94,7 @@ def createParam(request):
             return HttpResponseRedirect('/lmdb/reference/parameters/')
     else:
         form = ParamForm()
+        form.initial['objectid'] = Parameter.objects.all().order_by('-objectid')[0].objectid+1
     return render(request, 'lmdb/createParam.html', {'form' : form})
     
 #########################################################################################
@@ -121,6 +129,7 @@ def createProject(request):
             return HttpResponseRedirect('/lmdb/reference/projects/')
     else:
         form = ProjectForm()
+        form.initial['objectid'] = Project.objects.all().order_by('-objectid')[0].objectid+1
     return render(request, 'lmdb/createProject.html', {'form':form})
     
 #########################################################################################
@@ -153,6 +162,7 @@ def createPermit(request):
             return HttpResponseRedirect('/lmdb/reference/permits/')
     else:
         form = PermitForm()
+        form.initial['objectid'] = Permit.objects.all().order_by('-objectid')[0].objectid+1
     return render(request, 'lmdb/createPermit.html', {'form' : form})
 
 #########################################################################################
@@ -224,7 +234,7 @@ def createLocation(request):
 
 @login_required(login_url='/login/')
 def organisms(request):
-    organisms = Organism.objects.all().order_by('kingdom')
+    organisms = Organism.objects.all().order_by('organismname')
     template = loader.get_template('lmdb/organisms.html')
     context = RequestContext( request, {
         'organisms' : organisms,
@@ -245,6 +255,7 @@ def createOrganism(request):
             return HttpResponseRedirect('/lmdb/reference/organisms/')
     else:
         form = OrganismForm()
+        form.initial['objectid'] = Organism.objects.all().order_by('-objectid')[0].objectid+1
     return render(request, 'lmdb/createOrganism.html', {'form' : form})
 
 #########################################################################################
@@ -280,9 +291,202 @@ def familyFilter(request, family_id):
 	return HttpResponse(data, mimetype="application/javascript")
 	
 #########################################################################################
+#   END OF FUNCTIONS FOR ORGANISMS #
+#
+#########################################################################################
+#   BEGINNING OF FUNCTIONS FOR SIGHTINGS #
+#########################################################################################
+
+def sightings(request):    # !!!!!!   NEED TO APPLY FKEY RESTRAINTS
+    sightings = Sighting.objects.values()
+    points = []
+    lines = []
+    polys = []
+    for s in sightings:
+        location = Location.objects.get(pk = s['locationid'])
+        if location.pointid != None:
+            points.append(location.pointid)
+        elif location.lineid != None:
+            lines.append(location.lineid)
+        elif location.areaid != None:
+            polys.append(location.areaid)
+
+
+    template = loader.get_template('lmdb/sightings.html')
+    context = RequestContext( request, {
+        'sightings' : sightings,
+        'points': points,
+        'lines': lines,
+        'polys': polys,
+
+    })
+    return HttpResponse(template.render(context))
+
+def sightingDetail(request, sight_id):
+    sighting = get_object_or_404(Sighting, pk=sight_id)
+    organism = get_object_or_404(Organism, pk=sighting.organismid)
+    location = get_object_or_404(Location, pk=sighting.locationid)
+    project = get_object_or_404(Project, pk=sighting.projectid)
+    person =get_object_or_404(People, pk=sighting.personid)
+    return render(request, 'lmdb/sightingDetail.html', {'person': person, 'project' : project,'sighting' : sighting, 'organism' : organism, 'location' : location})
 
 
 
+
+#########################################################################################
+#   END OF FUNCTIONS FOR SIGHTINGS #
+#
+#########################################################################################
+#   BEGINNING OF FUNCTIONS FOR CHANGES #
+#########################################################################################
+def changes(request):     # !!!!!!   NEED TO APPLY FKEY RESTRAINTS
+    changes = Change.objects.values()
+    points = []
+    lines = []
+    polys = []
+    for c in changes:
+        location = Location.objects.get(pk = c['locationid'])
+        if location.pointid != None:
+            points.append(location.pointid)
+        elif location.lineid != None:
+            lines.append(location.lineid)
+        elif location.areaid != None:
+            polys.append(location.areaid)
+
+    template = loader.get_template('lmdb/changes.html')
+    context = RequestContext( request, {
+        'changes' : changes,
+        'points': points,
+        'lines': lines,
+        'polys': polys,
+
+    })
+    return HttpResponse(template.render(context))
+
+def changeDetail(request, change_id):
+    change = get_object_or_404(Change, pk=change_id)
+    parameter = get_object_or_404(Parameter, pk=change.parameterid)
+    location = get_object_or_404(Location, pk=change.locationid)
+    project = get_object_or_404(Project, pk=change.projectid)
+    person =get_object_or_404(People, pk=change.personid)
+    return render(request, 'lmdb/changeDetail.html', {'person': person, 'project' : project,'change' : change, 'parameter' : parameter, 'location' : location})
+
+
+
+
+
+#########################################################################################
+#   END OF FUNCTIONS FOR CHANGES #
+#
+#########################################################################################
+#   BEGINNING OF FUNCTIONS FOR MEASUREMENTS #
+#########################################################################################
+def measurements(request):
+    measurements = Measurement.objects.values()
+    points = []
+    lines = []
+    polys = []
+    print measurements
+    for m in measurements:
+        location = Location.objects.get(pk = m['locationid_id'])
+        if location.pointid != None:
+            points.append(location.pointid)
+        elif location.lineid != None:
+            lines.append(location.lineid)
+        elif location.areaid != None:
+            polys.append(location.areaid)
+    template = loader.get_template('lmdb/measurements.html')
+    context = RequestContext( request, {
+        'measurements' : measurements,
+        'points': points,
+        'lines': lines,
+        'polys': polys,
+    })
+    return HttpResponse(template.render(context))
+
+
+def measurementDetail(request, meas_id):
+    measurement = get_object_or_404(Measurement, pk=meas_id)
+    parameter = get_object_or_404(Parameter, pk=measurement.parameterid.objectid)
+    location = get_object_or_404(Location, pk=measurement.locationid.objectid)
+    project = get_object_or_404(Project, pk=measurement.projectid.objectid)
+    person =get_object_or_404(People, pk=measurement.personid.objectid)
+    return render(request, 'lmdb/measurementDetail.html', {'person': person, 'project' : project,'measurement' : measurement, 'parameter' : parameter, 'location' : location})
+
+def createMeasurement(request):
+    if request.POST:
+        form = MeasurementForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return HttpResponseRedirect('/lmdb/data/measurements/')
+    else:
+        form = MeasurementForm()
+        form.initial['objectid'] = Measurement.objects.all().order_by('-objectid')[0].objectid+1
+    points = []
+    lines = []
+    polys = []
+    locations = Location.objects.values()
+    for location in locations:
+        if location['pointid'] != None:
+            points.append(location['pointid'])
+        elif location['lineid'] != None:
+            lines.append(location['lineid'])
+        elif location['areaid'] != None:
+            polys.append(location['areaid'])
+
+    return render(request, 'lmdb/createMeasurement.html', {'form' : form, 'points':points, 'lines':lines,'polys':polys})
+
+
+
+#########################################################################################
+#   END OF FUNCTIONS FOR MEASUREMENTS #
+#
+#########################################################################################
+#   BEGINNING OF FUNCTIONS FOR COLLECTIONS #
+#########################################################################################
+def collections(request):    # !!!!!!   NEED TO APPLY FKEY RESTRAINTS
+    collections = Collection.objects.values()
+    points = []
+    lines = []
+    polys = []
+    for c in collections:
+        location = Location.objects.get(pk = c['locationid'])
+        if location.pointid != None:
+            points.append(location.pointid)
+        elif location.lineid != None:
+            lines.append(location.lineid)
+        elif location.areaid != None:
+            polys.append(location.areaid)
+
+
+    template = loader.get_template('lmdb/collections.html')
+    context = RequestContext( request, {
+        'collections' : collections,
+        'points': points,
+        'lines': lines,
+        'polys': polys,
+
+    })
+    return HttpResponse(template.render(context))
+
+
+def collectionDetail(request, coll_id):
+    collection = get_object_or_404(Collection, pk=coll_id)
+    organism = get_object_or_404(Organism, pk=collection.organismid)
+    location = get_object_or_404(Location, pk=collection.locationid)
+    project = get_object_or_404(Project, pk=collection.projectid)
+    person =get_object_or_404(People, pk=collection.personid)
+    return render(request, 'lmdb/collectionDetail.html', {'person': person, 'project' : project,'collection' : collection, 'organism' : organism, 'location' : location})
+
+
+
+
+#########################################################################################
+#   END OF FUNCTIONS FOR COLLECTIONS #
+#
+#########################################################################################
+#   BEGINNING OF FUNCTIONS FOR LOGIN INFORMATION #
+#########################################################################################
 
 from django.contrib.auth import authenticate, login, logout
 from django.http import *

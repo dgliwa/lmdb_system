@@ -5,13 +5,15 @@
 <form action="{% url 'lmdb:createProject' %}" method="post">
 {% csrf_token %}
 {{form.non_field_errors}}
-
+{{form.objectid.errors}}
+{{form.objectid}}
 Project Name:  {{form.projectname}}<br>
 Project Description:  {{form.projectdescription}}<br>
 Project Objective:  {{form.projectobjective}}<br>
 Associated Event:  {{form.eventid}}<br>
 Permit:  {{form.permitid}}<br>
-
+{{form.locationid.errors}}
+Location:  {{form.locationid}} <br>
 Project Start Date and Time: {{form.projectstartdate}}<br>
 Project End Date and Time:  {{form.projectenddate}}<br>
 Funded:  {{form.funded}} <br>

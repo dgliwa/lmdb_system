@@ -33,6 +33,16 @@ urlpatterns = patterns('',
     url(r'^reference/organisms/classFilter/(?P<class_id>\w+)/$', views.classFilter, name='classFilter'),
     url(r'^reference/organisms/orderFilter/(?P<order_id>\w+)/$', views.orderFilter, name='orderFilter'),
     url(r'^reference/organisms/familyFilter/(?P<family_id>\w+)/$', views.familyFilter, name='familyFilter'),
+    url(r'^data/$', views.data, name='data'),
+    url(r'^data/sightings/$', views.sightings, name='sightings'),
+    url(r'^data/sightings/(?P<sight_id>\d+)/$', views.sightingDetail, name='sightingDetail'),
+    url(r'^data/measurements/$', views.measurements, name='measurements'),
+    url(r'^data/measurements/(?P<meas_id>\d+)/$', views.measurementDetail, name='measurementDetail'),
+    url(r'^data/measurements/create/$', views.createMeasurement, name='createMeasurement'),
+    url(r'^data/changes/$', views.changes, name='changes'),
+    url(r'^data/changes/(?P<change_id>\d+)/$', views.changeDetail, name='changeDetail'),
+    url(r'^data/collections/$', views.collections, name='collections'),
+    url(r'^data/collections/(?P<coll_id>\d+)/$', views.collectionDetail, name='collectionDetail'),
 
 
 

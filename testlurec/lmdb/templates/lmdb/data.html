@@ -1,0 +1,11 @@
+{% extends "base.html" %}
+
+{% block pageName %}Data Entry{% endblock %}
+{% block content %}
+
+<a href="{% url 'lmdb:index' %}">Home</a><br>
+<a href="{% url 'lmdb:sightings' %}">Sightings</a><br>
+<a href="{% url 'lmdb:changes' %}">Changes</a><br>
+<a href="{% url 'lmdb:measurements' %}">Measurements</a><br>
+<a href="{% url 'lmdb:collections' %}">Collections</a><br>
+{% endblock %}

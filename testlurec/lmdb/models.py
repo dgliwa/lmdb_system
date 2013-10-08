@@ -101,10 +101,10 @@ class LocationSighting(models.Model):
 
 class Measurement(models.Model):
     objectid = models.IntegerField(primary_key=True,unique=True)
-    parameterid = models.IntegerField()
-    projectid = models.IntegerField(null=True, blank=True)
-    personid = models.IntegerField()
-    locationid = models.IntegerField()
+    parameterid = models.ForeignKey('Parameter', db_column='parameterid')
+    projectid = models.ForeignKey('Project', db_column='projectid', null=True)
+    personid = models.ForeignKey('People', db_column='personid')
+    locationid = models.ForeignKey('Location',db_column='locationid')
     mname = models.CharField(max_length=255)
     mmethod = models.CharField(max_length=255, blank=True)
     mquant = models.CharField(max_length=255)
@@ -138,6 +138,8 @@ class Parameter(models.Model):
     epanumber = models.CharField(max_length=10, blank=True)
     class Meta:
         db_table = 'parameter'
+    def __unicode__(self):
+        return self.commonname
 
 class People(models.Model):
     objectid = models.IntegerField(primary_key=True,unique=True)
@@ -168,6 +170,7 @@ class Permit(models.Model):
 
 class Project(models.Model):
     objectid = models.IntegerField(primary_key=True,unique=True)
+    locationid = models.IntegerField()
     projectname = models.CharField(max_length=100)
     projectdescription = models.CharField(max_length=255)
     projectobjective = models.CharField(max_length=255)
@@ -180,6 +183,8 @@ class Project(models.Model):
     personid = models.ForeignKey('People', db_column='personid')
     class Meta:
         db_table = 'project'
+    def __unicode__(self):
+        return self.projectname
 
 
 class Sighting(models.Model):

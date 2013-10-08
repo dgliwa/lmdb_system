@@ -31,6 +31,15 @@
     {% endif %}
     {% endfor %}
     </ul>
+    <h3>Unassigned Locations</h3>
+    <ul>
+    {% for l in locations %}
+    {% if not l.areaid and not l.lineid and not l.pointid %}
+        <li><a href="{% url 'lmdb:locationDetail' l.objectid %}">{{ l.objectid }}</a></li>
+    {% endif %}
+    {% endfor %}
+    </ul>
+
 {% else %}
     <p>No locations are available.</p>
 {% endif %}
