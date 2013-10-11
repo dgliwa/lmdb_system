@@ -1,13 +1,6 @@
-<!DOCTYPE html>
-<html>
-  <head>
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=7, IE=9, IE=10">
-    <!--The viewport meta tag is used to improve the presentation and behavior of the samples 
-      on iOS devices-->
-    <meta name="viewport" content="initial-scale=1, maximum-scale=1,user-scalable=no">
-    <title>Add Location</title>
-
+{% extends "base.html" %}
+{% block pageName %}Create Sighting{% endblock %}
+{% block customjs %}
     <link rel="stylesheet" href="http://js.arcgis.com/3.6/js/dojo/dijit/themes/claro/claro.css">
     <link rel="stylesheet" href="http://js.arcgis.com/3.6/js/esri/css/esri.css">
     <style>
@@ -16,7 +9,6 @@
         width: 100%;
         margin: 0; 
         padding: 0;
-        overflow:hidden;
       }
       #header {
         border:solid 2px #462d44;
@@ -63,9 +55,7 @@
     
     
     <script>
-var lmdbPointLayer;
-var lmdbLineLayer;
-var lmdbPolygonLayer;
+var featureLayer;
 dojo.require("esri.map");
 dojo.require("esri.layers.FeatureLayer");
 dojo.require("esri.layers.FeatureEditResult");
@@ -107,7 +97,7 @@ require([
     TemplatePicker,
     arrayUtils, event, lang, parser, registry
 ) {
-    parser.parse();
+   // parser.parse();
 
     // refer to "Using the Proxy Page" for more information:  https://developers.arcgis.com/en/javascript/jshelp/ags_proxy.html
     esriConfig.defaults.io.proxyUrl = "/proxy";
@@ -123,30 +113,73 @@ require([
     });
 
     map.on("layers-add-result", initEditing);
+    if({{points}}.length != 0){
+    pointLayer = new FeatureLayer("http://147.126.65.155/gis/rest/services/campus/lurec_lmdb/FeatureServer/0", {
+        mode: FeatureLayer.MODE_SNAPSHOT,
+        outFields: ["*"]
 
-    lmdbPointLayer = new FeatureLayer("http://147.126.65.155/gis/rest/services/campus/lurec_lmdb/FeatureServer/0", {
+    });
+    var queryString = ""
+    for( var i=0;  i<{{points}}.length; i++){
+        if (queryString == ""){
+            queryString += "objectid =" + {{points}}[i];
+        }
+        else{
+            queryString += "OR objectid =" + {{points}}[i];
+        }
+    
+    }
+    pointLayer.setDefinitionExpression(queryString);
+    }
+    if ({{lines}}.length != 0){
+    lineLayer = new FeatureLayer("http://147.126.65.155/gis/rest/services/campus/lurec_lmdb/FeatureServer/1", {
         mode: FeatureLayer.MODE_SNAPSHOT,
         outFields: ["*"]
     });
-    lmdbLineLayer = new FeatureLayer("http://147.126.65.155/gis/rest/services/campus/lurec_lmdb/FeatureServer/1", {
+    var queryString = ""
+    for( var i=0; i<{{lines}}.length;i++){
+        if (queryString == ""){
+            queryString += "objectid =" + {{lines}}[i];
+        }
+        else{
+            queryString += "OR objectid =" + {{lines}}[i];
+        }
+    
+    }
+    lineLayer.setDefinitionExpression(queryString);    }
+    if({{polys}}.length!=0){
+    polyLayer = new FeatureLayer("http://147.126.65.155/gis/rest/services/campus/lurec_lmdb/FeatureServer/2", {
         mode: FeatureLayer.MODE_SNAPSHOT,
         outFields: ["*"]
     });
-    lmdbPolygonLayer = new FeatureLayer("http://147.126.65.155/gis/rest/services/campus/lurec_lmdb/FeatureServer/2", {
-        mode: FeatureLayer.MODE_SNAPSHOT,
-        outFields: ["*"]
-    });
+   var queryString = ""
+    for( var i=0; i<{{polys}}.length; i++){
+        if (queryString == ""){
+            queryString += "objectid =" + {{polys}}[i];
+        }
+        else{
+            queryString += "OR objectid =" + {{polys}}[i];
+        }
+    
+    }
+    polyLayer.setDefinitionExpression(queryString);}
+    infoTemplate = new esri.InfoTemplate("Object ID : ${objectid}",
+        "<input class=\"hidden\" id = \"locId\" value=\"${objectid}\"/>" +
+        "You have selected to use this location to record your measurement.");
 
-    infoTemplate = new esri.InfoTemplate("ObjectID : ${objectid}",
-        "Description : ${description}<br>");
-
-    lmdbPointLayer.setInfoTemplate(infoTemplate);
-    lmdbLineLayer.setInfoTemplate(infoTemplate);
-    lmdbPolygonLayer.setInfoTemplate(infoTemplate);
+    if (pointLayer != null){
+       pointLayer.setInfoTemplate(infoTemplate);
+    }
+    if (lineLayer != null){
+        lineLayer.setInfoTemplate(infoTemplate);
+    }
+    if (polyLayer != null){
+        polyLayer.setInfoTemplate(infoTemplate);
+    }
 
     dojo.connect(map, "onLayersAddResult", initEditing);
 
-    dojo.connect(lmdbPointLayer, "onEditsComplete",
+    dojo.connect(pointLayer, "onEditsComplete",
         function (addResults) {
             if (addResults.length > 0) {
                 alert("objectid is: " + addResults[0].objectId);
@@ -158,8 +191,9 @@ require([
                 // It can be made less wordy if you use one.
                 var form = document.createElement("form");
                 form.setAttribute("method", method);
-                form.setAttribute("action", '..');
+                form.setAttribute("action", '/lmdb/reference/locations/create/popup/');
                 form.setAttribute("target", '_blank');
+
                 var csrfToken = document.createElement("input");
                 csrfToken.setAttribute("type", "hidden");
                 csrfToken.setAttribute("name", "csrfmiddlewaretoken");
@@ -194,9 +228,8 @@ require([
 
 
 
+                document.getElementById('id_locationid').value=addResults[0].objectId;
 
-                expressionParam = addResults[0].objectId;
-                myGPExecuteTask(expressionParam);
                 var graphic = featureLayer.graphics[featureLayer.graphics.length - 1];
                 graphic.attributes["additionalinformation"] = graphic.attributes["objectid"];
 
@@ -206,7 +239,7 @@ require([
         });
 
 
-    dojo.connect(lmdbLineLayer, "onEditsComplete",
+    dojo.connect(lineLayer, "onEditsComplete",
         function (addResults) {
             if (addResults.length > 0) {
                 alert("objectid is: " + addResults[0].objectId);
@@ -218,7 +251,9 @@ require([
                 // It can be made less wordy if you use one.
                 var form = document.createElement("form");
                 form.setAttribute("method", method);
-                form.setAttribute("action", '..');
+                form.setAttribute("action", '/lmdb/reference/locations/create/popup/');
+                form.setAttribute("target", '_blank');
+
 
                 var csrfToken = document.createElement("input");
                 csrfToken.setAttribute("type", "hidden");
@@ -255,12 +290,10 @@ require([
 
 
 
+                document.getElementById('id_locationid').value=addResults[0].objectId;
 
-                expressionParam = addResults[0].objectId;
-                myGPExecuteTask(expressionParam);
                 var graphic = featureLayer.graphics[featureLayer.graphics.length - 1];
                 graphic.attributes["additionalinformation"] = graphic.attributes["objectid"];
-
             }
 
 
@@ -269,7 +302,7 @@ require([
 
 
 
-    dojo.connect(lmdbPolygonLayer, "onEditsComplete",
+    dojo.connect(polyLayer, "onEditsComplete",
         function (addResults) {
             if (addResults.length > 0) {
                 alert("objectid is: " + addResults[0].objectId);
@@ -281,7 +314,8 @@ require([
                 // It can be made less wordy if you use one.
                 var form = document.createElement("form");
                 form.setAttribute("method", method);
-                form.setAttribute("action", '..');
+                form.setAttribute("action", '/lmdb/reference/locations/create/popup/');
+                form.setAttribute("target", '_blank');
 
                 var csrfToken = document.createElement("input");
                 csrfToken.setAttribute("type", "hidden");
@@ -318,9 +352,8 @@ require([
 
 
 
+                document.getElementById('id_locationid').value=addResults[0].objectId;
 
-                expressionParam = addResults[0].objectId;
-                myGPExecuteTask(expressionParam);
                 var graphic = featureLayer.graphics[featureLayer.graphics.length - 1];
                 graphic.attributes["additionalinformation"] = graphic.attributes["objectid"];
 
@@ -332,11 +365,32 @@ require([
 
 
 
-    /////////////////////////
+      if( pointLayer == null || lineLayer == null || polyLayer == null){
+         if(pointLayer!=null && lineLayer !=null){
+             map.addLayers([pointLayer,lineLayer]);
+         }
+         else if(pointLayer!=null && polyLayer!=null){
+             map.addLayers([pointLayer,polyLayer]);
+         }
+         else if(lineLayer!=null && polyLayer!=null){
+             map.addLayers([lineLayer,polyLayer]);
+         }
+         else if(pointLayer==null && lineLayer == null){
+             map.addLayers([polyLayer]);
+         }
+         else if(lineLayer==null && polyLayer==null){
+             map.addLayers([pointLayer]);
+         }
+         else if(pointLayer==null && polyLayer==null){
+             map.addLayers([lineLayer]);
+         }
+    }
+    else{
+        map.addLayers([pointLayer,lineLayer,polyLayer]);
+    }
+    map.addLayers([pointLayer,lineLayer,polyLayer]);
 
 
-
-    map.addLayers([lmdbPointLayer, lmdbLineLayer, lmdbPolygonLayer]);
 
     function initEditing(evt) {
         console.log("initEditing", evt);
@@ -368,6 +422,7 @@ require([
 
             layer.on("click", function (evt) {
                 event.stop(evt);
+                document.getElementById('id_locationid').value=document.getElementById('locId').value;
                 if (evt.ctrlKey === true || evt.metaKey === true) { //delete feature if ctrl key is depressed
                     layer.applyEdits(null, null, [evt.graphic]);
                     currentLayer = this;
@@ -416,100 +471,53 @@ require([
 
         });
     }
+    
+
 });
 
 
+</script>
+{% endblock %}
+{% block customclass %}
+class ="claro"
+{% endblock %}
+{% block content %}
+<form action="{% url 'lmdb:createSighting' %}" method="post">
 
 
-function geocode(lonNum, latNum, name, desc) {
-    point = new esri.geometry.geographicToWebMercator(esri.geometry.Point(lonNum, latNum, new esri.SpatialReference({
-        wkid: 4326
-    })));
-    var myGraphic = new esri.Graphic(point);
-    myGraphic.setAttributes({
-        'description': desc
-    })
-    try {
-        lmdbPointLayer.applyEdits([myGraphic], null, null);
-    } catch (err) {
-        console.log(err);
-    }
-    addGraphic(point);
-}
-
-function addGraphic(geometry) {
-    map.graphics.clear();
-    var symbol = new esri.symbol.SimpleMarkerSymbol(esri.symbol.SimpleMarkerSymbol.STYLE_SQUARE, 10);
-    map.graphics.add(new esri.Graphic(geometry, symbol));
-}
-
-
-function latlonValidation() {
-    var lat = document.forms["registration"]["latitude"].value;
-    var latNum = Number(lat);
-    var lon = document.forms["registration"]["longitude"].value;
-    var lonNum = Number(lon);
-    var name = document.forms["registration"]["name"].value;
-    var desc = document.forms["registration"]["description"].value;
-
-
-
-    var validLat = (lat.match(/^[-+]?(?:\d+\.?\d*|\.\d+)$/));
-    var validLon = (lon.match(/^[-+]?(?:\d+\.?\d*|\.\d+)$/));
-
-    if (!validLat) {
-        alert("Please enter numeric characters only for Latitude. Integers or Decimals with +/- signs are accepted.");
-        return false;
-    }
-
-    if (!validLon) {
-        alert("Please enter numeric characters only for Longitude. Integers or Decimals with +/- signs are accepted.");
-        return false;
-    }
-
-    if ((latNum <= -90) || (latNum >= 90)) {
-        alert("Please enter a value for latitude between -90.0 and 90.0");
-        return false;
-    }
-    if ((lonNum <= -180) || (lonNum >= 180)) {
-        alert("Please enter a value for longitude between -180.0 and 180.0");
-        return false;
-    }
-    alert('Form Succesfully Submitted');
-    geocode(lonNum, latNum, name, desc);
-    return true;
-}
-
-    </script>
-  </head>
-  <body class="claro">
-    <div data-dojo-type="dijit/layout/BorderContainer" data-dojo-props="gutters:true, design:'headline'" style="width:100%;height:100%;">
+{% csrf_token %}
+{{form.non_field_errors}}
+{{form.objectid.errors}}
+{{form.objectid}}
+{{form.organismid.errors}}
+Organism:  {{form.organismid}}  <br>
+{{form.projectid.errors}}
+Project:  {{form.projectid}} <br>
+{{form.locationid.errors}}
+Location:  {{form.locationid}} <br>
+<div data-dojo-type="dijit/layout/BorderContainer" data-dojo-props="gutters:true, design:'headline'" style="width:100%;height:100%;">
       <div data-dojo-type="dijit/layout/ContentPane"  id="header" data-dojo-props="region:'top'">
-      <p>Add your new site in one of two ways.</p>
-        <ol>
-          <li>Enter geographic coordinates in the form below, or</li>
-          <li>Click on the Sample Site point to the right then click on the map to add a point. </li>
-        </ol>
-      </p>
-    
-        <form id="latlonform" name='registration'  onSubmit="return latlonValidation();">
-            <label for="name">Name:</label>  
-            <input type="text" name="name" size="12" /> <br>             
-            <label for="description">Description:</label>  
-            <input type="text" name="description" size="12" /> <br> 
-            <label for="latitude">Latitude (y):</label>  
-            <input type="double" name="latitude" size="12" /> <br> 
-            <label for="longitude">Longitude (x):</label> 
-            <input type="double" name="longitude" size="12" /> 
-            <input type="submit" name="submit" value="Add Site"/>
-        </form> 
- 
-      
-      </div>
+           </div>
       <div id="map" data-dojo-type="dijit/layout/ContentPane" data-dojo-props="region:'center'"></div>
       <div id="rightPane" data-dojo-type="dijit/layout/ContentPane" data-dojo-props="region:'right'">
         <div id="templatePickerDiv"></div>
-      </div>
-    </div>
-  </body>
-</html>
+
+          </div>
+          </div>
+{{form.number.errors}}
+Number:  {{form.number}} <br>
+Measurement Date:  {{form.date}} <br>
+{{form.notes.errors}}
+Measurement Notes:  {{form.notes}} <br>
+{{form.personid.errors}}
+Person:  {{form.personid}}<br>
+
+
+<input type="submit" value="Create Sighting" />
+
+</form>
+
+{% endblock %}
+
+
+

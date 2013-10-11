@@ -12,7 +12,7 @@ from django.views.decorators.csrf import csrf_exempt, csrf_protect
 
 from django.contrib.auth import authenticate, login, logout
 
-from forms import ParamForm, PermitForm, EventForm, ProjectForm, LocationForm, OrganismForm, MeasurementForm
+from forms import ParamForm, PermitForm, EventForm, ProjectForm, LocationForm, OrganismForm, MeasurementForm, SightingForm
 import json
 
 @login_required(login_url='/login/')
@@ -223,6 +223,27 @@ def createLocation(request):
     else:
         return HttpResponseRedirect('/lmdb/reference/locations/create/map/')
 
+
+@login_required(login_url='/login/')
+def createLocationPopUp(request):
+    if request.POST:
+        print request.POST['objectid']
+        if request.POST.has_key('indicator'):
+            l = Location(objectid = request.POST['objectid'])
+            if request.POST['type'] == 'point':
+                l.pointid = request.POST['objectid']
+            if request.POST['type'] == 'line':
+                l.lineid = request.POST['objectid']
+            if request.POST['type'] == 'poly':
+                l.areaid = request.POST['objectid']
+            l.name = request.user.first_name + ' ' + request.user.last_name + ' location'
+            l.description = 'Location created during data input'
+            print l.save()             
+            message = 'Success'
+            return render(request, 'lmdb/createLocationPopUp.html', {'message' : message})
+    else:
+        return HttpResponseRedirect('/lmdb/reference/locations/')
+
 ##  !!!! Need to add a sync locations view to allow for locations not tagged to be added to the db !!!! ##
 
 #########################################################################################
@@ -324,12 +345,35 @@ def sightings(request):    # !!!!!!   NEED TO APPLY FKEY RESTRAINTS
 
 def sightingDetail(request, sight_id):
     sighting = get_object_or_404(Sighting, pk=sight_id)
-    organism = get_object_or_404(Organism, pk=sighting.organismid)
+    organism = get_object_or_404(Organism, pk=sighting.organismid.objectid)
     location = get_object_or_404(Location, pk=sighting.locationid)
-    project = get_object_or_404(Project, pk=sighting.projectid)
-    person =get_object_or_404(People, pk=sighting.personid)
+    project = get_object_or_404(Project, pk=sighting.projectid.objectid)
+    person =get_object_or_404(People, pk=sighting.personid.objectid)
     return render(request, 'lmdb/sightingDetail.html', {'person': person, 'project' : project,'sighting' : sighting, 'organism' : organism, 'location' : location})
 
+
+def createSighting(request):
+    if request.POST:
+        form = SightingForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return HttpResponseRedirect('/lmdb/data/sightings/')
+    else:
+        form = SightingForm()
+        form.initial['objectid'] = Sighting.objects.all().order_by('-objectid')[0].objectid+1
+    points = []
+    lines = []
+    polys = []
+    locations = Location.objects.values()
+    for location in locations:
+        if location['pointid'] != None:
+            points.append(location['pointid'])
+        elif location['lineid'] != None:
+            lines.append(location['lineid'])
+        elif location['areaid'] != None:
+            polys.append(location['areaid'])
+
+    return render(request, 'lmdb/createSighting.html', {'form' : form, 'points':points, 'lines':lines,'polys':polys})
 
 
 
@@ -372,7 +416,8 @@ def changeDetail(request, change_id):
     return render(request, 'lmdb/changeDetail.html', {'person': person, 'project' : project,'change' : change, 'parameter' : parameter, 'location' : location})
 
 
-
+def createChange(request):
+    return HttpResponse()
 
 
 #########################################################################################
@@ -386,9 +431,8 @@ def measurements(request):
     points = []
     lines = []
     polys = []
-    print measurements
     for m in measurements:
-        location = Location.objects.get(pk = m['locationid_id'])
+        location = Location.objects.get(pk = m['locationid'])
         if location.pointid != None:
             points.append(location.pointid)
         elif location.lineid != None:
@@ -477,6 +521,10 @@ def collectionDetail(request, coll_id):
     project = get_object_or_404(Project, pk=collection.projectid)
     person =get_object_or_404(People, pk=collection.personid)
     return render(request, 'lmdb/collectionDetail.html', {'person': person, 'project' : project,'collection' : collection, 'organism' : organism, 'location' : location})
+    
+
+def createCollection(request):
+    return HttpResponse()
 
 
 

@@ -104,7 +104,7 @@ class Measurement(models.Model):
     parameterid = models.ForeignKey('Parameter', db_column='parameterid')
     projectid = models.ForeignKey('Project', db_column='projectid', null=True)
     personid = models.ForeignKey('People', db_column='personid')
-    locationid = models.ForeignKey('Location',db_column='locationid')
+    locationid = models.IntegerField()
     mname = models.CharField(max_length=255)
     mmethod = models.CharField(max_length=255, blank=True)
     mquant = models.CharField(max_length=255)
@@ -128,6 +128,8 @@ class Organism(models.Model):
     species = models.CharField(max_length=255, blank=True)
     class Meta:
         db_table = 'organism'
+    def __unicode__(self):
+        return self.organismname
 
 
 class Parameter(models.Model):
@@ -189,9 +191,9 @@ class Project(models.Model):
 
 class Sighting(models.Model):
     objectid = models.IntegerField(primary_key=True,unique=True)
-    personid = models.IntegerField()
-    organismid = models.IntegerField()
-    projectid = models.IntegerField(null=True, blank=True)
+    personid = models.ForeignKey('People', db_column='personid')
+    organismid = models.ForeignKey('Organism', db_column='organismid')
+    projectid = models.ForeignKey('Project', db_column='projectid', null=True)
     locationid = models.IntegerField()
     number = models.IntegerField(null=True, blank=True)
     date = models.DateTimeField()

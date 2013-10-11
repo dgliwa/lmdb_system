@@ -163,9 +163,9 @@ require([
     
     }
     polyLayer.setDefinitionExpression(queryString);}
-    infoTemplate = new esri.InfoTemplate("ObjectID : ${objectid}",
-        "Description : ${description}<br>" +
-        "<button type=\"button\" onclick=\"addLocation(${objectid})\">Click me</button>");
+    infoTemplate = new esri.InfoTemplate("Object ID : ${objectid}",
+        "<input class=\"hidden\" id = \"locId\" value=\"${objectid}\"/>" +
+        "You have selected to use this location to record your measurement.");
 
     if (pointLayer != null){
        pointLayer.setInfoTemplate(infoTemplate);
@@ -178,6 +178,190 @@ require([
     }
 
     dojo.connect(map, "onLayersAddResult", initEditing);
+
+    dojo.connect(pointLayer, "onEditsComplete",
+        function (addResults) {
+            if (addResults.length > 0) {
+                alert("objectid is: " + addResults[0].objectId);
+
+
+                method = "post"; // Set method to post by default, if not specified.
+
+                // The rest of this code assumes you are not using a library.
+                // It can be made less wordy if you use one.
+                var form = document.createElement("form");
+                form.setAttribute("method", method);
+                form.setAttribute("action", '/lmdb/reference/locations/create/popup/');
+                form.setAttribute("target", '_blank');
+
+                var csrfToken = document.createElement("input");
+                csrfToken.setAttribute("type", "hidden");
+                csrfToken.setAttribute("name", "csrfmiddlewaretoken");
+                csrfToken.setAttribute("value", "{{ csrf_token }}");
+                form.appendChild(csrfToken);
+
+
+                var indicator = document.createElement("input");
+                indicator.setAttribute("type", "hidden");
+                indicator.setAttribute("name", "indicator");
+                indicator.setAttribute("value", "yes");
+                form.appendChild(indicator);
+
+
+                var type = document.createElement("input");
+                type.setAttribute("type", "hidden");
+                type.setAttribute("name", "type");
+                type.setAttribute("value", "point");
+                form.appendChild(type);
+
+                var hiddenField = document.createElement("input");
+                hiddenField.setAttribute("type", "hidden");
+                hiddenField.setAttribute("name", 'objectid');
+                hiddenField.setAttribute("value", addResults[0].objectId);
+
+                form.appendChild(hiddenField);
+
+
+
+                document.body.appendChild(form);
+                form.submit();
+
+
+
+                document.getElementById('id_locationid').value=addResults[0].objectId;
+
+                var graphic = featureLayer.graphics[featureLayer.graphics.length - 1];
+                graphic.attributes["additionalinformation"] = graphic.attributes["objectid"];
+
+            }
+
+
+        });
+
+
+    dojo.connect(lineLayer, "onEditsComplete",
+        function (addResults) {
+            if (addResults.length > 0) {
+                alert("objectid is: " + addResults[0].objectId);
+
+
+                method = "post"; // Set method to post by default, if not specified.
+
+                // The rest of this code assumes you are not using a library.
+                // It can be made less wordy if you use one.
+                var form = document.createElement("form");
+                form.setAttribute("method", method);
+                form.setAttribute("action", '/lmdb/reference/locations/create/popup/');
+                form.setAttribute("target", '_blank');
+
+
+                var csrfToken = document.createElement("input");
+                csrfToken.setAttribute("type", "hidden");
+                csrfToken.setAttribute("name", "csrfmiddlewaretoken");
+                csrfToken.setAttribute("value", "{{ csrf_token }}");
+                form.appendChild(csrfToken);
+
+
+                var indicator = document.createElement("input");
+                indicator.setAttribute("type", "hidden");
+                indicator.setAttribute("name", "indicator");
+                indicator.setAttribute("value", "yes");
+                form.appendChild(indicator);
+
+
+                var type = document.createElement("input");
+                type.setAttribute("type", "hidden");
+                type.setAttribute("name", "type");
+                type.setAttribute("value", "line");
+                form.appendChild(type);
+
+
+                var hiddenField = document.createElement("input");
+                hiddenField.setAttribute("type", "hidden");
+                hiddenField.setAttribute("name", 'objectid');
+                hiddenField.setAttribute("value", addResults[0].objectId);
+
+                form.appendChild(hiddenField);
+
+
+
+                document.body.appendChild(form);
+                form.submit();
+
+
+
+                document.getElementById('id_locationid').value=addResults[0].objectId;
+
+                var graphic = featureLayer.graphics[featureLayer.graphics.length - 1];
+                graphic.attributes["additionalinformation"] = graphic.attributes["objectid"];
+            }
+
+
+        });
+
+
+
+
+    dojo.connect(polyLayer, "onEditsComplete",
+        function (addResults) {
+            if (addResults.length > 0) {
+                alert("objectid is: " + addResults[0].objectId);
+
+
+                method = "post"; // Set method to post by default, if not specified.
+
+                // The rest of this code assumes you are not using a library.
+                // It can be made less wordy if you use one.
+                var form = document.createElement("form");
+                form.setAttribute("method", method);
+                form.setAttribute("action", '/lmdb/reference/locations/create/popup/');
+                form.setAttribute("target", '_blank');
+
+                var csrfToken = document.createElement("input");
+                csrfToken.setAttribute("type", "hidden");
+                csrfToken.setAttribute("name", "csrfmiddlewaretoken");
+                csrfToken.setAttribute("value", "{{ csrf_token }}");
+                form.appendChild(csrfToken);
+
+
+                var indicator = document.createElement("input");
+                indicator.setAttribute("type", "hidden");
+                indicator.setAttribute("name", "indicator");
+                indicator.setAttribute("value", "yes");
+                form.appendChild(indicator);
+
+
+                var type = document.createElement("input");
+                type.setAttribute("type", "hidden");
+                type.setAttribute("name", "type");
+                type.setAttribute("value", "poly");
+                form.appendChild(type);
+
+
+                var hiddenField = document.createElement("input");
+                hiddenField.setAttribute("type", "hidden");
+                hiddenField.setAttribute("name", 'objectid');
+                hiddenField.setAttribute("value", addResults[0].objectId);
+
+                form.appendChild(hiddenField);
+
+
+
+                document.body.appendChild(form);
+                form.submit();
+
+
+
+                document.getElementById('id_locationid').value=addResults[0].objectId;
+
+                var graphic = featureLayer.graphics[featureLayer.graphics.length - 1];
+                graphic.attributes["additionalinformation"] = graphic.attributes["objectid"];
+
+            }
+
+
+        });
+
 
 
 
@@ -238,6 +422,7 @@ require([
 
             layer.on("click", function (evt) {
                 event.stop(evt);
+                document.getElementById('id_locationid').value=document.getElementById('locId').value;
                 if (evt.ctrlKey === true || evt.metaKey === true) { //delete feature if ctrl key is depressed
                     layer.applyEdits(null, null, [evt.graphic]);
                     currentLayer = this;
@@ -291,15 +476,6 @@ require([
 });
 
 
-
-function addLocation(objectid){
-    document.getElementById('id_locationid').value=objectid;    
-    }
-
-
-
-
-
 </script>
 {% endblock %}
 {% block customclass %}
@@ -323,6 +499,10 @@ Location:  {{form.locationid}} <br>
       <div data-dojo-type="dijit/layout/ContentPane"  id="header" data-dojo-props="region:'top'">
            </div>
       <div id="map" data-dojo-type="dijit/layout/ContentPane" data-dojo-props="region:'center'"></div>
+      <div id="rightPane" data-dojo-type="dijit/layout/ContentPane" data-dojo-props="region:'right'">
+        <div id="templatePickerDiv"></div>
+
+          </div>
           </div>
 {{form.medium.errors}}
 Medium:  {{form.medium}} <br>
