@@ -5,32 +5,32 @@ from django.contrib.auth.models import User
 
 class Change(models.Model):
     objectid = models.IntegerField(primary_key=True, unique=True)
-    projectid = models.IntegerField()
+    projectid = models.ForeignKey('Project', db_column='projectid')
     locationid = models.IntegerField(null=True, blank=True)
     description = models.CharField(max_length=255)
     justification = models.CharField(max_length=255)
     permanent = models.SmallIntegerField()
     chemicalapplication = models.SmallIntegerField()
-    parameterid = models.IntegerField(null=True, blank=True)
+    parameterid = models.ForeignKey('Parameter', db_column='parameterid', null=True, blank=True)
     chemicalused = models.CharField(max_length=255, blank=True)
     chemicalquantity = models.DecimalField(null=True, max_digits=38, decimal_places=8, blank=True)
     chemicalunits = models.CharField(max_length=50, blank=True)
     areachange = models.CharField(max_length=50, blank=True)
     date = models.DateTimeField(null=True, blank=True)
-    personid = models.SmallIntegerField(null=True, blank=True)
+    personid = models.ForeignKey('People',db_column='personid',null=True, blank=True)
     class Meta:
         db_table = 'change'
 
 class Collection(models.Model):
     objectid = models.IntegerField(primary_key=True,unique=True)
-    projectid = models.IntegerField()
-    organismid = models.IntegerField()
+    projectid = models.ForeignKey('Project', db_column='projectid')
+    organismid = models.ForeignKey('Organism',db_column='organismid')
     datecollect = models.DateTimeField()
     methodcollect = models.CharField(max_length=255, blank=True)
     stored = models.SmallIntegerField()
     storecollect = models.CharField(max_length=255, blank=True)
     locationid = models.IntegerField(null=True, blank=True)
-    personid = models.IntegerField(null=True, blank=True)
+    personid = models.ForeignKey('People',db_column='personid',null=True, blank=True)
     class Meta:
         db_table = 'collection'
 

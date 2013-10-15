@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-{% block pageName %}Create Sighting{% endblock %}
+{% block pageName %}Create Change{% endblock %}
 {% block customjs %}
     <link rel="stylesheet" href="http://js.arcgis.com/3.6/js/dojo/dijit/themes/claro/claro.css">
     <link rel="stylesheet" href="http://js.arcgis.com/3.6/js/esri/css/esri.css">
@@ -90,10 +90,9 @@ require([
 
     "dijit/layout/BorderContainer", "dijit/layout/ContentPane",
     "dijit/form/Button", "dojo/domReady!"
-    
 ], function (
     Map, Draw, Edit, Graphic, esriConfig,
-    FeatureLayer, Point,
+    FeatureLayer,Point,
     SimpleMarkerSymbol, SimpleLineSymbol, SimpleFillSymbol,
     TemplatePicker,
     arrayUtils, event, lang, parser, registry
@@ -166,7 +165,7 @@ require([
     polyLayer.setDefinitionExpression(queryString);}
     infoTemplate = new esri.InfoTemplate("Object ID : ${objectid}",
         "<input class=\"hidden\" id = \"locId\" value=\"${objectid}\"/>" +
-        "You have selected to use this location to record your sighting.");
+        "You have selected to use this location to record your change.");
 
     if (pointLayer != null){
        pointLayer.setInfoTemplate(infoTemplate);
@@ -403,9 +402,6 @@ require([
 
         });
 
-
-
-
       if( pointLayer == null || lineLayer == null || polyLayer == null){
          if(pointLayer!=null && lineLayer !=null){
              map.addLayers([pointLayer,lineLayer]);
@@ -523,15 +519,17 @@ require([
 class ="claro"
 {% endblock %}
 {% block content %}
-<form action="{% url 'lmdb:createSighting' %}" method="post">
-
-
+<form action="{% url 'lmdb:createChange' %}" method="post">
 {% csrf_token %}
 {{form.non_field_errors}}
 {{form.objectid.errors}}
 {{form.objectid}}
-{{form.organismid.errors}}
-Organism:  {{form.organismid}}  <br>
+{{form.description.errors}}
+Description:  {{form.description}}<br>
+{{form.justification.errors}}
+Justification:  {{form.justification}} <br>
+{{form.parameterid.errors}}
+Parameter:  {{form.parameterid}}  <br>
 {{form.projectid.errors}}
 Project:  {{form.projectid}} <br>
 {{form.locationid.errors}}
@@ -545,19 +543,26 @@ Location:  {{form.locationid}} <br>
 
           </div>
           </div>
-{{form.number.errors}}
-Number:  {{form.number}} <br>
-Sighting Date:  {{form.date}} <br>
-{{form.notes.errors}}
-Sighting Notes:  {{form.notes}} <br>
+{{form.permanent.errors}}
+Permanent Change:  {{form.permanent}} <br>
+{{form.chemicalapplication.errors}}
+Chemical Application: {{form.chemicalapplication}} <br>
+{{form.chemicalused.errors}}
+Chemical Used:  {{form.chemicalused}} <br>
+{{form.chemicalquantity.errors}}
+Chemical Quantity:  {{form.chemicalquantity}} <br>
+{{form.chemicalunits.errors}}
+Chemical Units:  {{form.chemicalunits}} <br>
+{{form.areachange.errors}}
+Area of the Change:  {{form.areachange}}<br>
+{{form.date.errors}}
+Change Date:  {{form.date}} <br>
 {{form.personid.errors}}
 Person:  {{form.personid}}<br>
 
-
-<input type="submit" value="Create Sighting" />
+<input type="submit" value="Create Change" />
 
 </form>
-
 {% endblock %}
 
 

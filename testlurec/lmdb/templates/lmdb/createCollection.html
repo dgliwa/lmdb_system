@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-{% block pageName %}Create Sighting{% endblock %}
+{% block pageName %}Create Collection{% endblock %}
 {% block customjs %}
     <link rel="stylesheet" href="http://js.arcgis.com/3.6/js/dojo/dijit/themes/claro/claro.css">
     <link rel="stylesheet" href="http://js.arcgis.com/3.6/js/esri/css/esri.css">
@@ -75,7 +75,7 @@ require([
     "esri/config",
 
     "esri/layers/FeatureLayer",
-    "esri/geometry/Point",
+    "esri/layers/Point"
     "esri/symbols/SimpleMarkerSymbol",
     "esri/symbols/SimpleLineSymbol",
     "esri/symbols/SimpleFillSymbol",
@@ -90,10 +90,9 @@ require([
 
     "dijit/layout/BorderContainer", "dijit/layout/ContentPane",
     "dijit/form/Button", "dojo/domReady!"
-    
 ], function (
     Map, Draw, Edit, Graphic, esriConfig,
-    FeatureLayer, Point,
+    FeatureLayer,Point
     SimpleMarkerSymbol, SimpleLineSymbol, SimpleFillSymbol,
     TemplatePicker,
     arrayUtils, event, lang, parser, registry
@@ -166,7 +165,7 @@ require([
     polyLayer.setDefinitionExpression(queryString);}
     infoTemplate = new esri.InfoTemplate("Object ID : ${objectid}",
         "<input class=\"hidden\" id = \"locId\" value=\"${objectid}\"/>" +
-        "You have selected to use this location to record your sighting.");
+        "You have selected to use this location to record your collection.");
 
     if (pointLayer != null){
        pointLayer.setInfoTemplate(infoTemplate);
@@ -403,9 +402,6 @@ require([
 
         });
 
-
-
-
       if( pointLayer == null || lineLayer == null || polyLayer == null){
          if(pointLayer!=null && lineLayer !=null){
              map.addLayers([pointLayer,lineLayer]);
@@ -523,9 +519,7 @@ require([
 class ="claro"
 {% endblock %}
 {% block content %}
-<form action="{% url 'lmdb:createSighting' %}" method="post">
-
-
+<form action="{% url 'lmdb:createCollection' %}" method="post">
 {% csrf_token %}
 {{form.non_field_errors}}
 {{form.objectid.errors}}
@@ -545,16 +539,18 @@ Location:  {{form.locationid}} <br>
 
           </div>
           </div>
-{{form.number.errors}}
-Number:  {{form.number}} <br>
-Sighting Date:  {{form.date}} <br>
-{{form.notes.errors}}
-Sighting Notes:  {{form.notes}} <br>
+{{form.methodcollect.errors}}
+Collection Method:  {{form.methodcollect}} <br>
+{{form.stored.errors}}
+Collection Stored: {{form.stored}} <br>
+{{form.storecollect.errors}}
+Collection Storer:  {{form.storecollect}} <br>
+{{form.datecollect.errors}}
+Collection Date:  {{form.datecollect}} <br>
 {{form.personid.errors}}
 Person:  {{form.personid}}<br>
 
-
-<input type="submit" value="Create Sighting" />
+<input type="submit" value="Create Collection" />
 
 </form>
 

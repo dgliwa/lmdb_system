@@ -12,7 +12,7 @@ from django.views.decorators.csrf import csrf_exempt, csrf_protect
 
 from django.contrib.auth import authenticate, login, logout
 
-from forms import ParamForm, PermitForm, EventForm, ProjectForm, LocationForm, OrganismForm, MeasurementForm, SightingForm
+from forms import ParamForm, PermitForm, EventForm, ProjectForm, LocationForm, OrganismForm, MeasurementForm, SightingForm, CollectionForm, ChangeForm
 import json
 
 @login_required(login_url='/login/')
@@ -417,7 +417,27 @@ def changeDetail(request, change_id):
 
 
 def createChange(request):
-    return HttpResponse()
+    if request.POST:
+        form = ChangeForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return HttpResponseRedirect('/lmdb/data/changes/')
+    else:
+        form = ChangeForm()
+        form.initial['objectid'] = Change.objects.all().order_by('-objectid')[0].objectid+1
+    points = []
+    lines = []
+    polys = []
+    locations = Location.objects.values()
+    for location in locations:
+        if location['pointid'] != None:
+            points.append(location['pointid'])
+        elif location['lineid'] != None:
+            lines.append(location['lineid'])
+        elif location['areaid'] != None:
+            polys.append(location['areaid'])
+
+    return render(request, 'lmdb/createChange.html', {'form' : form, 'points':points, 'lines':lines,'polys':polys})
 
 
 #########################################################################################
@@ -452,7 +472,7 @@ def measurements(request):
 def measurementDetail(request, meas_id):
     measurement = get_object_or_404(Measurement, pk=meas_id)
     parameter = get_object_or_404(Parameter, pk=measurement.parameterid.objectid)
-    location = get_object_or_404(Location, pk=measurement.locationid.objectid)
+    location = get_object_or_404(Location, pk=measurement.locationid)
     project = get_object_or_404(Project, pk=measurement.projectid.objectid)
     person =get_object_or_404(People, pk=measurement.personid.objectid)
     return render(request, 'lmdb/measurementDetail.html', {'person': person, 'project' : project,'measurement' : measurement, 'parameter' : parameter, 'location' : location})
@@ -524,7 +544,27 @@ def collectionDetail(request, coll_id):
     
 
 def createCollection(request):
-    return HttpResponse()
+    if request.POST:
+        form = CollectionForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return HttpResponseRedirect('/lmdb/data/collections/')
+    else:
+        form = CollectionForm()
+        form.initial['objectid'] = Collection.objects.all().order_by('-objectid')[0].objectid+1
+    points = []
+    lines = []
+    polys = []
+    locations = Location.objects.values()
+    for location in locations:
+        if location['pointid'] != None:
+            points.append(location['pointid'])
+        elif location['lineid'] != None:
+            lines.append(location['lineid'])
+        elif location['areaid'] != None:
+            polys.append(location['areaid'])
+
+    return render(request, 'lmdb/createCollection.html', {'form' : form, 'points':points, 'lines':lines,'polys':polys})
 
 
 

@@ -1,5 +1,5 @@
 from django import forms
-from models import Parameter, Permit, Event, Project, People, Location, Organism, Measurement, Sighting
+from models import Parameter, Permit, Event, Project, People, Location, Organism, Measurement, Sighting, Collection, Change
 from django.forms.extras.widgets import SelectDateWidget, Select
 
 
@@ -87,7 +87,7 @@ class MeasurementForm(forms.ModelForm):
     mmethod = forms.CharField(max_length=255, required=False)
     mquant = forms.CharField(max_length=255)
     munits = forms.CharField(max_length=100, required=False)
-    date = forms.DateTimeField(widget=SelectDateWidget())
+    date = forms.DateTimeField()
     time = forms.DateTimeField(required=False)
     notes = forms.CharField(max_length=255, required=False)
     medium = forms.CharField(max_length=50, required=False)
@@ -107,3 +107,33 @@ class SightingForm(forms.ModelForm):
     class Meta:
         model = Sighting
 
+class CollectionForm(forms.ModelForm):
+    objectid = forms.IntegerField(widget=forms.HiddenInput())
+    projectid = forms.ModelChoiceField(queryset = Project.objects.all())
+    organismid = forms.ModelChoiceField(queryset = Organism.objects.all())
+    datecollect = forms.DateTimeField()
+    methodcollect = forms.CharField(max_length=255)
+    stored = forms.IntegerField()
+    storecollect = forms.CharField(max_length=255)
+    locationid = forms.IntegerField(widget=forms.HiddenInput())
+    personid = forms.ModelChoiceField(queryset = People.objects.all(), required = False)
+    class Meta:
+        model = Collection
+        
+class ChangeForm(forms.ModelForm):
+    objectid = forms.IntegerField(widget=forms.HiddenInput())
+    projectid = forms.ModelChoiceField(queryset = Project.objects.all())
+    locationid = forms.IntegerField(widget=forms.HiddenInput())
+    description = forms.CharField(max_length=255)
+    justification = forms.CharField(max_length=255)
+    permanent = forms.IntegerField()
+    chemicalapplication = forms.IntegerField()
+    parameterid = forms.ModelChoiceField(queryset = Parameter.objects.all(), required=False)
+    chemicalused = forms.CharField(max_length=255, required=False)
+    chemicalquantity = forms.DecimalField(required=False, max_digits=38, decimal_places=8, )
+    chemicalunits = forms.CharField(max_length=50, required=False)
+    areachange = forms.CharField(max_length=50, required=False)
+    date = forms.DateTimeField(required=False)
+    personid = forms.ModelChoiceField(queryset = People.objects.all(), required = False)
+    class Meta:
+        model = Change

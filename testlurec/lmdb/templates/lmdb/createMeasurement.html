@@ -1,8 +1,12 @@
 {% extends "base.html" %}
 {% block pageName %}Create Measurement{% endblock %}
 {% block customjs %}
+   {% load static %}
     <link rel="stylesheet" href="http://js.arcgis.com/3.6/js/dojo/dijit/themes/claro/claro.css">
     <link rel="stylesheet" href="http://js.arcgis.com/3.6/js/esri/css/esri.css">
+    <script type="text/javascript" src="{% static "datepicker/jquery.simple-dtpicker.js" %}"></script>
+	<link type="text/css" href="{% static "datepicker/jquery.simple-dtpicker.css" %}" rel="stylesheet" />
+
     <style>
       html, body {
         height: 100%;
@@ -75,6 +79,7 @@ require([
     "esri/config",
 
     "esri/layers/FeatureLayer",
+    "esri/geometry/Point",
 
     "esri/symbols/SimpleMarkerSymbol",
     "esri/symbols/SimpleLineSymbol",
@@ -92,7 +97,7 @@ require([
     "dijit/form/Button", "dojo/domReady!"
 ], function (
     Map, Draw, Edit, Graphic, esriConfig,
-    FeatureLayer,
+    FeatureLayer,Point,
     SimpleMarkerSymbol, SimpleLineSymbol, SimpleFillSymbol,
     TemplatePicker,
     arrayUtils, event, lang, parser, registry
@@ -109,7 +114,7 @@ require([
         basemap: "satellite",
         logo: true,
         center: [-88.366193, 42.289993],
-        zoom: 15
+        zoom: 14
     });
 
     map.on("layers-add-result", initEditing);
@@ -230,9 +235,20 @@ require([
 
                 document.getElementById('id_locationid').value=addResults[0].objectId;
 
-                var graphic = featureLayer.graphics[featureLayer.graphics.length - 1];
+var graphic = pointLayer.graphics[pointLayer.graphics.length - 1];
                 graphic.attributes["additionalinformation"] = graphic.attributes["objectid"];
-
+                try{
+                x = graphic.geometry.x;
+                y = graphic.geometry.y;
+                sr = map.spatialReference;
+                p = new Point(x,y,sr)
+                map.infoWindow.show(p);
+                
+                map.infoWindow.setContent(graphic.getContent());
+                }
+                catch(err){
+                console.log(err);
+                }
             }
 
 
@@ -292,9 +308,21 @@ require([
 
                 document.getElementById('id_locationid').value=addResults[0].objectId;
 
-                var graphic = featureLayer.graphics[featureLayer.graphics.length - 1];
-                graphic.attributes["additionalinformation"] = graphic.attributes["objectid"];
-            }
+                 var graphic = lineLayer.graphics[lineLayer.graphics.length - 1];
+             graphic.attributes["additionalinformation"] = graphic.attributes["objectid"];
+                try{
+                x = graphic.geometry.paths[0][0][0];
+                y = graphic.geometry.paths[0][0][1];
+                sr = map.spatialReference;
+                p = new Point(x,y,sr)
+                map.infoWindow.show(p);
+                
+                map.infoWindow.setContent(graphic.getContent());
+                }
+                catch(err){
+                console.log(err);
+                }
+                        }
 
 
         });
@@ -354,9 +382,20 @@ require([
 
                 document.getElementById('id_locationid').value=addResults[0].objectId;
 
-                var graphic = featureLayer.graphics[featureLayer.graphics.length - 1];
-                graphic.attributes["additionalinformation"] = graphic.attributes["objectid"];
-
+                var graphic = polyLayer.graphics[polyLayer.graphics.length - 1];
+             graphic.attributes["additionalinformation"] = graphic.attributes["objectid"];
+                try{
+                x = graphic.geometry.rings[0][0][0];
+                y = graphic.geometry.rings[0][0][1];
+                sr = map.spatialReference;
+                p = new Point(x,y,sr)
+                map.infoWindow.show(p);
+                
+                map.infoWindow.setContent(graphic.getContent());
+                }
+                catch(err){
+                console.log(err);
+                }
             }
 
 
@@ -514,6 +553,12 @@ Measurement Quantity: {{form.mquant}} <br>
 Measurement Units:  {{form.munits}} <br>
 {{form.date.errors}}
 Measurement Date:  {{form.date}} <br>
+<script type="text/javascript">
+		$.noConflict();
+		jQuery($(function(){
+			$('#id_date').appendDtpicker();
+		}));
+	</script>
 {{form.notes.errors}}
 Measurement Notes:  {{form.notes}} <br>
 {{form.personid.errors}}
