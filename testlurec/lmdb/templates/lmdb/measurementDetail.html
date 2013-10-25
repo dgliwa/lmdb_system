@@ -257,7 +257,7 @@ class ="claro"
 <h1>{{measurement.mname}}</h1>
 <ul>
     <li>ID:  {{measurement.objectid}}</li>
-    <li>Project:  {{project.projectname}}</li>
+    <li>Project:  <a href="{% url 'lmdb:projectDetail' project.objectid %}">{{project.projectname}}</a></li>
     <li>Parameter Name:  <a href="{% url 'lmdb:paramDetail' parameter.objectid %}">{{parameter.commonname}}</a></li>
     <li>Measurement Date:  {{measurement.date}}</li>
     <li>Measurement Method:  {{measurement.mmethod}}</li>

@@ -1,5 +1,11 @@
 {% extends "base.html" %}
 {% block pageName %}Create Event{% endblock %}
+{% block customjs %}
+{% load static %}
+    <script type="text/javascript" src="{% static "datepicker/jquery.simple-dtpicker.js" %}"></script>
+	<link type="text/css" href="{% static "datepicker/jquery.simple-dtpicker.css" %}" rel="stylesheet" />
+
+{% endblock %}
 {% block content %}
 <form action="{% url 'lmdb:createEvent' %}" method="post">
 
@@ -13,8 +19,18 @@ Event Name:  {{form.eventname}}<br>
 Event Type:  {{form.eventtype}}<br>
 {{form.eventstartdate.errors}}
 Event Start Date and Time: {{form.eventstartdate}}<br>
+<script type="text/javascript">
+		jQuery($(function(){
+			$('#id_eventstartdate').appendDtpicker();
+		}));
+	</script>
 {{form.eventenddate.errors}}
 Event End Date and Time:  {{form.eventenddate}}<br>
+<script type="text/javascript">
+		jQuery($(function(){
+			$('#id_eventenddate').appendDtpicker();
+		}));
+	</script>
 {{form.eventparticipants.errors}}
 Number of Participants:  {{form.eventparticipants}}<br>
 {{form.eventdescription.errors}}

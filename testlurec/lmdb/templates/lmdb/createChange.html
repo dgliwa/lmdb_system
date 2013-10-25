@@ -1,6 +1,67 @@
 {% extends "base.html" %}
 {% block pageName %}Create Change{% endblock %}
 {% block customjs %}
+
+<style>
+#overlay {
+     overflow: auto;
+     position: fixed;
+     left: 0px;
+     top: 0px;
+     width:100%;
+     min-height:100%;
+     z-index: 1000;
+     background:rgba(0,0,0,0.6);
+}
+
+#overlay div {
+     width:450px;
+     margin: 100px auto;
+     background-color: #fff;
+     border:1px solid #000;
+     padding:15px;
+     text-align:left;
+  box-shadow:0 4px 12px rgba(0, 0, 0, 0.4), 0 1px 0 rgba(255, 255, 255, 0.5) inset;
+  border-radius:6px;
+}
+
+#upprev_close{
+background:  white;
+    border:0;
+    color: #929292;
+    float: right;
+    font-weight: bold;
+    margin: 0;
+    padding: 0;
+    text-transform: uppercase;
+ cursor:pointer;cursor:hand;
+}
+
+#report_form input[type="radio"] {
+   display:none;
+}
+
+#report_form  label {
+    display:table;
+    background-color:#ddd;
+    padding:4px 11px;
+ cursor:pointer;cursor:hand;
+ border-radius:3px 3px 3px 3px;
+ margin: 0.3em;
+}
+
+#report_form  input[type="radio"]:checked + label {
+    background-color:#bbb;
+ box-shadow: -1px 0 5px orange;
+}
+
+</style>
+
+
+
+{% load static %}
+    <script type="text/javascript" src="{% static "datepicker/jquery.simple-dtpicker.js" %}"></script>
+	<link type="text/css" href="{% static "datepicker/jquery.simple-dtpicker.css" %}" rel="stylesheet" />
     <link rel="stylesheet" href="http://js.arcgis.com/3.6/js/dojo/dijit/themes/claro/claro.css">
     <link rel="stylesheet" href="http://js.arcgis.com/3.6/js/esri/css/esri.css">
     <style>
@@ -36,9 +97,7 @@
       }
     </style>
 
- <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7/jquery.js"></script> 
-    <script src="http://malsup.github.com/jquery.form.js"></script> 
-
+ 
     <script src="http://js.arcgis.com/3.6/"></script>
     
         <script> 
@@ -184,53 +243,18 @@ require([
             if (addResults.length > 0) {
                 alert("objectid is: " + addResults[0].objectId);
 
-
-                method = "post"; // Set method to post by default, if not specified.
-
-                // The rest of this code assumes you are not using a library.
-                // It can be made less wordy if you use one.
-                var form = document.createElement("form");
-                form.setAttribute("method", method);
-                form.setAttribute("action", '/lmdb/reference/locations/create/popup/');
-                form.setAttribute("target", '_blank');
-
-                var csrfToken = document.createElement("input");
-                csrfToken.setAttribute("type", "hidden");
-                csrfToken.setAttribute("name", "csrfmiddlewaretoken");
-                csrfToken.setAttribute("value", "{{ csrf_token }}");
-                form.appendChild(csrfToken);
-
-
-                var indicator = document.createElement("input");
-                indicator.setAttribute("type", "hidden");
-                indicator.setAttribute("name", "indicator");
-                indicator.setAttribute("value", "yes");
-                form.appendChild(indicator);
-
-
-                var type = document.createElement("input");
-                type.setAttribute("type", "hidden");
-                type.setAttribute("name", "type");
-                type.setAttribute("value", "point");
-                form.appendChild(type);
-
-                var hiddenField = document.createElement("input");
-                hiddenField.setAttribute("type", "hidden");
-                hiddenField.setAttribute("name", 'objectid');
-                hiddenField.setAttribute("value", addResults[0].objectId);
-
-                form.appendChild(hiddenField);
-
-
-
-                document.body.appendChild(form);
-                form.submit();
-
-
+                try{
+                jQuery.post('/lmdb/reference/locations/create/popup/',{'csrfmiddlewaretoken' : '{{ csrf_token }}','indicator': 'yes', 'type': 'point', 'objectid' :addResults[0].objectId}, function() {
+  alert( "success" );
+}); 
+                }
+                catch(err){
+                console.log(err);
+                }
 
                 document.getElementById('id_locationid').value=addResults[0].objectId;
 
-                var graphic = pointLayer.graphics[pointLayer.graphics.length - 1];
+var graphic = pointLayer.graphics[pointLayer.graphics.length - 1];
                 graphic.attributes["additionalinformation"] = graphic.attributes["objectid"];
                 try{
                 x = graphic.geometry.x;
@@ -244,7 +268,6 @@ require([
                 catch(err){
                 console.log(err);
                 }
-
             }
 
 
@@ -257,54 +280,19 @@ require([
                 alert("objectid is: " + addResults[0].objectId);
 
 
-                method = "post"; // Set method to post by default, if not specified.
-
-                // The rest of this code assumes you are not using a library.
-                // It can be made less wordy if you use one.
-                var form = document.createElement("form");
-                form.setAttribute("method", method);
-                form.setAttribute("action", '/lmdb/reference/locations/create/popup/');
-                form.setAttribute("target", '_blank');
-
-
-                var csrfToken = document.createElement("input");
-                csrfToken.setAttribute("type", "hidden");
-                csrfToken.setAttribute("name", "csrfmiddlewaretoken");
-                csrfToken.setAttribute("value", "{{ csrf_token }}");
-                form.appendChild(csrfToken);
-
-
-                var indicator = document.createElement("input");
-                indicator.setAttribute("type", "hidden");
-                indicator.setAttribute("name", "indicator");
-                indicator.setAttribute("value", "yes");
-                form.appendChild(indicator);
-
-
-                var type = document.createElement("input");
-                type.setAttribute("type", "hidden");
-                type.setAttribute("name", "type");
-                type.setAttribute("value", "line");
-                form.appendChild(type);
-
-
-                var hiddenField = document.createElement("input");
-                hiddenField.setAttribute("type", "hidden");
-                hiddenField.setAttribute("name", 'objectid');
-                hiddenField.setAttribute("value", addResults[0].objectId);
-
-                form.appendChild(hiddenField);
-
-
-
-                document.body.appendChild(form);
-                form.submit();
+try{                jQuery.post('/lmdb/reference/locations/create/popup/',{'csrfmiddlewaretoken' : '{{ csrf_token }}','indicator': 'yes', 'type': 'line', 'objectid' :addResults[0].objectId}, function() {
+  alert( "success" );
+}); 
+                }
+                catch(err){
+                console.log(err);
+                }
 
 
 
                 document.getElementById('id_locationid').value=addResults[0].objectId;
 
-             var graphic = lineLayer.graphics[lineLayer.graphics.length - 1];
+                 var graphic = lineLayer.graphics[lineLayer.graphics.length - 1];
              graphic.attributes["additionalinformation"] = graphic.attributes["objectid"];
                 try{
                 x = graphic.geometry.paths[0][0][0];
@@ -318,10 +306,7 @@ require([
                 catch(err){
                 console.log(err);
                 }
-            
-            
-            
-            }
+                        }
 
 
         });
@@ -334,54 +319,20 @@ require([
             if (addResults.length > 0) {
                 alert("objectid is: " + addResults[0].objectId);
 
-
-                method = "post"; // Set method to post by default, if not specified.
-
-                // The rest of this code assumes you are not using a library.
-                // It can be made less wordy if you use one.
-                var form = document.createElement("form");
-                form.setAttribute("method", method);
-                form.setAttribute("action", '/lmdb/reference/locations/create/popup/');
-                form.setAttribute("target", '_blank');
-
-                var csrfToken = document.createElement("input");
-                csrfToken.setAttribute("type", "hidden");
-                csrfToken.setAttribute("name", "csrfmiddlewaretoken");
-                csrfToken.setAttribute("value", "{{ csrf_token }}");
-                form.appendChild(csrfToken);
-
-
-                var indicator = document.createElement("input");
-                indicator.setAttribute("type", "hidden");
-                indicator.setAttribute("name", "indicator");
-                indicator.setAttribute("value", "yes");
-                form.appendChild(indicator);
-
-
-                var type = document.createElement("input");
-                type.setAttribute("type", "hidden");
-                type.setAttribute("name", "type");
-                type.setAttribute("value", "poly");
-                form.appendChild(type);
-
-
-                var hiddenField = document.createElement("input");
-                hiddenField.setAttribute("type", "hidden");
-                hiddenField.setAttribute("name", 'objectid');
-                hiddenField.setAttribute("value", addResults[0].objectId);
-
-                form.appendChild(hiddenField);
-
-
-
-                document.body.appendChild(form);
-                form.submit();
+try{
+               jQuery.post('/lmdb/reference/locations/create/popup/',{'csrfmiddlewaretoken' : '{{ csrf_token }}','indicator': 'yes', 'type': 'poly', 'objectid' :addResults[0].objectId}, function() {
+  alert( "success" );
+}); 
+                }
+                catch(err){
+                console.log(err);
+                }
 
 
 
                 document.getElementById('id_locationid').value=addResults[0].objectId;
 
-                 var graphic = polyLayer.graphics[polyLayer.graphics.length - 1];
+                var graphic = polyLayer.graphics[polyLayer.graphics.length - 1];
              graphic.attributes["additionalinformation"] = graphic.attributes["objectid"];
                 try{
                 x = graphic.geometry.rings[0][0][0];
@@ -395,8 +346,6 @@ require([
                 catch(err){
                 console.log(err);
                 }
-           
-
             }
 
 
@@ -519,6 +468,105 @@ require([
 class ="claro"
 {% endblock %}
 {% block content %}
+<script type="text/javascript">
+//test popup to add contents
+
+function report(c_id) {
+    var form = document.createElement("form", "report_form");
+    form.id = "report_form";
+    form.method = "post";
+    form.action = "index.php?mode=post_comment";
+
+    var reply_place = document.createElement("div");
+    reply_place.id = "overlay";
+    var inner_div = document.createElement("div"), button_close = document.createElement("button");
+    button_close.id = "upprev_close";
+    button_close.innerHTML = "x";
+    button_close.onclick = function () {
+        var element = document.getElementById('overlay');
+        element.parentNode.removeChild(element);
+    };
+    inner_div.appendChild(button_close);
+
+    var legend = document.createElement("legend");
+    legend.innerHTML = "Why do you want to add this?";
+    form.appendChild(legend);
+
+    var input1 = document.createElement("input");
+    input1.type = "radio";
+    input1.id = "this";
+    input1.value = "this";
+    input1.name = "options";
+    var radio_label1 = document.createElement("label");
+    radio_label1.htmlFor = "this";
+    radio_label1_text = "this";
+    radio_label1.appendChild(document.createTextNode(radio_label1_text));
+    form.appendChild(input1);
+    form.appendChild(radio_label1);
+
+    var input2 = document.createElement("input");
+    input2.type = "radio";
+    input2.id = "that";
+    input2.value = "that";
+    input2.name = "options";
+    var radio_label2 = document.createElement("label");
+    radio_label2.htmlFor = "that";
+    radio_label2_text = "that";
+    radio_label2.appendChild(document.createTextNode(radio_label2_text));
+    form.appendChild(input2);
+    form.appendChild(radio_label2);
+
+    var input3 = document.createElement("input");
+    input3.type = "radio";
+    input3.id = "spam";
+    input3.value = "spam";
+    input3.name = "options";
+    var radio_label3 = document.createElement("label");
+    radio_label3.htmlFor = "spam";
+    radio_label6_text = "Spam";
+    radio_label3.appendChild(document.createTextNode(radio_label6_text));
+    form.appendChild(input3);
+    form.appendChild(radio_label3);
+
+    var submit_btn = document.createElement("input", "the_submit");
+    submit_btn.type = "submit";
+    submit_btn.className = "submit";
+    submit_btn.value = "Report";
+    form.appendChild(submit_btn);
+
+    submit_btn.onclick = function () {
+        var checked = false, formElems = this.parentNode.getElementsByTagName('input');
+        for (var i = 0; i < formElems.length; i++) {
+            if (formElems[i].type == 'radio' && formElems[i].checked == true) {
+                checked = true;
+                var el = formElems[i];
+                break;
+            }
+        }
+        if (!checked) return false;
+        var poststr = "c_id=" + c_id + "&reason=" + encodeURI(el.value);
+        alert(poststr);
+        return false;
+    }
+
+    inner_div.appendChild(form);
+    reply_place.appendChild(inner_div);
+
+    var attach_to = document.getElementById("wrapper"), parentDiv = attach_to.parentNode;
+    parentDiv.insertBefore(reply_place, attach_to);
+
+}
+</script>
+
+
+<span style="cursor:pointer;cursor:hand;" onclick="report(127);">Report this!</span>
+<div id="wrapper"></div>
+
+
+
+
+
+
 <form action="{% url 'lmdb:createChange' %}" method="post">
 {% csrf_token %}
 {{form.non_field_errors}}
@@ -557,6 +605,13 @@ Chemical Units:  {{form.chemicalunits}} <br>
 Area of the Change:  {{form.areachange}}<br>
 {{form.date.errors}}
 Change Date:  {{form.date}} <br>
+<script type="text/javascript">
+		$.noConflict();
+		jQuery($(function(){
+			$('#id_date').appendDtpicker();
+		}));
+	</script>
+
 {{form.personid.errors}}
 Person:  {{form.personid}}<br>
 

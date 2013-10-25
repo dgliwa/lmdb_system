@@ -1,6 +1,6 @@
 from django import forms
 from models import Parameter, Permit, Event, Project, People, Location, Organism, Measurement, Sighting, Collection, Change
-from django.forms.extras.widgets import SelectDateWidget, Select
+from django.forms.extras.widgets import Select
 
 
 class ParamForm(forms.ModelForm):
@@ -15,8 +15,8 @@ class ParamForm(forms.ModelForm):
     
 class PermitForm(forms.ModelForm):
     objectid = forms.IntegerField(widget=forms.HiddenInput())
-    permitstartdate = forms.DateTimeField(widget=SelectDateWidget())
-    permitenddate = forms.DateTimeField(widget=SelectDateWidget())
+    permitstartdate = forms.DateTimeField()
+    permitenddate = forms.DateTimeField()
     permitagency = forms.CharField()
     description = forms.CharField()
     
@@ -27,8 +27,8 @@ class EventForm(forms.ModelForm):
     objectid = forms.IntegerField(widget=forms.HiddenInput())
     eventname = forms.CharField()
     eventtype = forms.CharField()
-    eventstartdate = forms.DateTimeField(widget=SelectDateWidget())
-    eventenddate = forms.DateTimeField(widget=SelectDateWidget())
+    eventstartdate = forms.DateTimeField()
+    eventenddate = forms.DateTimeField()
     eventparticipants = forms.IntegerField()
     eventdescription = forms.CharField()
     personid = forms.ModelChoiceField(queryset=People.objects.all())
@@ -44,8 +44,8 @@ class ProjectForm(forms.ModelForm):
     locationid = forms.IntegerField()
     eventid = forms.ModelChoiceField(queryset=Event.objects.all())
     permitid = forms.ModelChoiceField(queryset=Permit.objects.all())
-    projectstartdate = forms.DateTimeField(widget=SelectDateWidget())
-    projectenddate = forms.DateTimeField(widget=SelectDateWidget())
+    projectstartdate = forms.DateTimeField()
+    projectenddate = forms.DateTimeField()
     funded = forms.IntegerField()
     funder = forms.CharField()
     personid = forms.ModelChoiceField(queryset=People.objects.all())
@@ -101,7 +101,7 @@ class SightingForm(forms.ModelForm):
     projectid = forms.ModelChoiceField(queryset = Project.objects.all(),required=False)
     locationid = forms.IntegerField(widget=forms.HiddenInput())
     number = forms.IntegerField(required=False)
-    date = forms.DateTimeField(widget=SelectDateWidget())
+    date = forms.DateTimeField()
     time = forms.DateTimeField(required=False)
     notes = forms.CharField(max_length=255, required=False)
     class Meta:

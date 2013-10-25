@@ -19,4 +19,44 @@
     <li>Funder:  {{project.funder}}</li>
     <li>Project Coordinator:  {{person.firstname}} {{person.lastname}}</li>
 </ul>
+<h3>Changes</h3>
+{% if changes %}
+    <ul>
+    {% for c in changes %}
+        <li><a href="{% url 'lmdb:changeDetail' c.objectid %}">{{ c.objectid }}</a></li>
+    {% endfor %}
+    </ul>
+{% else %}
+    <p>No changes associated with project.</p>
+{% endif %}
+<h3>Collections</h3>
+{% if collections %}
+    <ul>
+    {% for c in collections %}
+        <li><a href="{% url 'lmdb:collectionDetail' c.objectid %}">{{ c.objectid }}</a></li>
+    {% endfor %}
+    </ul>
+{% else %}
+    <p>No collections associated with project.</p>
+{% endif %}
+<h3>Measurements</h3>
+{% if measurements %}
+    <ul>
+    {% for m in measurements %}
+        <li><a href="{% url 'lmdb:measurementDetail' m.objectid %}">{{ m.objectid }}</a></li>
+    {% endfor %}
+    </ul>
+{% else %}
+    <p>No measurements associated with project.</p>
+{% endif %}
+<h3>Sightings</h3>
+{% if sightings %}
+    <ul>
+    {% for s in sightings %}
+        <li><a href="{% url 'lmdb:sightingDetail' s.objectid %}">{{ s.objectid }}</a></li>
+    {% endfor %}
+    </ul>
+{% else %}
+    <p>No sightings associated with project.</p>
+{% endif %}
 {% endblock %}

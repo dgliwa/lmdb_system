@@ -258,7 +258,7 @@ class ="claro"
 <ul>
     <li>ID:  {{sighting.objectid}}</li>
     <li>Sighting Number:  {{sighting.number}}</li>
-    <li>Project:  {{project.projectname}}</li>
+    <li>Project:  <a href="{% url 'lmdb:projectDetail' project.objectid %}">{{project.projectname}}</a></li>
     <li>Organism Name:  <a href="{% url 'lmdb:organismDetail' organism.objectid %}">{{organism.organismname}}</a></li>
     <li>Sighting Date:  {{sighting.date}}</li>
     <li>Location:  <a href="{% url 'lmdb:locationDetail' location.objectid %}">{{location.name}}</a></li>

@@ -96,6 +96,19 @@ def createParam(request):
         form = ParamForm()
         form.initial['objectid'] = Parameter.objects.all().order_by('-objectid')[0].objectid+1
     return render(request, 'lmdb/createParam.html', {'form' : form})
+
+
+@login_required(login_url='/login/')
+def createParamFromData(request):
+    if request.POST:
+        param = Parameter(objectid = Parameter.objects.all().order_by('-objectid')[0].objectid+1)
+        param.sciname = request.POST['sciname']
+        param.commonname = request.POST['commonname']
+        param.casnumber = request.POST['casnumber']
+        param.epanumber = request.POST['epanumber']
+        param.save()
+        return HttpResponse(json.dumps({'id': param.objectid, 'commonname' : param.commonname}))
+    return HttpResponse('failed')
     
 #########################################################################################
 #   END OF FUNCTIONS FOR PARAMETERS #
@@ -118,7 +131,11 @@ def projectDetail(request, project_id):
     project = get_object_or_404(Project, pk=project_id)
     person = get_object_or_404(People, pk=project.personid.objectid)
     event = get_object_or_404(Event, pk=project.eventid.objectid)
-    return render(request, 'lmdb/projectDetail.html', {'project' : project, 'person' : person, 'event' : event})
+    sightings = Sighting.objects.filter(projectid=project_id)
+    changes = Change.objects.filter(projectid=project_id)
+    measurements = Measurement.objects.filter(projectid=project_id)
+    collections = Collection.objects.filter(projectid=project_id)
+    return render(request, 'lmdb/projectDetail.html', {'project' : project, 'person' : person, 'event' : event, 'sightings' : sightings, 'changes' : changes, 'measurements' : measurements, 'collections' : collections})
     
 @login_required(login_url='/login/')
 def createProject(request):
@@ -409,10 +426,10 @@ def changes(request):     # !!!!!!   NEED TO APPLY FKEY RESTRAINTS
 
 def changeDetail(request, change_id):
     change = get_object_or_404(Change, pk=change_id)
-    parameter = get_object_or_404(Parameter, pk=change.parameterid)
+    parameter = get_object_or_404(Parameter, pk=change.parameterid.objectid)
     location = get_object_or_404(Location, pk=change.locationid)
-    project = get_object_or_404(Project, pk=change.projectid)
-    person =get_object_or_404(People, pk=change.personid)
+    project = get_object_or_404(Project, pk=change.projectid.objectid)
+    person =get_object_or_404(People, pk=change.personid.objectid)
     return render(request, 'lmdb/changeDetail.html', {'person': person, 'project' : project,'change' : change, 'parameter' : parameter, 'location' : location})
 
 
@@ -536,10 +553,10 @@ def collections(request):    # !!!!!!   NEED TO APPLY FKEY RESTRAINTS
 
 def collectionDetail(request, coll_id):
     collection = get_object_or_404(Collection, pk=coll_id)
-    organism = get_object_or_404(Organism, pk=collection.organismid)
+    organism = get_object_or_404(Organism, pk=collection.organismid.objectid)
     location = get_object_or_404(Location, pk=collection.locationid)
-    project = get_object_or_404(Project, pk=collection.projectid)
-    person =get_object_or_404(People, pk=collection.personid)
+    project = get_object_or_404(Project, pk=collection.projectid.objectid)
+    person =get_object_or_404(People, pk=collection.personid.objectid)
     return render(request, 'lmdb/collectionDetail.html', {'person': person, 'project' : project,'collection' : collection, 'organism' : organism, 'location' : location})
     
 

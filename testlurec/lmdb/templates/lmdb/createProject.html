@@ -1,5 +1,11 @@
 {% extends "base.html" %}
 {% block pageName %}Create Project{% endblock %}
+{% block customjs %}
+{% load static %}
+    <script type="text/javascript" src="{% static "datepicker/jquery.simple-dtpicker.js" %}"></script>
+	<link type="text/css" href="{% static "datepicker/jquery.simple-dtpicker.css" %}" rel="stylesheet" />
+
+{% endblock %}
 {% block content %}
 
 <form action="{% url 'lmdb:createProject' %}" method="post">
@@ -15,7 +21,18 @@ Permit:  {{form.permitid}}<br>
 {{form.locationid.errors}}
 Location:  {{form.locationid}} <br>
 Project Start Date and Time: {{form.projectstartdate}}<br>
+<script type="text/javascript">
+		jQuery($(function(){
+			$('#id_projectstartdate').appendDtpicker();
+		}));
+	</script>
+
 Project End Date and Time:  {{form.projectenddate}}<br>
+<script type="text/javascript">
+		jQuery($(function(){
+			$('#id_projectenddate').appendDtpicker();
+		}));
+	</script>
 Funded:  {{form.funded}} <br>
 Funder:  {{form.funder}}<br>
 Project Coordinator:  {{form.personid}}<br>
