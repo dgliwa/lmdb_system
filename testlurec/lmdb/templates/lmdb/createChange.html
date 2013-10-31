@@ -107,6 +107,28 @@ background:  white;
             // bind 'latlonform' and provide a simple callback function 
             $('#latlonform').ajaxForm(function() { 
             }); 
+            
+            $("#createChange").click(function() {
+           $("#changeForm").submit();
+       });
+    
+       $("#paramSubmit").submit(function(e){
+            e.preventDefault();
+            var values = $(this).serialize();
+            
+            var a = $.post('/lmdb/reference/parameters/createFromData/', values, function(response) {
+    // log the response to the console
+    console.log("Response: "+response);
+    console.log(response['commonname']);
+ $("#id_parameterid").append('<option value="' + response['id'] + '">' + response['commonname'] + '</option>');
+      $("#id_parameterid option:last").attr('selected', 'selected');
+       },'json');
+    console.log(a);
+    this.reset();
+        $("#paramSubmit").css('visibility','hidden')
+
+    });
+            
         }); 
         
         
@@ -461,6 +483,21 @@ try{
 
 });
 
+function addParameter(){
+    $("#paramSubmit").css('visibility','visible')
+// jQuery.getJSON("/lmdb/reference/organisms/orderFilter/"+order_field+"/", function(j) {
+//         var options = '<option value="">---------- </option>';
+//         for (var i = 0; i < j.length; i++) {
+//           options += '<option value="' + j[i].family + '">' + j[i].family + '</option>';
+//         }
+//         $("#id_family").html(options);
+//         $("#id_family option:first").attr('selected', 'selected');
+//         $("#id_family").attr('disabled', false);
+//       })
+//       $("#id_order_field").attr('selected', 'selected');
+
+};
+
 
 </script>
 {% endblock %}
@@ -468,106 +505,18 @@ try{
 class ="claro"
 {% endblock %}
 {% block content %}
-<script type="text/javascript">
-//test popup to add contents
-
-function report(c_id) {
-    var form = document.createElement("form", "report_form");
-    form.id = "report_form";
-    form.method = "post";
-    form.action = "index.php?mode=post_comment";
-
-    var reply_place = document.createElement("div");
-    reply_place.id = "overlay";
-    var inner_div = document.createElement("div"), button_close = document.createElement("button");
-    button_close.id = "upprev_close";
-    button_close.innerHTML = "x";
-    button_close.onclick = function () {
-        var element = document.getElementById('overlay');
-        element.parentNode.removeChild(element);
-    };
-    inner_div.appendChild(button_close);
-
-    var legend = document.createElement("legend");
-    legend.innerHTML = "Why do you want to add this?";
-    form.appendChild(legend);
-
-    var input1 = document.createElement("input");
-    input1.type = "radio";
-    input1.id = "this";
-    input1.value = "this";
-    input1.name = "options";
-    var radio_label1 = document.createElement("label");
-    radio_label1.htmlFor = "this";
-    radio_label1_text = "this";
-    radio_label1.appendChild(document.createTextNode(radio_label1_text));
-    form.appendChild(input1);
-    form.appendChild(radio_label1);
-
-    var input2 = document.createElement("input");
-    input2.type = "radio";
-    input2.id = "that";
-    input2.value = "that";
-    input2.name = "options";
-    var radio_label2 = document.createElement("label");
-    radio_label2.htmlFor = "that";
-    radio_label2_text = "that";
-    radio_label2.appendChild(document.createTextNode(radio_label2_text));
-    form.appendChild(input2);
-    form.appendChild(radio_label2);
-
-    var input3 = document.createElement("input");
-    input3.type = "radio";
-    input3.id = "spam";
-    input3.value = "spam";
-    input3.name = "options";
-    var radio_label3 = document.createElement("label");
-    radio_label3.htmlFor = "spam";
-    radio_label6_text = "Spam";
-    radio_label3.appendChild(document.createTextNode(radio_label6_text));
-    form.appendChild(input3);
-    form.appendChild(radio_label3);
-
-    var submit_btn = document.createElement("input", "the_submit");
-    submit_btn.type = "submit";
-    submit_btn.className = "submit";
-    submit_btn.value = "Report";
-    form.appendChild(submit_btn);
-
-    submit_btn.onclick = function () {
-        var checked = false, formElems = this.parentNode.getElementsByTagName('input');
-        for (var i = 0; i < formElems.length; i++) {
-            if (formElems[i].type == 'radio' && formElems[i].checked == true) {
-                checked = true;
-                var el = formElems[i];
-                break;
-            }
-        }
-        if (!checked) return false;
-        var poststr = "c_id=" + c_id + "&reason=" + encodeURI(el.value);
-        alert(poststr);
-        return false;
-    }
-
-    inner_div.appendChild(form);
-    reply_place.appendChild(inner_div);
-
-    var attach_to = document.getElementById("wrapper"), parentDiv = attach_to.parentNode;
-    parentDiv.insertBefore(reply_place, attach_to);
-
-}
-</script>
-
-
-<span style="cursor:pointer;cursor:hand;" onclick="report(127);">Report this!</span>
-<div id="wrapper"></div>
 
 
 
 
 
 
-<form action="{% url 'lmdb:createChange' %}" method="post">
+
+<table>
+<tbody>
+<tr>
+<td style="width:75%">
+<form id= "changeForm" action="{% url 'lmdb:createChange' %}" method="post">
 {% csrf_token %}
 {{form.non_field_errors}}
 {{form.objectid.errors}}
@@ -577,20 +526,9 @@ Description:  {{form.description}}<br>
 {{form.justification.errors}}
 Justification:  {{form.justification}} <br>
 {{form.parameterid.errors}}
-Parameter:  {{form.parameterid}}  <br>
+Parameter:  {{form.parameterid}}  <button type="button" onclick="addParameter();">Add Parameter</button><br>
 {{form.projectid.errors}}
 Project:  {{form.projectid}} <br>
-{{form.locationid.errors}}
-Location:  {{form.locationid}} <br>
-<div data-dojo-type="dijit/layout/BorderContainer" data-dojo-props="gutters:true, design:'headline'" style="width:100%;height:100%;">
-      <div data-dojo-type="dijit/layout/ContentPane"  id="header" data-dojo-props="region:'top'">
-           </div>
-      <div id="map" data-dojo-type="dijit/layout/ContentPane" data-dojo-props="region:'center'"></div>
-      <div id="rightPane" data-dojo-type="dijit/layout/ContentPane" data-dojo-props="region:'right'">
-        <div id="templatePickerDiv"></div>
-
-          </div>
-          </div>
 {{form.permanent.errors}}
 Permanent Change:  {{form.permanent}} <br>
 {{form.chemicalapplication.errors}}
@@ -606,7 +544,6 @@ Area of the Change:  {{form.areachange}}<br>
 {{form.date.errors}}
 Change Date:  {{form.date}} <br>
 <script type="text/javascript">
-		$.noConflict();
 		jQuery($(function(){
 			$('#id_date').appendDtpicker();
 		}));
@@ -615,9 +552,41 @@ Change Date:  {{form.date}} <br>
 {{form.personid.errors}}
 Person:  {{form.personid}}<br>
 
-<input type="submit" value="Create Change" />
+{{form.locationid.errors}}
+Location:  {{form.locationid}} <br>
 
 </form>
+</td>
+<td>
+<form id = "paramSubmit" style = "visibility:hidden;" id="paramForm" name="paramForm" >
+{% csrf_token %}
+
+Scientific Name:
+<input id="sciname" type = "text" name="sciname"/>
+Common Name:
+<input id="comname" type = "text" name ="commonname"/>
+CAS Number:
+<input id="casnum" type = "text" name ="casnumber"/>
+EPA Number:
+<input id="epanum" type = "text" name="epanumber"/>
+
+<input type="submit" value="Submit"/>
+</form>
+</td>
+</tr>
+</tbody>
+</table>
+<div data-dojo-type="dijit/layout/BorderContainer" data-dojo-props="gutters:true, design:'headline'" style="width:100%;height:100%;">
+      <div data-dojo-type="dijit/layout/ContentPane"  id="header" data-dojo-props="region:'top'">
+           </div>
+      <div id="map" data-dojo-type="dijit/layout/ContentPane" data-dojo-props="region:'center'"></div>
+      <div id="rightPane" data-dojo-type="dijit/layout/ContentPane" data-dojo-props="region:'right'">
+        <div id="templatePickerDiv"></div>
+
+          </div>
+          </div>
+
+<input id="createChange" type="submit" value="Create Change" />
 {% endblock %}
 
 

@@ -1,12 +1,8 @@
 {% extends "base.html" %}
-{% block pageName %}Create Measurement{% endblock %}
+{% block pageName %}Clean Locations{% endblock %}
 {% block customjs %}
-   {% load static %}
     <link rel="stylesheet" href="http://js.arcgis.com/3.6/js/dojo/dijit/themes/claro/claro.css">
     <link rel="stylesheet" href="http://js.arcgis.com/3.6/js/esri/css/esri.css">
-    <script type="text/javascript" src="{% static "datepicker/jquery.simple-dtpicker.js" %}"></script>
-	<link type="text/css" href="{% static "datepicker/jquery.simple-dtpicker.css" %}" rel="stylesheet" />
-
     <style>
       html, body {
         height: 100%;
@@ -39,8 +35,6 @@
         border: solid 2px #444;
       }
     </style>
-    
-    
 
  <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7/jquery.js"></script> 
     <script src="http://malsup.github.com/jquery.form.js"></script> 
@@ -54,27 +48,6 @@
             // bind 'latlonform' and provide a simple callback function 
             $('#latlonform').ajaxForm(function() { 
             }); 
-            
-            $("#createMeasurement").click(function() {
-           $("#measurementForm").submit();
-       });
-    
-       $("#paramSubmit").submit(function(e){
-            e.preventDefault();
-            var values = $(this).serialize();
-            
-            var a = $.post('/lmdb/reference/parameters/createFromData/', values, function(response) {
-    // log the response to the console
-    console.log("Response: "+response);
-    console.log(response['commonname']);
- $("#id_parameterid").append('<option value="' + response['id'] + '">' + response['commonname'] + '</option>');
-      $("#id_parameterid option:last").attr('selected', 'selected');
-       },'json');
-    console.log(a);
-    this.reset();
-        $("#paramSubmit").css('visibility','visible')
-
-    });
         }); 
         
         
@@ -82,7 +55,9 @@
     
     
     <script>
-var featureLayer;
+var pointLayer;
+var lineLayer;
+var polyLayer;
 dojo.require("esri.map");
 dojo.require("esri.layers.FeatureLayer");
 dojo.require("esri.layers.FeatureEditResult");
@@ -102,7 +77,6 @@ require([
     "esri/config",
 
     "esri/layers/FeatureLayer",
-    "esri/geometry/Point",
 
     "esri/symbols/SimpleMarkerSymbol",
     "esri/symbols/SimpleLineSymbol",
@@ -120,7 +94,7 @@ require([
     "dijit/form/Button", "dojo/domReady!"
 ], function (
     Map, Draw, Edit, Graphic, esriConfig,
-    FeatureLayer,Point,
+    FeatureLayer,
     SimpleMarkerSymbol, SimpleLineSymbol, SimpleFillSymbol,
     TemplatePicker,
     arrayUtils, event, lang, parser, registry
@@ -137,194 +111,99 @@ require([
         basemap: "satellite",
         logo: true,
         center: [-88.366193, 42.289993],
-        zoom: 14
+        zoom: 15
     });
 
     map.on("layers-add-result", initEditing);
-    if({{points}}.length != 0){
+    
     pointLayer = new FeatureLayer("http://147.126.65.155/gis/rest/services/campus/lurec_lmdb/FeatureServer/0", {
         mode: FeatureLayer.MODE_SNAPSHOT,
         outFields: ["*"]
 
     });
+    if({{points}}.length != 0){
     var queryString = ""
+    
     for( var i=0;  i<{{points}}.length; i++){
         if (queryString == ""){
-            queryString += "objectid =" + {{points}}[i];
+            queryString += "objectid !=" + {{points}}[i];
         }
         else{
-            queryString += "OR objectid =" + {{points}}[i];
+            queryString += "AND objectid !=" + {{points}}[i];
         }
     
     }
     pointLayer.setDefinitionExpression(queryString);
     }
-    if ({{lines}}.length != 0){
+   
     lineLayer = new FeatureLayer("http://147.126.65.155/gis/rest/services/campus/lurec_lmdb/FeatureServer/1", {
         mode: FeatureLayer.MODE_SNAPSHOT,
         outFields: ["*"]
     });
+    if ({{lines}}.length != 0){
     var queryString = ""
     for( var i=0; i<{{lines}}.length;i++){
         if (queryString == ""){
-            queryString += "objectid =" + {{lines}}[i];
+            queryString += "objectid !=" + {{lines}}[i];
         }
         else{
-            queryString += "OR objectid =" + {{lines}}[i];
+            queryString += "AND objectid !=" + {{lines}}[i];
         }
     
     }
     lineLayer.setDefinitionExpression(queryString);    }
-    if({{polys}}.length!=0){
     polyLayer = new FeatureLayer("http://147.126.65.155/gis/rest/services/campus/lurec_lmdb/FeatureServer/2", {
         mode: FeatureLayer.MODE_SNAPSHOT,
         outFields: ["*"]
     });
+        if({{polys}}.length!=0){
+
    var queryString = ""
     for( var i=0; i<{{polys}}.length; i++){
         if (queryString == ""){
-            queryString += "objectid =" + {{polys}}[i];
+            queryString += "objectid !=" + {{polys}}[i];
         }
         else{
-            queryString += "OR objectid =" + {{polys}}[i];
+            queryString += "AND objectid !=" + {{polys}}[i];
         }
     
     }
     polyLayer.setDefinitionExpression(queryString);}
-    infoTemplate = new esri.InfoTemplate("Object ID : ${objectid}",
-        "<input class=\"hidden\" id = \"locId\" value=\"${objectid}\"/>" +
-        "You have selected to use this location to record your measurement.");
+    pointinfoTemplate = new esri.InfoTemplate("ObjectID : ${objectid}",
+        "<button onClick='addPoint(${objectid})'>Sync Point</button>");
+    lineinfoTemplate = new esri.InfoTemplate("ObjectID : ${objectid}",
+        "<button onClick='addLine(${objectid})'>Sync Line</button>");
+    polyinfoTemplate = new esri.InfoTemplate("ObjectID : ${objectid}",
+        "<button onClick='addPoly(${objectid})'>Sync Poly</button>");
 
     if (pointLayer != null){
-       pointLayer.setInfoTemplate(infoTemplate);
+       pointLayer.setInfoTemplate(pointinfoTemplate);
     }
     if (lineLayer != null){
-        lineLayer.setInfoTemplate(infoTemplate);
+        lineLayer.setInfoTemplate(lineinfoTemplate);
     }
     if (polyLayer != null){
-        polyLayer.setInfoTemplate(infoTemplate);
+        polyLayer.setInfoTemplate(polyinfoTemplate);
     }
-
     dojo.connect(map, "onLayersAddResult", initEditing);
 
-    dojo.connect(pointLayer, "onEditsComplete",
-        function (addResults) {
-            if (addResults.length > 0) {
-                alert("objectid is: " + addResults[0].objectId);
-
-                try{
-                jQuery.post('/lmdb/reference/locations/create/popup/',{'csrfmiddlewaretoken' : '{{ csrf_token }}','indicator': 'yes', 'type': 'point', 'objectid' :addResults[0].objectId}, function() {
-  alert( "success" );
-}); 
-                }
-                catch(err){
-                console.log(err);
-                }
-
-                document.getElementById('id_locationid').value=addResults[0].objectId;
-
-var graphic = pointLayer.graphics[pointLayer.graphics.length - 1];
-                graphic.attributes["additionalinformation"] = graphic.attributes["objectid"];
-                try{
-                x = graphic.geometry.x;
-                y = graphic.geometry.y;
-                sr = map.spatialReference;
-                p = new Point(x,y,sr)
-                
-                map.infoWindow.show(p);
-                
-                map.infoWindow.setContent(graphic.getContent());
-                }
-                catch(err){
-                console.log(err);
-                }
-            }
+    
 
 
-        });
-
-
-    dojo.connect(lineLayer, "onEditsComplete",
-        function (addResults) {
-            if (addResults.length > 0) {
-                alert("objectid is: " + addResults[0].objectId);
-
-
-try{                jQuery.post('/lmdb/reference/locations/create/popup/',{'csrfmiddlewaretoken' : '{{ csrf_token }}','indicator': 'yes', 'type': 'line', 'objectid' :addResults[0].objectId}, function() {
-  alert( "success" );
-}); 
-                }
-                catch(err){
-                console.log(err);
-                }
-
-
-
-                document.getElementById('id_locationid').value=addResults[0].objectId;
-
-                 var graphic = lineLayer.graphics[lineLayer.graphics.length - 1];
-             graphic.attributes["additionalinformation"] = graphic.attributes["objectid"];
-                try{
-                x = graphic.geometry.paths[0][0][0];
-                y = graphic.geometry.paths[0][0][1];
-                sr = map.spatialReference;
-                p = new Point(x,y,sr)
-                map.infoWindow.show(p);
-                
-                map.infoWindow.setContent(graphic.getContent());
-                }
-                catch(err){
-                console.log(err);
-                }
-                        }
-
-
-        });
+    
 
 
 
 
-    dojo.connect(polyLayer, "onEditsComplete",
-        function (addResults) {
-            if (addResults.length > 0) {
-                alert("objectid is: " + addResults[0].objectId);
-
-try{
-               jQuery.post('/lmdb/reference/locations/create/popup/',{'csrfmiddlewaretoken' : '{{ csrf_token }}','indicator': 'yes', 'type': 'poly', 'objectid' :addResults[0].objectId}, function() {
-  alert( "success" );
-}); 
-                }
-                catch(err){
-                console.log(err);
-                }
-
-
-
-                document.getElementById('id_locationid').value=addResults[0].objectId;
-
-                var graphic = polyLayer.graphics[polyLayer.graphics.length - 1];
-             graphic.attributes["additionalinformation"] = graphic.attributes["objectid"];
-                try{
-                x = graphic.geometry.rings[0][0][0];
-                y = graphic.geometry.rings[0][0][1];
-                sr = map.spatialReference;
-                p = new Point(x,y,sr)
-                map.infoWindow.show(p);
-                
-                map.infoWindow.setContent(graphic.getContent());
-                }
-                catch(err){
-                console.log(err);
-                }
-            }
-
-
-        });
+   
 
 
 
 
-      if( pointLayer == null || lineLayer == null || polyLayer == null){
+    /////////////////////////
+
+
+    if( pointLayer == null || lineLayer == null || polyLayer == null){
          if(pointLayer!=null && lineLayer !=null){
              map.addLayers([pointLayer,lineLayer]);
          }
@@ -348,8 +227,6 @@ try{
         map.addLayers([pointLayer,lineLayer,polyLayer]);
     }
     map.addLayers([pointLayer,lineLayer,polyLayer]);
-
-
 
     function initEditing(evt) {
         console.log("initEditing", evt);
@@ -381,7 +258,6 @@ try{
 
             layer.on("click", function (evt) {
                 event.stop(evt);
-                document.getElementById('id_locationid').value=document.getElementById('locId').value;
                 if (evt.ctrlKey === true || evt.metaKey === true) { //delete feature if ctrl key is depressed
                     layer.applyEdits(null, null, [evt.graphic]);
                     currentLayer = this;
@@ -430,25 +306,148 @@ try{
 
         });
     }
-    
-
 });
 
 
-function addParameter(){
-    $("#paramSubmit").css('visibility','visible')
-// jQuery.getJSON("/lmdb/reference/organisms/orderFilter/"+order_field+"/", function(j) {
-//         var options = '<option value="">---------- </option>';
-//         for (var i = 0; i < j.length; i++) {
-//           options += '<option value="' + j[i].family + '">' + j[i].family + '</option>';
-//         }
-//         $("#id_family").html(options);
-//         $("#id_family option:first").attr('selected', 'selected');
-//         $("#id_family").attr('disabled', false);
-//       })
-//       $("#id_order_field").attr('selected', 'selected');
 
-};
+function addPoint(objectid){
+      method = "post"; // Set method to post by default, if not specified.
+
+                // The rest of this code assumes you are not using a library.
+                // It can be made less wordy if you use one.
+                var form = document.createElement("form");
+                form.setAttribute("method", method);
+                form.setAttribute("action", '../create/');
+
+                var csrfToken = document.createElement("input");
+                csrfToken.setAttribute("type", "hidden");
+                csrfToken.setAttribute("name", "csrfmiddlewaretoken");
+                csrfToken.setAttribute("value", "{{ csrf_token }}");
+                form.appendChild(csrfToken);
+
+
+                var indicator = document.createElement("input");
+                indicator.setAttribute("type", "hidden");
+                indicator.setAttribute("name", "indicator");
+                indicator.setAttribute("value", "yes");
+                form.appendChild(indicator);
+
+
+                var type = document.createElement("input");
+                type.setAttribute("type", "hidden");
+                type.setAttribute("name", "type");
+                type.setAttribute("value", "point");
+                form.appendChild(type);
+
+
+                var hiddenField = document.createElement("input");
+                hiddenField.setAttribute("type", "hidden");
+                hiddenField.setAttribute("name", 'objectid');
+                hiddenField.setAttribute("value", objectid);
+
+                form.appendChild(hiddenField);
+
+
+
+                document.body.appendChild(form);
+                form.submit();
+
+
+
+}
+
+
+function addLine(objectid){
+      method = "post"; // Set method to post by default, if not specified.
+
+                // The rest of this code assumes you are not using a library.
+                // It can be made less wordy if you use one.
+                var form = document.createElement("form");
+                form.setAttribute("method", method);
+                form.setAttribute("action", '../create/');
+
+                var csrfToken = document.createElement("input");
+                csrfToken.setAttribute("type", "hidden");
+                csrfToken.setAttribute("name", "csrfmiddlewaretoken");
+                csrfToken.setAttribute("value", "{{ csrf_token }}");
+                form.appendChild(csrfToken);
+
+
+                var indicator = document.createElement("input");
+                indicator.setAttribute("type", "hidden");
+                indicator.setAttribute("name", "indicator");
+                indicator.setAttribute("value", "yes");
+                form.appendChild(indicator);
+
+
+                var type = document.createElement("input");
+                type.setAttribute("type", "hidden");
+                type.setAttribute("name", "type");
+                type.setAttribute("value", "line");
+                form.appendChild(type);
+
+
+                var hiddenField = document.createElement("input");
+                hiddenField.setAttribute("type", "hidden");
+                hiddenField.setAttribute("name", 'objectid');
+                hiddenField.setAttribute("value", objectid);
+
+                form.appendChild(hiddenField);
+
+
+
+                document.body.appendChild(form);
+                form.submit();
+
+
+
+}
+
+function addPoly(objectid){
+      method = "post"; // Set method to post by default, if not specified.
+
+                // The rest of this code assumes you are not using a library.
+                // It can be made less wordy if you use one.
+                var form = document.createElement("form");
+                form.setAttribute("method", method);
+                form.setAttribute("action", '../create/');
+
+                var csrfToken = document.createElement("input");
+                csrfToken.setAttribute("type", "hidden");
+                csrfToken.setAttribute("name", "csrfmiddlewaretoken");
+                csrfToken.setAttribute("value", "{{ csrf_token }}");
+                form.appendChild(csrfToken);
+
+
+                var indicator = document.createElement("input");
+                indicator.setAttribute("type", "hidden");
+                indicator.setAttribute("name", "indicator");
+                indicator.setAttribute("value", "yes");
+                form.appendChild(indicator);
+
+
+                var type = document.createElement("input");
+                type.setAttribute("type", "hidden");
+                type.setAttribute("name", "type");
+                type.setAttribute("value", "poly");
+                form.appendChild(type);
+
+
+                var hiddenField = document.createElement("input");
+                hiddenField.setAttribute("type", "hidden");
+                hiddenField.setAttribute("name", 'objectid');
+                hiddenField.setAttribute("value", objectid);
+
+                form.appendChild(hiddenField);
+
+
+
+                document.body.appendChild(form);
+                form.submit();
+
+
+
+}
 
 
 
@@ -459,82 +458,12 @@ function addParameter(){
 class ="claro"
 {% endblock %}
 {% block content %}
-<table>
-<tbody>
-<tr>
-<td style="width:75%">
-<form id="measurementForm" action="{% url 'lmdb:createMeasurement' %}" method="post">
-{% csrf_token %}
-{{form.non_field_errors}}
-{{form.objectid.errors}}
-{{form.objectid}}
-{{form.mname.errors}}
-Name:  {{form.mname}}<br>
-{{form.parameterid.errors}}
-Parameter:  {{form.parameterid}}  <button type="button" onclick="addParameter();">Add Parameter</button>
 
-<br>
-{{form.projectid.errors}}
-Project:  {{form.projectid}} <br>
-{{form.medium.errors}}
-Medium:  {{form.medium}} <br>
-{{form.mmethod.errors}}
-Measurement Method:  {{form.mmethod}} <br>
-{{form.mquant.errors}}
-Measurement Quantity: {{form.mquant}} <br>
-{{form.munits.errors}}
-Measurement Units:  {{form.munits}} <br>
-{{form.date.errors}}
-Measurement Date:  {{form.date}} <br>
-<script type="text/javascript">
-		$.noConflict();
-		jQuery($(function(){
-			$('#id_date').appendDtpicker();
-		}));
-	</script>
-{{form.notes.errors}}
-Measurement Notes:  {{form.notes}} <br>
-{{form.personid.errors}}
-Person:  {{form.personid}}<br>
-
-{{form.locationid.errors}}
-Location:  {{form.locationid}} <br>
-
-</form>
-</td>
-<td>
-<form id = "paramSubmit" style = "visibility:hidden;" id="paramForm" name="paramForm" >
-{% csrf_token %}
-
-Scientific Name:
-<input id="sciname" type = "text" name="sciname"/>
-Common Name:
-<input id="comname" type = "text" name ="commonname"/>
-CAS Number:
-<input id="casnum" type = "text" name ="casnumber"/>
-EPA Number:
-<input id="epanum" type = "text" name="epanumber"/>
-
-<input type="submit" value="Submit"/>
-</form>
-</td>
-</tr>
-</tbody>
-</table>
-<div data-dojo-type="dijit/layout/BorderContainer" data-dojo-props="gutters:true, design:'headline'" style="width:100%;height:100%;">
+     <div data-dojo-type="dijit/layout/BorderContainer" data-dojo-props="gutters:true, design:'headline'" style="width:100%;height:100%;">
       <div data-dojo-type="dijit/layout/ContentPane"  id="header" data-dojo-props="region:'top'">
+      <p>To delete locations that are not synced, press control (or command if using a mac) and click the location.  To sync the location, click the location.  Then click the button that appears in the infowindow. 
+      </p>
            </div>
       <div id="map" data-dojo-type="dijit/layout/ContentPane" data-dojo-props="region:'center'"></div>
-      <div id="rightPane" data-dojo-type="dijit/layout/ContentPane" data-dojo-props="region:'right'">
-        <div id="templatePickerDiv"></div>
-
           </div>
-          </div>
-
-<input id="createMeasurement" type="submit" value="Create Measurement" />
-
-
 {% endblock %}
-
-
-

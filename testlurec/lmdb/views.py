@@ -11,14 +11,16 @@ from django.contrib.auth.decorators import login_required
 from django.views.decorators.csrf import csrf_exempt, csrf_protect
 
 from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth.decorators import permission_required
+
 
 from forms import ParamForm, PermitForm, EventForm, ProjectForm, LocationForm, OrganismForm, MeasurementForm, SightingForm, CollectionForm, ChangeForm
 import json
 
 @login_required(login_url='/login/')
 def index(request):
-    
-    return render(request,'lmdb/index.html',{})
+    canAdd = request.user.has_perm("user.can_add")
+    return render(request,'lmdb/index.html',{'canAdd' : canAdd})
 
 @login_required(login_url='/login/')
 def reference(request):
@@ -29,6 +31,10 @@ def reference(request):
 def data(request):
     
     return render(request,'lmdb/data.html',{})
+
+#@login_required(login_url='/login/')    
+#def userMan(request):
+#    return render(request, 'lmdb/userMan.html',{})
 
 
 
@@ -52,16 +58,19 @@ def events(request):
     })
     return HttpResponse(template.render(context))
 
-@login_required(login_url='/login/')    
+@login_required(login_url='/login/')
+@permission_required('events.can_add')    
 def createEvent(request):
     if request.POST:  #inserts new event into database
-        form = EventForm(request.POST)
+        postVals = request.POST.copy()
+        postVals['objectid'] = Event.objects.all().order_by('-objectid')[0].objectid+1
+        form = EventForm(postVals)
         if form.is_valid():
             form.save()
             return HttpResponseRedirect('/lmdb/reference/events/')
     else:
         form = EventForm()
-        form.initial['objectid'] = Event.objects.all().order_by('-objectid')[0].objectid+1
+        form.initial['objectid'] = 1
     return render(request, 'lmdb/createEvent.html', {'form' : form})
   
 #########################################################################################
@@ -88,13 +97,15 @@ def paramDetail(request, param_id):
 @login_required(login_url='/login/')
 def createParam(request):
     if request.POST:
-        form = ParamForm(request.POST)
+        postVals = request.POST.copy()
+        postVals['objectid'] = Parameter.objects.all().order_by('-objectid')[0].objectid+1
+        form = ParamForm(postVals)
         if form.is_valid():
             form.save()
             return HttpResponseRedirect('/lmdb/reference/parameters/')
     else:
         form = ParamForm()
-        form.initial['objectid'] = Parameter.objects.all().order_by('-objectid')[0].objectid+1
+        form.initial['objectid'] = 1
     return render(request, 'lmdb/createParam.html', {'form' : form})
 
 
@@ -140,13 +151,15 @@ def projectDetail(request, project_id):
 @login_required(login_url='/login/')
 def createProject(request):
     if request.POST:  #inserts new project into database
-        form = ProjectForm(request.POST)
+        postVals = request.POST.copy()
+        postVals['objectid'] = Project.objects.all().order_by('-objectid')[0].objectid+1
+        form = ProjectForm(postVals)
         if form.is_valid():
             form.save()
             return HttpResponseRedirect('/lmdb/reference/projects/')
     else:
         form = ProjectForm()
-        form.initial['objectid'] = Project.objects.all().order_by('-objectid')[0].objectid+1
+        form.initial['objectid'] = 1
     return render(request, 'lmdb/createProject.html', {'form':form})
     
 #########################################################################################
@@ -173,13 +186,15 @@ def permitDetail(request, permit_id):
 @login_required(login_url='/login/')
 def createPermit(request):
     if request.POST:
-        form = PermitForm(request.POST)
+        postVals = request.POST.copy()
+        postVals['objectid'] = Permit.objects.all().order_by('-objectid')[0].objectid+1
+        form = PermitForm(postVals)        
         if form.is_valid():
             form.save()
             return HttpResponseRedirect('/lmdb/reference/permits/')
     else:
         form = PermitForm()
-        form.initial['objectid'] = Permit.objects.all().order_by('-objectid')[0].objectid+1
+        form.initial['objectid'] = 1
     return render(request, 'lmdb/createPermit.html', {'form' : form})
 
 #########################################################################################
@@ -261,6 +276,24 @@ def createLocationPopUp(request):
     else:
         return HttpResponseRedirect('/lmdb/reference/locations/')
 
+@login_required(login_url='/login/')
+@permission_required('locations.can_add')    
+@permission_required('locations.can_delete')    
+def locationCleanup(request):
+    locations = Location.objects.values()
+    points = []
+    lines = []
+    polys = []
+    for location in locations: 
+        if location['pointid'] != None:
+            points.append(location['pointid'])
+        elif location['lineid'] != None:
+            lines.append(location['lineid'])
+        elif location['areaid'] != None:
+            polys.append(location['areaid'])
+
+    return render(request, 'lmdb/locationCleanup.html', {'points':points, 'lines':lines,'polys':polys})
+
 ##  !!!! Need to add a sync locations view to allow for locations not tagged to be added to the db !!!! ##
 
 #########################################################################################
@@ -287,14 +320,33 @@ def organismDetail(request, org_id):
 @login_required(login_url='/login/')
 def createOrganism(request):
     if request.POST:
-        form = OrganismForm(request.POST)
+        postVals = request.POST.copy()
+        postVals['objectid'] = Organism.objects.all().order_by('-objectid')[0].objectid+1
+        form = OrganismForm(postVals)
         if form.is_valid():
             form.save()
             return HttpResponseRedirect('/lmdb/reference/organisms/')
     else:
         form = OrganismForm()
-        form.initial['objectid'] = Organism.objects.all().order_by('-objectid')[0].objectid+1
+        form.initial['objectid'] = 1
     return render(request, 'lmdb/createOrganism.html', {'form' : form})
+    
+@login_required(login_url='/login/')
+def createOrganismFromData(request):
+    if request.POST:
+        org = Organism(objectid = Organism.objects.all().order_by('-objectid')[0].objectid+1)
+        org.organismname = request.POST['organismname']
+        org.kingdom = request.POST['kingdom']
+        
+        org.phylum = request.POST['phylum']
+        org.class_field = request.POST['class_field']
+        org.order_field = request.POST['order_field']
+        org.family = request.POST['family']
+        org.genus = request.POST['genus']
+        org.species = request.POST['species']
+        org.save()
+        return HttpResponse(json.dumps({'id': org.objectid, 'organismname' : org.organismname}))
+    return HttpResponse('failed')
 
 #########################################################################################
 # FUNCTIONS THAT HANDLE AJAX CALLS FROM THE CREATE ORGANISMS PAGE  #
@@ -327,7 +379,33 @@ def familyFilter(request, family_id):
 	b = Organism.objects.filter(family=family_id).values('genus').distinct()  
 	data = json.dumps([dict(genus = org['genus']) for org in b])
 	return HttpResponse(data, mimetype="application/javascript")
-	
+
+def genusFilter(request, genus_id):
+	from django.core import serializers
+	b = Organism.objects.filter(genus=genus_id).values('organismname','objectid').distinct()  
+	data = json.dumps([dict(organismname = org['organismname'], objectid=org['objectid']) for org in b])
+	return HttpResponse(data, mimetype="application/javascript")
+
+def species(request,column, filter):
+    print column
+    if column=='kingdom':
+        b = Organism.objects.filter(kingdom = filter).values('organismname','objectid').distinct()
+    elif column=='phylum':
+        b = Organism.objects.filter(phylum = filter).values('organismname','objectid').distinct()
+    elif column=='order_field':
+        b = Organism.objects.filter(order_field = filter).values('organismname','objectid').distinct()
+    elif column=='family':
+        b = Organism.objects.filter(family = filter).values('organismname','objectid').distinct()
+    elif column=='class_field':
+        b = Organism.objects.filter(class_field = filter).values('organismname','objectid').distinct()
+    elif column=='genus':
+        b = Organism.objects.filter(genus = filter).values('organismname','objectid').distinct()
+    else:
+        return HttpResponse('failed')
+    data = json.dumps([dict(organismname = org['organismname'], objectid=org['objectid']) for org in b])
+    return HttpResponse(data, mimetype="application/javascript")
+
+    
 #########################################################################################
 #   END OF FUNCTIONS FOR ORGANISMS #
 #
@@ -371,13 +449,15 @@ def sightingDetail(request, sight_id):
 
 def createSighting(request):
     if request.POST:
-        form = SightingForm(request.POST)
+        postVals = request.POST.copy()
+        postVals['objectid'] = Sighting.objects.all().order_by('-objectid')[0].objectid+1
+        form = SightingForm(postVals)
         if form.is_valid():
             form.save()
             return HttpResponseRedirect('/lmdb/data/sightings/')
     else:
         form = SightingForm()
-        form.initial['objectid'] = Sighting.objects.all().order_by('-objectid')[0].objectid+1
+        form.initial['objectid'] = 1
     points = []
     lines = []
     polys = []
@@ -435,13 +515,16 @@ def changeDetail(request, change_id):
 
 def createChange(request):
     if request.POST:
-        form = ChangeForm(request.POST)
+        postVals = request.POST.copy()
+        postVals['objectid'] = Change.objects.all().order_by('-objectid')[0].objectid+1
+        form = ChangeForm(postVals)
+        form.initial['objectid'] = Change.objects.all().order_by('-objectid')[0].objectid+1
         if form.is_valid():
             form.save()
             return HttpResponseRedirect('/lmdb/data/changes/')
     else:
         form = ChangeForm()
-        form.initial['objectid'] = Change.objects.all().order_by('-objectid')[0].objectid+1
+        form.initial['objectid'] = 1
     points = []
     lines = []
     polys = []
@@ -496,13 +579,15 @@ def measurementDetail(request, meas_id):
 
 def createMeasurement(request):
     if request.POST:
-        form = MeasurementForm(request.POST)
+        postVals = request.POST.copy()
+        postVals['objectid'] = Measurement.objects.all().order_by('-objectid')[0].objectid+1
+        form = MeasurementForm(postVals)
         if form.is_valid():
             form.save()
             return HttpResponseRedirect('/lmdb/data/measurements/')
     else:
         form = MeasurementForm()
-        form.initial['objectid'] = Measurement.objects.all().order_by('-objectid')[0].objectid+1
+        form.initial['objectid'] = 1
     points = []
     lines = []
     polys = []
@@ -562,13 +647,17 @@ def collectionDetail(request, coll_id):
 
 def createCollection(request):
     if request.POST:
-        form = CollectionForm(request.POST)
+        postVals = request.POST.copy()
+        postVals['objectid'] = Collection.objects.all().order_by('-objectid')[0].objectid+1
+        form = CollectionForm(postVals)
+        #form.fields['objectid'].initial = Collection.objects.all().order_by('-objectid')[0].objectid+1
         if form.is_valid():
+            form.cleaned_data['objectid']=Collection.objects.all().order_by('-objectid')[0].objectid+1
             form.save()
             return HttpResponseRedirect('/lmdb/data/collections/')
     else:
         form = CollectionForm()
-        form.initial['objectid'] = Collection.objects.all().order_by('-objectid')[0].objectid+1
+        form.initial['objectid'] = 1
     points = []
     lines = []
     polys = []
@@ -605,9 +694,6 @@ from django.contrib.auth.decorators import login_required
 
 #handles the logins of users and holds home page
 
-@login_required(login_url='/login/')
-def index(request):
-    return render(request,'lmdb/index.html',{})
 
 
 def login_user(request):

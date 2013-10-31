@@ -1,6 +1,8 @@
 from django import forms
 from models import Parameter, Permit, Event, Project, People, Location, Organism, Measurement, Sighting, Collection, Change
 from django.forms.extras.widgets import Select
+from django.contrib.auth.models import User
+
 
 
 class ParamForm(forms.ModelForm):
@@ -49,7 +51,7 @@ class ProjectForm(forms.ModelForm):
     funded = forms.IntegerField()
     funder = forms.CharField()
     personid = forms.ModelChoiceField(queryset=People.objects.all())
-    
+    people = forms.ModelMultipleChoiceField(queryset=User.objects.all(), widget=forms.CheckboxSelectMultiple())
     class Meta:
         model = Project
         
@@ -137,3 +139,5 @@ class ChangeForm(forms.ModelForm):
     personid = forms.ModelChoiceField(queryset = People.objects.all(), required = False)
     class Meta:
         model = Change
+        
+    

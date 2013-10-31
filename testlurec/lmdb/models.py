@@ -183,6 +183,7 @@ class Project(models.Model):
     funded = models.SmallIntegerField()
     funder = models.CharField(max_length=255, blank=True)
     personid = models.ForeignKey('People', db_column='personid')
+    people = models.ManyToManyField(User)
     class Meta:
         db_table = 'project'
     def __unicode__(self):

@@ -51,11 +51,233 @@
             // bind 'latlonform' and provide a simple callback function 
             $('#latlonform').ajaxForm(function() { 
             }); 
+            
+       $("#createCollection").click(function() {
+           $("#collectionForm").submit();
+       });
+       
+        $("#organismSubmit").submit(function(e){
+            e.preventDefault();
+            var values = $(this).serialize();
+            
+            var a = $.post('/lmdb/reference/organisms/createFromData/', values, function(response) {
+    // log the response to the console
+    //console.log("Response: "+response);
+    //console.log(response['commonname']);
+ $("#id_organismid").append('<option value="' + response['id'] + '">' + response['organismname'] + '</option>');
+      $("#id_organismid option:last").attr('selected', 'selected');
+       },'json');
+    console.log(a);
+    this.reset();
+        $("#organismSubmit").css('visibility','hidden')
+
+    });
+
         }); 
         
-        
-    </script> 
+    $(function(){
+    $("select#id_kingdom").change(function(){
+      $.getJSON("/lmdb/reference/organisms/kingdomFilter/"+$(this).val()+"/", function(j) {
+        var options = '<option value="">---------- </option>';
+        for (var i = 0; i < j.length; i++) {
+          options += '<option value="' + j[i].phylum + '">' + j[i].phylum + '</option>';
+        }
+        $("#id_phylum").html(options);
+        $("#id_phylum option:first").attr('selected', 'selected');
+        $("#id_phylum").attr('disabled', false);
+      })
+      $("#id_kingdom").attr('selected', 'selected');
+      $.getJSON( "/lmdb/reference/organisms/kingdom/"+$(this).val()+"/", function( data ) {
+        var options = '<option value="">---------- </option>';
+        for (var i = 0; i < data.length; i++) {
+          options += '<option value="' + data[i].objectid + '">' + data[i].organismname + '</option>';
+        }
+        $("#id_organismid").html(options);
+        $("#id_organismid option:first").attr('selected', 'selected');
+});
+
+    })
+  })
+  
+  
+$(function(){
+    $("select#id_phylum").change(function(){
+      $.getJSON("/lmdb/reference/organisms/phylumFilter/"+$(this).val()+"/", function(j) {
+        var options = '<option value="">---------- </option>';
+        for (var i = 0; i < j.length; i++) {
+          options += '<option value="' + j[i].class_field + '">' + j[i].class_field + '</option>';
+        }
+        $("#id_class_field").html(options);
+        $("#id_class_field option:first").attr('selected', 'selected');
+        $("#id_class_field").attr('disabled', false);
+      })
+      $("#id_phylum").attr('selected', 'selected');
+    $.getJSON( "/lmdb/reference/organisms/phylum/"+$(this).val()+"/", function( data ) {
+        var options = '<option value="">---------- </option>';
+        for (var i = 0; i < data.length; i++) {
+          options += '<option value="' + data[i].objectid + '">' + data[i].organismname + '</option>';
+        }
+        $("#id_organismid").html(options);
+        $("#id_organismid option:first").attr('selected', 'selected');
+});
+    })
+  })
+  
+$(function(){
+    $("select#id_class_field").change(function(){
+      $.getJSON("/lmdb/reference/organisms/classFilter/"+$(this).val()+"/", function(j) {
+        var options = '<option value="">---------- </option>';
+        for (var i = 0; i < j.length; i++) {
+          options += '<option value="' + j[i].order_field + '">' + j[i].order_field + '</option>';
+        }
+        $("#id_order_field").html(options);
+        $("#id_order_field option:first").attr('selected', 'selected');
+        $("#id_order_field").attr('disabled', false);
+      })
+      $("#id_class_field").attr('selected', 'selected');
+      $.getJSON( "/lmdb/reference/organisms/class_field/"+$(this).val()+"/", function( data ) {
+        var options = '<option value="">---------- </option>';
+        for (var i = 0; i < data.length; i++) {
+          options += '<option value="' + data[i].objectid + '">' + data[i].organismname + '</option>';
+        }
+        $("#id_organismid").html(options);
+        $("#id_organismid option:first").attr('selected', 'selected');
+});
+    })
+  })
+  
+$(function(){
+    $("select#id_order_field").change(function(){
+      $.getJSON("/lmdb/reference/organisms/orderFilter/"+$(this).val()+"/", function(j) {
+        var options = '<option value="">---------- </option>';
+        for (var i = 0; i < j.length; i++) {
+          options += '<option value="' + j[i].family + '">' + j[i].family + '</option>';
+        }
+        $("#id_family").html(options);
+        $("#id_family option:first").attr('selected', 'selected');
+        $("#id_family").attr('disabled', false);
+      })
+      $("#id_order_field").attr('selected', 'selected');
+      $.getJSON( "/lmdb/reference/organisms/order_field/"+$(this).val()+"/", function( data ) {
+        var options = '<option value="">---------- </option>';
+        for (var i = 0; i < data.length; i++) {
+          options += '<option value="' + data[i].objectid + '">' + data[i].organismname + '</option>';
+        }
+        $("#id_organismid").html(options);
+        $("#id_organismid option:first").attr('selected', 'selected');
+});
+    })
+  })
+  
+$(function(){
+    $("select#id_family").change(function(){
+      $.getJSON("/lmdb/reference/organisms/familyFilter/"+$(this).val()+"/", function(j) {
+        var options = '<option value="">---------- </option>';
+        for (var i = 0; i < j.length; i++) {
+          options += '<option value="' + j[i].genus + '">' + j[i].genus + '</option>';
+        }
+        $("#id_genus").html(options);
+        $("#id_genus option:first").attr('selected', 'selected');
+        $("#id_genus").attr('disabled', false);
+      })
+      $("#id_family").attr('selected', 'selected');
+      $.getJSON( "/lmdb/reference/organisms/family/"+$(this).val()+"/", function( data ) {
+        var options = '<option value="">---------- </option>';
+        for (var i = 0; i < data.length; i++) {
+          options += '<option value="' + data[i].objectid + '">' + data[i].organismname + '</option>';
+        }
+        $("#id_organismid").html(options);
+        $("#id_organismid option:first").attr('selected', 'selected');
+});
+    })
+  })
+
+$(function(){
+    $("select#id_genus").change(function(){
+      $.getJSON("/lmdb/reference/organisms/genusFilter/"+$(this).val()+"/", function(j) {
+        var options = '';
+        console.log(j);
+        for (var i = 0; i < j.length; i++) {
+          options += '<option value="' + j[i].objectid + '">' + j[i].organismname + '</option>';
+        }
+        $("#id_organismid").html(options);
+        $("#id_organismid option:first").attr('selected', 'selected');
+      })
+      $("#id_genus").attr('selected', 'selected');
+    })
+  })
+
+
+function manClassUpdate(phyl){
+jQuery.getJSON("/lmdb/reference/organisms/phylumFilter/"+phyl+"/", function(j) {
+        var options = '<option value="">---------- </option>';
+        for (var i = 0; i < j.length; i++) {
+          options += '<option value="' + j[i].class_field + '">' + j[i].class_field + '</option>';
+        }
+        $("#id_class_field").html(options);
+        $("#id_class_field option:first").attr('selected', 'selected');
+        $("#id_class_field").attr('disabled', false);
+      })
+      $("#id_phylum").attr('selected', 'selected');
+
+};
+
+
+function manOrderUpdate(class_field){
+jQuery.getJSON("/lmdb/reference/organisms/classFilter/"+class_field+"/", function(j) {
+        var options = '<option value="">---------- </option>';
+        for (var i = 0; i < j.length; i++) {
+          options += '<option value="' + j[i].order_field + '">' + j[i].order_field + '</option>';
+        }
+        $("#id_order_field").html(options);
+        $("#id_order_field option:first").attr('selected', 'selected');
+        $("#id_order_field").attr('disabled', false);
+      })
+      $("#id_class_field").attr('selected', 'selected');
+
+};
+
+function manFamilyUpdate(order_field){
+jQuery.getJSON("/lmdb/reference/organisms/orderFilter/"+order_field+"/", function(j) {
+        var options = '<option value="">---------- </option>';
+        for (var i = 0; i < j.length; i++) {
+          options += '<option value="' + j[i].family + '">' + j[i].family + '</option>';
+        }
+        $("#id_family").html(options);
+        $("#id_family option:first").attr('selected', 'selected');
+        $("#id_family").attr('disabled', false);
+      })
+      $("#id_order_field").attr('selected', 'selected');
+
+};
+
+
+function manGenusUpdate(family){
+jQuery.getJSON("/lmdb/reference/organisms/familyFilter/"+family+"/", function(j) {
+        var options = '<option value="">---------- </option>';
+        for (var i = 0; i < j.length; i++) {
+          options += '<option value="' + j[i].genus + '">' + j[i].genus + '</option>';
+        }
+        $("#id_genus").html(options);
+        $("#id_genus option:first").attr('selected', 'selected');
+        $("#id_genus").attr('disabled', false);
+      })
+      $("#id_family").attr('selected', 'selected');
+
+};    
+
+function addOrganism(){
+    $("#organismSubmit").css('visibility','visible')
+    $("#kingdom").val($("#id_kingdom").val());
+    $("#phylum").val($("#id_phylum").val());
+    $("#class_field").val($("#id_class_field").val());
+    $("#order_field").val($("#id_order_field").val());
+    $("#family").val($("#id_family").val());
+    $("#genus").val($("#id_genus").val());
     
+    }
+    </script> 
+
     
     <script>
 var featureLayer;
@@ -412,26 +634,44 @@ try{
 class ="claro"
 {% endblock %}
 {% block content %}
-<form action="{% url 'lmdb:createCollection' %}" method="post">
+<table>
+<tbody>
+<tr>
+<td style="width:75%">
+<form id = "collectionForm" action="{% url 'lmdb:createCollection' %}" method="post">
 {% csrf_token %}
 {{form.non_field_errors}}
 {{form.objectid.errors}}
 {{form.objectid}}
+
+Organism Kingdom:  <select id="id_kingdom" name="kingdom">
+<option value="" selected="selected"></option>
+<option value="Bacteria">Bacteria</option>
+<option value="Archaea">Archaea</option>
+<option value="Protista">Protista</option>
+<option value="Plantae">Plantae</option>
+<option value="Fungi">Fungi</option>
+<option value="Animalia">Animalia</option>
+</select><br>
+
+Organism Phylum: <select disabled="True" id="id_phylum" name="phylum">
+</select> <br>
+ 
+Organism Class:  <select disabled="True" id="id_class_field" name="class_field">
+</select><br>
+
+Organism Order:  <select disabled="True" id="id_order_field" name="order_field">
+</select><br>
+
+Organism Family:  <select disabled="True" id="id_family" name="family">
+</select><br>
+
+Organism Genus:  <select disabled="True" id="id_genus" name="genus">
+</select><br>
 {{form.organismid.errors}}
-Organism:  {{form.organismid}}  <br>
+Organism:  {{form.organismid}}  <button type="button" onclick="addOrganism();">Add Organism</button><br> 
 {{form.projectid.errors}}
 Project:  {{form.projectid}} <br>
-{{form.locationid.errors}}
-Location:  {{form.locationid}} <br>
-<div data-dojo-type="dijit/layout/BorderContainer" data-dojo-props="gutters:true, design:'headline'" style="width:100%;height:100%;">
-      <div data-dojo-type="dijit/layout/ContentPane"  id="header" data-dojo-props="region:'top'">
-           </div>
-      <div id="map" data-dojo-type="dijit/layout/ContentPane" data-dojo-props="region:'center'"></div>
-      <div id="rightPane" data-dojo-type="dijit/layout/ContentPane" data-dojo-props="region:'right'">
-        <div id="templatePickerDiv"></div>
-
-          </div>
-          </div>
 {{form.methodcollect.errors}}
 Collection Method:  {{form.methodcollect}} <br>
 {{form.stored.errors}}
@@ -449,10 +689,59 @@ Collection Date:  {{form.datecollect}} <br>
 
 {{form.personid.errors}}
 Person:  {{form.personid}}<br>
-
-<input type="submit" value="Create Collection" />
+{{form.locationid.errors}}
+Location:  {{form.locationid}} <br>
 
 </form>
+</td>
+<td>
+<div>
+<form style="visibility:hidden" id="organismSubmit">
+{% csrf_token %}
+
+Organism Kingdom:  <select id="kingdom" name="kingdom">
+<option value="" selected="selected"></option>
+<option value="Bacteria">Bacteria</option>
+<option value="Archaea">Archaea</option>
+<option value="Protista">Protista</option>
+<option value="Plantae">Plantae</option>
+<option value="Fungi">Fungi</option>
+<option value="Animalia">Animalia</option>
+</select><br>
+
+Organism Phylum: <input type="text" id="phylum" name="phylum"/>
+ 
+Organism Class:  <input type="text" id="class_field" name="class_field"/>
+
+
+Organism Order:  <input type="text" id="order_field" name="order_field"/>
+
+Organism Family:  <input type="text" id="family" name="family"/>
+
+Organism Genus:  <input type="text" id="genus" name="genus"/>
+
+Organism Species <input type="text" id = "species" name="species"/>
+
+Organism Name:  <input type="text" id = "organismname" name="organismname"/>
+
+<input type="submit" value="Submit"/>
+</form>
+</div>
+</td>
+</tr>
+</tbody>
+</table>
+<div data-dojo-type="dijit/layout/BorderContainer" data-dojo-props="gutters:true, design:'headline'" style="width:100%;height:100%;">
+      <div data-dojo-type="dijit/layout/ContentPane"  id="header" data-dojo-props="region:'top'">
+           </div>
+      <div id="map" data-dojo-type="dijit/layout/ContentPane" data-dojo-props="region:'center'"></div>
+      <div id="rightPane" data-dojo-type="dijit/layout/ContentPane" data-dojo-props="region:'right'">
+        <div id="templatePickerDiv"></div>
+
+          </div>
+          </div>
+<input id="createCollection" type="submit" value="Create Collection" />
+
 
 {% endblock %}
 
