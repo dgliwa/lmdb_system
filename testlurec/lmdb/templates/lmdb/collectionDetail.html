@@ -47,7 +47,8 @@
         $(document).ready(function() { 
             // bind 'latlonform' and provide a simple callback function 
             $('#latlonform').ajaxForm(function() { 
-            }); 
+            });
+            
         }); 
         
         
@@ -159,6 +160,9 @@ require([
 
 
     map.addLayers([featureLayer]);
+    
+    
+
 
     function initEditing(evt) {
         console.log("initEditing", evt);
@@ -273,6 +277,7 @@ class ="claro"
            </div>
       <div id="map" data-dojo-type="dijit/layout/ContentPane" data-dojo-props="region:'center'"></div>
           </div>
+
 
 {% endblock %}
  

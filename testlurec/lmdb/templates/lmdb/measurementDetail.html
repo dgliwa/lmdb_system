@@ -191,12 +191,7 @@ require([
 
             layer.on("click", function (evt) {
                 event.stop(evt);
-                if (evt.ctrlKey === true || evt.metaKey === true) { //delete feature if ctrl key is depressed
-                    layer.applyEdits(null, null, [evt.graphic]);
-                    currentLayer = this;
-                    editToolbar.deactivate();
-                    editingEnabled = false;
-                }
+                
             });
         });
 

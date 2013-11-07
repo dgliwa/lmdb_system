@@ -8,7 +8,7 @@ urlpatterns = patterns('',
     'template_name': 'login.html'
 }),
     url(r'^$', views.index, name='index'),
-#    url(r'^userMan$', views.userMan, name='userMan'),
+    url(r'^userMan$', views.userMan, name='userMan'),
     url(r'^reference/$', views.reference, name='reference'),
     url(r'^reference/events/$', views.events, name='events'),
     url(r'^reference/events/(?P<event_id>\d+)/$', views.eventDetail, name='eventDetail'),
@@ -53,6 +53,7 @@ urlpatterns = patterns('',
     url(r'^data/collections/$', views.collections, name='collections'),
     url(r'^data/collections/(?P<coll_id>\d+)/$', views.collectionDetail, name='collectionDetail'),
     url(r'^data/collections/create/$', views.createCollection, name='createCollection'),
+    url(r'^reporting/$', views.reporting, name='reporting'),
 
 
 

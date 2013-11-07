@@ -1,8 +1,16 @@
 {% extends "base.html" %}
 {% block content %}
+{% if canAdd == True %}
+<p>If you have just added new users to the system, please go to User Management to sync your users to the database, and to add them to your projects</p>
+<a href="{% url 'lmdb:userMan' %}">User Management</a><br><br>
+{% endif %}
+
 
 <a href="{% url 'lmdb:reference' %}">Reference Data</a><br>
 <a href="{% url 'lmdb:data' %}">Data Input</a><br>
+<a href="{% url 'lmdb:reporting' %}">Reporting</a><br>
+
+
 
 
 

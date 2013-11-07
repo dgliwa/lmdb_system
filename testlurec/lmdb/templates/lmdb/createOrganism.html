@@ -79,20 +79,6 @@ $(function(){
       $("#id_family").attr('selected', 'selected');
     })
   })
-//   $(function(){
-//     $("select#id_kingdom").change(function(){
-//       $.getJSON("/lmdb/organisms/kingdomFilter/"+$(this).val()+"/", function(j) {
-//         var options = '<option value="">---------- </option>';
-//         for (var i = 0; i < j.length; i++) {
-//           options += '<option value="' + parseInt(j[i].pk) + '">' + j[i].fields['longname'] + '</option>';
-//         }
-//         $("#id_phylum").html(options);
-//         $("#id_phylum option:first").attr('selected', 'selected');
-//         $("#id_phylum").attr('disabled', false);
-//       })
-//       $("#id_kingdom").attr('selected', 'selected');
-//     })
-//   })
 
 function manClassUpdate(phyl){
 jQuery.getJSON("/lmdb/reference/organisms/phylumFilter/"+phyl+"/", function(j) {

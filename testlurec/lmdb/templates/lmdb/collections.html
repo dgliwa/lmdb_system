@@ -43,13 +43,22 @@
     
         <script> 
         // wait for the DOM to be loaded    
-       
+        var i = 0;
+
         $(document).ready(function() { 
             // bind 'latlonform' and provide a simple callback function 
             $('#latlonform').ajaxForm(function() { 
             }); 
         }); 
         
+        function addFilter(){
+        i++;
+        $('#filterDiv').append('<br><select class="filter"><option value="">--------</option><option value="">Location</option><option value="">Organism</option><option value="">Project</option><option value="">Date</option><option value="">Person</option></select><input type ="text"/>  ')
+        };
+        
+        function filterCollection(){
+        
+        };
         
     </script> 
     
@@ -250,12 +259,7 @@ require([
 
             layer.on("click", function (evt) {
                 event.stop(evt);
-                if (evt.ctrlKey === true || evt.metaKey === true) { //delete feature if ctrl key is depressed
-                    layer.applyEdits(null, null, [evt.graphic]);
-                    currentLayer = this;
-                    editToolbar.deactivate();
-                    editingEnabled = false;
-                }
+                
             });
         });
 
@@ -314,10 +318,29 @@ class ="claro"
 {% endblock %}
 {% block content %}
 <h3> <a href="{% url 'lmdb:createCollection' %}">Create Collection</a></h3>
+<div id="filterDiv">
+Filter By: <br>
+<select id="filter">
+                <option value="">--------</option>
+                <option value="">Location</option>
+                <option value="">Organism</option>
+                <option value="">Project</option>
+                <option value="">Date</option>
+                <option value="">Person</option>
+            </select>
+            <input type = "text"/>
+           </div>
+<button type="button" onClick="addFilter()">Add Another Filter</button><br>
+<button type="button" onClick="filterCollections()">Filter Collections</button>
 
 {% if collections %}
     <ul>
     {% for c in collections %}
+        
+    
+    
+    
+    
         <li><a href="{% url 'lmdb:collectionDetail' c.objectid %}">{{ c.objectid }}</a></li>
     {% endfor %}
     </ul>

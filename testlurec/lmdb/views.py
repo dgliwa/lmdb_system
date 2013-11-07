@@ -32,9 +32,10 @@ def data(request):
     
     return render(request,'lmdb/data.html',{})
 
-#@login_required(login_url='/login/')    
-#def userMan(request):
-#    return render(request, 'lmdb/userMan.html',{})
+@login_required(login_url='/login/')
+@permission_required('users.can_add')
+def userMan(request):
+    return render(request, 'lmdb/userMan.html',{})
 
 
 
@@ -625,7 +626,7 @@ def collections(request):    # !!!!!!   NEED TO APPLY FKEY RESTRAINTS
             polys.append(location.areaid)
 
 
-    template = loader.get_template('lmdb/collections.html')
+    template = loader.get_template('lmdb/collections2.html')
     context = RequestContext( request, {
         'collections' : collections,
         'points': points,
@@ -677,6 +678,20 @@ def createCollection(request):
 
 #########################################################################################
 #   END OF FUNCTIONS FOR COLLECTIONS #
+#
+#########################################################################################
+#   BEGINNING OF FUNCTIONS FOR REPORTING INFORMATION
+#########################################################################################
+
+
+@login_required(login_url='/login/')
+def reporting(request):
+    
+    return render(request,'lmdb/reporting.html',{})
+
+
+#########################################################################################
+#   END OF FUNCTIONS FOR REPORTING #
 #
 #########################################################################################
 #   BEGINNING OF FUNCTIONS FOR LOGIN INFORMATION #

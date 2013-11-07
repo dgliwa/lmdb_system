@@ -1,5 +1,16 @@
 {% extends "base.html" %}
+{% block customjs %}
+
+<script>
+function syncUsers(){
+jQuery.post('/lmdb/userMan/',{'csrfmiddlewaretoken' : '{{ csrf_token }}', 'sync' : 'users'});
+};
+</script>
+{% endblock %}
 {% block content %}
 
+
+
+<button type="button" onClick="syncUsers()">Sync Users</button>
 
 {% endblock %}
