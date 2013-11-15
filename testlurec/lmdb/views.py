@@ -11,6 +11,8 @@ from django.contrib.auth.decorators import login_required
 from django.views.decorators.csrf import csrf_exempt, csrf_protect
 
 from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth.models import User
+
 from django.contrib.auth.decorators import permission_required
 
 
@@ -29,12 +31,81 @@ def reference(request):
 
 @login_required(login_url='/login/')
 def data(request):
-    
     return render(request,'lmdb/data.html',{})
+
+@login_required(login_url='/login/')
+def dataUpdate(request):
+    if request.user.is_staff:
+        sightings = Sighting.objects.all()
+        measurements = Measurement.objects.all()
+        collections = Collection.objects.all()
+        changes = Change.objects.all()
+    else:
+        id = request.user.id
+        person = People.objects.get(objectid = id)
+        sightings = Sighting.objects.get_query_set().filter(personid = person)
+        measurements = Measurement.objects.get_query_set().filter(personid = person)
+        collections = Collections.objects.get_query_set().filter(personid = person)
+        changes = Changes.objects.get_query_set().filter(personid = person)
+    return render(request,'lmdb/dataUpdate.html',{'sightings':sightings,'measurements':measurements,'collections':collections,'changes':changes})
+
+@login_required(login_url='/login/')
+def dataUpdateForm(request):
+    if request.POST:
+        changes = []
+        changeforms =[]
+        sightings = []
+        sightingforms = []
+        measurements = []
+        measurementforms = []
+        collections = []
+        collectionforms = []
+        dict = request.POST
+        vals = dict.keys()
+        for val in vals:
+            if val != 'csrfmiddlewaretoken':
+                split = dict[val].split(',')
+                if split[0] == 'Change':
+                    c = Change.objects.get(objectid=int(split[1]))
+                    form = ChangeForm(instance=c)
+                    changeforms.append(form)
+                    changes.append(c)
+                elif split[0] == 'Sighting':
+                    s = Sighting.objects.get(objectid=int(split[1]))
+                    form = SightingForm(instance=s)
+                    sightingforms.append(form)
+                    sightings.append(s)
+                elif split[0] == 'Measurement':
+                    m = Measurement.objects.get(objectid=int(split[1]))
+                    form = MeasurementForm(instance=m)
+                    measurementforms.append(form)
+                    measurements.append(m)
+                elif split[0] == 'Collection':
+                    c = Collection.objects.get(objectid=int(split[1]))
+                    form = CollectionForm(instance=c)
+                    collectionforms.append(form)
+                    collections.append(c)
+        if len(collectionforms) == 0:
+            collectionforms = None
+        if len(changeforms) == 0:
+            changeforms = None
+        if len(measurementforms) == 0:
+            measurementforms = None
+        if len(sightingforms) == 0:
+            sightingforms = None         
+    return render(request,'lmdb/dataUpdateForm.html',{'collectionforms':collectionforms, 'changeforms':changeforms,'measurementforms':measurementforms,'sightingforms':sightingforms})
 
 @login_required(login_url='/login/')
 @permission_required('users.can_add')
 def userMan(request):
+    if request.POST:
+        users = User.objects.all().order_by('id')
+        people = People.objects.all().order_by('objectid')
+        if len(users)>len(people):
+            for i in range(len(people),len(users)):
+                print users[i]
+                #u = users[i]
+                #p = Person(objectid=u.id, firstname=u.first_name,lastname=u.last_name, email=u.email,
     return render(request, 'lmdb/userMan.html',{})
 
 
@@ -613,20 +684,23 @@ def createMeasurement(request):
 #########################################################################################
 def collections(request):    # !!!!!!   NEED TO APPLY FKEY RESTRAINTS
     collections = Collection.objects.values()
-    points = []
+    points = {}
     lines = []
     polys = []
     for c in collections:
         location = Location.objects.get(pk = c['locationid'])
         if location.pointid != None:
-            points.append(location.pointid)
+            if points.has_key(location.pointid):
+                points[location.pointid] = points[location.pointid] + 1 
+            else:
+                points[location.pointid] = 1
         elif location.lineid != None:
             lines.append(location.lineid)
         elif location.areaid != None:
             polys.append(location.areaid)
 
 
-    template = loader.get_template('lmdb/collections2.html')
+    template = loader.get_template('lmdb/collections.html')
     context = RequestContext( request, {
         'collections' : collections,
         'points': points,

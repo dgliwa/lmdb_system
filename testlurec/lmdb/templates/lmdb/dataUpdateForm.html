@@ -1,0 +1,351 @@
+{% extends "base.html" %}
+{% block pageName %}Data Update{% endblock %}
+{% block customjs %}
+    {% load static %}
+    <script type="text/javascript" src="{% static "datepicker/jquery.simple-dtpicker.js" %}"></script>
+	<link type="text/css" href="{% static "datepicker/jquery.simple-dtpicker.css" %}" rel="stylesheet" />
+
+{% endblock %}
+{% block content %}
+
+{% if measurementforms or changeforms or collectionforms or sightingforms %}
+    {% if measurementforms %}
+    <h3>Measurements</h3>
+        {% for form in measurementforms %}
+<table>
+            <tbody>
+            <tr>
+            <td style="width:75%">
+            <form id="measurementForm{{form.objectid.value}}" action="{% url 'lmdb:createMeasurement' %}" method="post">
+            {% csrf_token %}
+            {{form.non_field_errors}}
+            {{form.objectid.errors}}
+            {{form.objectid}}
+            {{form.mname.errors}}
+            Name:  {{form.mname}}<br>
+            {{form.parameterid.errors}}
+            Parameter:  {{form.parameterid}}  <button type="button" onclick="addParameter();">Add Parameter</button>
+
+            <br>
+            {{form.projectid.errors}}
+            Project:  {{form.projectid}} <br>
+            {{form.mediuform.errors}}
+            Medium:  {{form.medium}} <br>
+            {{form.mmethod.errors}}
+            Measurement Method:  {{form.mmethod}} <br>
+            {{form.mquant.errors}}
+            Measurement Quantity: {{form.mquant}} <br>
+            {{form.munits.errors}}
+            Measurement Units:  {{form.munits}} <br>
+            {{form.date.errors}}
+            Measurement Date:  {{form.date}} <br>
+           
+            {{form.notes.errors}}
+            Measurement Notes:  {{form.notes}} <br>
+            {{form.personid.errors}}
+            Person:  {{form.personid}}<br>
+
+            {{form.locationid.errors}}
+            Location:  {{form.locationid}} <br>
+
+            </form>
+            </td>
+            <td>
+            <form id = "paramSubmit" style = "visibility:hidden;" id="paramForm" name="paramForm" >
+            {% csrf_token %}
+            <p>If you do not know the CAS or EPA Number(s), you can search for them <a href="http://ofmpub.epa.gov/sor_internet/registry/substreg/searchandretrieve/substancesearch/search.do" target="_blank">here</a></p>
+
+            Scientific Name:
+            <input id="sciname" type = "text" name="sciname"/>
+            Common Name:
+            <input id="comname" type = "text" name ="commonname"/>
+            CAS Number:
+            <input id="casnum" type = "text" name ="casnumber"/>
+            EPA Number:
+            <input id="epanum" type = "text" name="epanumber"/>
+
+            <input type="submit" value="Submit"/>
+            </form>
+            </td>
+            </tr>
+            </tbody>
+            </table>
+        <br>
+        <p>-----------------------------------------------------------<p>
+        {% endfor %}
+        
+        
+    {% endif %}
+    {% if changeforms %}
+        <h3>Changes</h3>
+
+        {% for form in changeforms %}
+        
+        <table>
+        <tbody>
+        <tr>
+        <td style="width:75%">
+        <form id= "changeForm{{form.objectid.value}}" action="{% url 'lmdb:createChange' %}" method="post">
+        {% csrf_token %}
+        {{form.non_field_errors}}
+        {{form.objectid.errors}}
+        {{form.objectid}}
+        {{form.description.errors}}
+        Description:  {{form.description}}<br>
+        {{form.justification.errors}}
+        Justification:  {{form.justification}} <br>
+        {{form.parameterid.errors}}
+        Parameter:  {{form.parameterid}}  <button type="button" onclick="addParameter();">Add Parameter</button><br>
+        {{form.projectid.errors}}
+        Project:  {{form.projectid}} <br>
+        {{form.permanent.errors}}
+        Permanent Change:  {{form.permanent}} <br>
+        {{form.chemicalapplication.errors}}
+        Chemical Application: {{form.chemicalapplication}} <br>
+        {{form.chemicalused.errors}}
+        Chemical Used:  {{form.chemicalused}} <br>
+        {{form.chemicalquantity.errors}}
+        Chemical Quantity:  {{form.chemicalquantity}} <br>
+        {{form.chemicalunits.errors}}
+        Chemical Units:  {{form.chemicalunits}} <br>
+        {{form.areachange.errors}}
+        Area of the Change:  {{form.areachange}}<br>
+        {{form.date.errors}}
+        Change Date:  {{form.date}} <br>
+       
+        {{form.personid.errors}}
+        Person:  {{form.personid}}<br>
+
+        {{form.locationid.errors}}
+        Location:  {{form.locationid}} <br>
+
+        </form>
+        </td>
+        <td>
+        <form id = "paramSubmit" style = "visibility:hidden;" id="paramForm" name="paramForm" >
+        {% csrf_token %}
+        <p>If you do not know the CAS or EPA Number(s), you can search for them <a href="http://ofmpub.epa.gov/sor_internet/registry/substreg/searchandretrieve/substancesearch/search.do" target="_blank">here</a></p>
+
+        Scientific Name:
+        <input id="sciname" type = "text" name="sciname"/>
+        Common Name:
+        <input id="comname" type = "text" name ="commonname"/>
+        CAS Number:
+        <input id="casnum" type = "text" name ="casnumber"/>
+        EPA Number:
+        <input id="epanum" type = "text" name="epanumber"/>
+
+        <input type="submit" value="Submit"/>
+        </form>
+        </td>
+        </tr>
+        </tbody>
+        </table>
+        <br>
+        <p>-----------------------------------------------------------<p>
+        {% endfor %}
+    {% endif %}
+    {% if collectionforms %}
+        <h3>Collections</h3>
+        {% for form in collectionforms %}
+            <table>
+            <tbody>
+            <tr>
+            <td style="width:75%">
+            <form id = "collectionForm{{form.objectid.value}}" action="{% url 'lmdb:createCollection' %}" method="post">
+            {% csrf_token %}
+            {{form.non_field_errors}}
+            {{form.objectid.errors}}
+            {{form.objectid}}
+
+            Organism Kingdom:  <select id="id_kingdom" name="kingdom">
+            <option value="" selected="selected">---------- </option>
+            <option value="Bacteria">Bacteria</option>
+            <option value="Archaea">Archaea</option>
+            <option value="Protista">Protista</option>
+            <option value="Plantae">Plantae</option>
+            <option value="Fungi">Fungi</option>
+            <option value="Animalia">Animalia</option>
+            </select><br>
+
+            Organism Phylum: <select disabled="True" id="id_phylum" name="phylum">
+            </select> <br>
+ 
+            Organism Class:  <select disabled="True" id="id_class_field" name="class_field">
+            </select><br>
+
+            Organism Order:  <select disabled="True" id="id_order_field" name="order_field">
+            </select><br>
+
+            Organism Family:  <select disabled="True" id="id_family" name="family">
+            </select><br>
+
+            Organism Genus:  <select disabled="True" id="id_genus" name="genus">
+            </select><br>
+            {{form.organismid.errors}}
+            Organism:  {{form.organismid}}  <button type="button" onclick="addOrganism();">Add Organism</button><br> 
+            {{form.projectid.errors}}
+            Project:  {{form.projectid}} <br>
+            {{form.methodcollect.errors}}
+            Collection Method:  {{form.methodcollect}} <br>
+            {{form.stored.errors}}
+            Collection Stored: {{form.stored}} <br>
+            {{form.storecollect.errors}}
+            Collection Storer:  {{form.storecollect}} <br>
+            {{form.datecollect.errors}}
+            Collection Date:  {{form.datecollect}} <br>
+            
+
+            {{form.personid.errors}}
+            Person:  {{form.personid}}<br>
+            {{form.locationid.errors}}
+            Location:  {{form.locationid}} <br>
+
+            </form>
+            </td>
+            <td>
+            <div>
+            <form style="visibility:hidden" id="organismSubmit">
+            {% csrf_token %}
+
+            Organism Kingdom:  <select id="kingdom" name="kingdom">
+            <option value="" selected="selected">---------- </option>
+            <option value="Bacteria">Bacteria</option>
+            <option value="Archaea">Archaea</option>
+            <option value="Protista">Protista</option>
+            <option value="Plantae">Plantae</option>
+            <option value="Fungi">Fungi</option>
+            <option value="Animalia">Animalia</option>
+            </select><br>
+
+            Organism Phylum: <input type="text" id="phylum" name="phylum"/>
+ 
+            Organism Class:  <input type="text" id="class_field" name="class_field"/>
+
+
+            Organism Order:  <input type="text" id="order_field" name="order_field"/>
+
+            Organism Family:  <input type="text" id="family" name="family"/>
+
+            Organism Genus:  <input type="text" id="genus" name="genus"/>
+
+            Organism Species <input type="text" id = "species" name="species"/>
+
+            Organism Name:  <input type="text" id = "organismname" name="organismname"/>
+
+            <input type="submit" value="Submit"/>
+            </form>
+            </div>
+            </td>
+            </tr>
+            </tbody>
+            </table>
+            <br>
+            <p>-----------------------------------------------------------<p>
+        {% endfor %}
+    {% endif %}
+    {% if sightingforms %}
+        <h3>Sightings</h3>
+        {% for form in sightingforms %}
+        <table>
+        <tbody>
+        <tr>
+        <td style="width:75%">
+        <form id = "sightingForm{{form.objectid.value}}" action="{% url 'lmdb:createSighting' %}" method="post">
+
+
+        {% csrf_token %}
+        {{form.non_field_errors}}
+        {{form.objectid.errors}}
+        {{form.objectid}}
+        Organism Kingdom:  <select id="id_kingdom" name="kingdom">
+        <option value="" selected="selected">---------- </option>
+        <option value="Bacteria">Bacteria</option>
+        <option value="Archaea">Archaea</option>
+        <option value="Protista">Protista</option>
+        <option value="Plantae">Plantae</option>
+        <option value="Fungi">Fungi</option>
+        <option value="Animalia">Animalia</option>
+        </select><br>
+
+        Organism Phylum: <select disabled="True" id="id_phylum" name="phylum">
+        </select> <br>
+ 
+        Organism Class:  <select disabled="True" id="id_class_field" name="class_field">
+        </select><br>
+
+        Organism Order:  <select disabled="True" id="id_order_field" name="order_field">
+        </select><br>
+
+        Organism Family:  <select disabled="True" id="id_family" name="family">
+        </select><br>
+
+        Organism Genus:  <select disabled="True" id="id_genus" name="genus">
+        </select><br>
+        {{form.organismid.errors}}
+        Organism:  {{form.organismid}}  <button type="button" onclick="addOrganism();">Add Organism</button><br> 
+        {{form.projectid.errors}}
+        Project:  {{form.projectid}} <br>
+
+        {{form.number.errors}}
+        Number:  {{form.number}} <br>
+        Sighting Date:  {{form.date}} <br>
+        
+
+        {{form.notes.errors}}
+        Sighting Notes:  {{form.notes}} <br>
+        {{form.personid.errors}}
+        Person:  {{form.personid}}<br>
+
+        {{form.locationid.errors}}
+        Location:  {{form.locationid}} <br>
+
+        </form>
+
+        </td>
+        <td>
+        <div>
+        <form style="visibility:hidden" id="organismSubmit">
+        Organism Kingdom:  <select id="kingdom" name="kingdom">
+        <option value="" selected="selected">---------- </option>
+        <option value="Bacteria">Bacteria</option>
+        <option value="Archaea">Archaea</option>
+        <option value="Protista">Protista</option>
+        <option value="Plantae">Plantae</option>
+        <option value="Fungi">Fungi</option>
+        <option value="Animalia">Animalia</option>
+        </select><br>
+
+        Organism Phylum: <input type="text" id="phylum" name="phylum"/>
+ 
+        Organism Class:  <input type="text" id="class_field" name="class_field"/>
+
+
+        Organism Order:  <input type="text" id="order_field" name="order_field"/>
+
+        Organism Family:  <input type="text" id="family" name="family"/>
+
+        Organism Genus:  <input type="text" id="genus" name="genus"/>
+
+        Organism Species <input type="text" id = "species" name="species"/>
+
+        Organism Name:  <input type="text" id = "organismname" name="organismname"/>
+
+        <input type="submit" value="Submit"/>
+        </form>
+        </div>
+        </td>
+        </tr>
+        </tbody>
+        </table>
+        {% endfor %}
+    {% endif %}
+{% else %}
+<h3>None Selected</h3>
+{% endif %}
+<script type="text/javascript">
+                    $(function(){
+                        $('.datefield').appendDtpicker();
+                    });
+                </script>
+{% endblock %}

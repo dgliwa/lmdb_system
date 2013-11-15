@@ -2,6 +2,7 @@
 
 {% block pageName %}Data Entry{% endblock %}
 {% block content %}
+<a href="{% url 'lmdb:dataUpdate' %}">Update or Delete Records</a><br>
 
 <a href="{% url 'lmdb:index' %}">Home</a><br>
 <a href="{% url 'lmdb:sightings' %}">Sightings</a><br>

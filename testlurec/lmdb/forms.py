@@ -89,7 +89,7 @@ class MeasurementForm(forms.ModelForm):
     mmethod = forms.CharField(max_length=255, required=False)
     mquant = forms.CharField(max_length=255)
     munits = forms.CharField(max_length=100, required=False)
-    date = forms.DateTimeField()
+    date = forms.DateTimeField(widget=forms.TextInput(attrs={'class':'datefield'}))
     time = forms.DateTimeField(required=False)
     notes = forms.CharField(max_length=255, required=False)
     medium = forms.CharField(max_length=50, required=False)
@@ -103,8 +103,8 @@ class SightingForm(forms.ModelForm):
     projectid = forms.ModelChoiceField(queryset = Project.objects.all(),required=False)
     locationid = forms.IntegerField(widget=forms.HiddenInput())
     number = forms.IntegerField(required=False)
-    date = forms.DateTimeField()
-    time = forms.DateTimeField(required=False)
+    date = forms.DateTimeField(widget=forms.TextInput(attrs={'class':'datefield'}))
+    time = forms.DateTimeField(widget=forms.TextInput(attrs={'class':'datefield'}))
     notes = forms.CharField(max_length=255, required=False)
     class Meta:
         model = Sighting
@@ -113,7 +113,7 @@ class CollectionForm(forms.ModelForm):
     objectid = forms.IntegerField(widget=forms.HiddenInput())
     projectid = forms.ModelChoiceField(queryset = Project.objects.all())
     organismid = forms.ModelChoiceField(queryset = Organism.objects.all())
-    datecollect = forms.DateTimeField()
+    datecollect = forms.DateTimeField(widget=forms.TextInput(attrs={'class':'datefield'}))
     methodcollect = forms.CharField(max_length=255)
     stored = forms.IntegerField()
     storecollect = forms.CharField(max_length=255)
@@ -135,7 +135,7 @@ class ChangeForm(forms.ModelForm):
     chemicalquantity = forms.DecimalField(required=False, max_digits=38, decimal_places=8, )
     chemicalunits = forms.CharField(max_length=50, required=False)
     areachange = forms.CharField(max_length=50, required=False)
-    date = forms.DateTimeField(required=False)
+    date = forms.DateTimeField(required=False, widget=forms.TextInput(attrs={'class':'datefield'}))
     personid = forms.ModelChoiceField(queryset = People.objects.all(), required = False)
     class Meta:
         model = Change

@@ -1,5 +1,4 @@
 {% extends "base.html" %}
-{% block pageName %}Collections{% endblock %}
 {% block customjs %}
 {% load static %}
     
@@ -56,14 +55,6 @@
             }); 
         }); 
         
-        function addFilter(){
-        i++;
-        $('#filterDiv').append('<br><select class="filter"><option value="">--------</option><option value="">Location</option><option value="">Organism</option><option value="">Project</option><option value="">Date</option><option value="">Person</option></select><input type ="text"/>  ')
-        };
-        
-        function filterCollection(){
-        
-        };
         
     </script> 
     
@@ -136,12 +127,12 @@ require([
 
     });
     var queryString = ""
-    for( var i=0;  i<{{points}}.length; i++){
+    for( var i in {{points}}){
         if (queryString == ""){
-            queryString += "objectid =" + {{points}}[i];
+            queryString += "objectid =" + i;
         }
         else{
-            queryString += "OR objectid =" + {{points}}[i];
+            queryString += "OR objectid =" + i;
         }
     
     }
@@ -192,21 +183,6 @@ require([
         polyLayer.setInfoTemplate(infoTemplate);
     }
     dojo.connect(map, "onLayersAddResult", initEditing);
-
-    
-
-
-    
-
-
-
-
-   
-
-
-
-
-    /////////////////////////
 
 
     if( pointLayer == null || lineLayer == null || polyLayer == null){
@@ -317,67 +293,12 @@ require([
 
 
 </script>
-{% endblock %}
-{% block customclass %}
-class ="claro"
-{% endblock %}
-{% block content %}
-<h3> <a href="{% url 'lmdb:createCollection' %}">Create Collection</a></h3>
-<div data-dojo-type="dijit/layout/BorderContainer" data-dojo-props="gutters:true, design:'headline'" style="width:100%;height:100%;">
-      <div data-dojo-type="dijit/layout/ContentPane"  id="header" data-dojo-props="region:'top'">
-           </div>
-      <div id="map" data-dojo-type="dijit/layout/ContentPane" data-dojo-props="region:'center'"></div>
-          </div>
-<br>          
-
-{% if collections %}
-    <input type = "text" id="datepicker_min"/>
-    <input type = "text" id="datepicker_max"/>
-
-
-    <table id="example">
-    <thead>
-        <th>ID</th>
-        <th>Project</th>
-        <th>Organism</th>
-        <th>Location</th>
-        <th>Collector</th>
-        <th>Date</th>
-    </thead>
-    <tbody>
-    {% for c in collections %}
-        <tr>
-        <td><a href="{% url 'lmdb:collectionDetail' c.objectid %}">{{ c.objectid }}</a></td>
-        <td>{{ c.projectid_id }}</td>
-        <td>{{ c.organismid_id }}</td>
-        <td>{{ c.locationid }}</td>
-        <td>{{ c.personid_id }}</td>
-        <td>{{ c.datecollect|date:"m/d/Y" }}</td>
-        </tr>
-    {% endfor %}
-    </tbody>
-    <tfoot>
-   <tr>
-			<th><input style="width:100%" type="text" name="id" value="Search Ids" class="search_init" /></th>
-			<th><input style="width:100%" type="text" name="project" value="Search Projects" class="search_init" /></th>
-			<th><input style="width:100%" type="text" name="organism" value="Search Organisms" class="search_init" /></th>
-			<th><input style="width:100%" type="text" name="location" value="Search Locations" class="search_init" /></th>
-			<th><input style="width:100%" type="text" name="person" value="Search People" class="search_init" /></th>
-			<th><input style="width:100%" type="text" name="date" value="Search Dates" class="search_init" /></th>
-
-		</tr>
-	</tfoot>
-    </table>
-    <br>
-
-     
-{% else %}
-    <p>No collections are available.</p>
-{% endif %}
 
 <script>
 var minDateFilter;
 var maxDateFilter;
+var asInitVals = new Array();
+
 
 $.fn.dataTableExt.afnFiltering.push(
   function( oSettings, aData, iDataIndex ) {
@@ -466,5 +387,8 @@ $(document).ready( function() {
 
 } );
 </script>
+{% endblock %}
+{% block customclass %}
+class ="claro"
 {% endblock %}
 
