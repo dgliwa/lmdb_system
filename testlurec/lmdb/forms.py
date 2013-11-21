@@ -104,7 +104,7 @@ class SightingForm(forms.ModelForm):
     locationid = forms.IntegerField(widget=forms.HiddenInput())
     number = forms.IntegerField(required=False)
     date = forms.DateTimeField(widget=forms.TextInput(attrs={'class':'datefield'}))
-    time = forms.DateTimeField(widget=forms.TextInput(attrs={'class':'datefield'}))
+    time = forms.DateTimeField(required = False, widget=forms.TextInput(attrs={'class':'datefield'}))
     notes = forms.CharField(max_length=255, required=False)
     class Meta:
         model = Sighting

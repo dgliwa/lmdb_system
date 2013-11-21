@@ -54,6 +54,15 @@ $(document).ready( function() {
         "oLanguage": {
             "sSearch": "Search all columns:"
         },
+        "aoColumns": [
+                null,
+                { "sType": "numeric" },
+                { "sType": "numeric" },
+                { "sType": "numeric" },
+                { "sType": "numeric" },
+                { "sType": "numeric" },
+                null
+            ],
     "bJQueryUI": true
     } );
     
@@ -191,8 +200,8 @@ function editRows(){
     {% if sightings %}
     {% for s in sightings %}
         <tr>
-        <td>Sighting</td>
-        <td><a href="{% url 'lmdb:sightingDetail' s.objectid %}">{{ s.objectid }}</a></td>
+        <td><a href="{% url 'lmdb:sightingDetail' s.objectid %}">Sighting</a></td>
+        <td>{{ s.objectid }}</td>
         <td>{{ s.projectid_id }}</td>
         <td>{{ s.organismid_id }}</td>
         <td>{{ s.locationid }}</td>
@@ -204,8 +213,8 @@ function editRows(){
     {% if measurements %}
     {% for m in measurements %}
         <tr>
-        <td>Measurement</td>
-        <td><a href="{% url 'lmdb:measurementDetail' m.objectid %}">{{ m.objectid }}</a></td>
+        <td><a href="{% url 'lmdb:measurementDetail' m.objectid %}">Measurement</a></td>
+        <td>{{ m.objectid }}</td>
         <td>{{ m.projectid_id }}</td>
         <td>{{ m.parameterid_id }}</td>
         <td>{{ m.locationid }}</td>
@@ -217,8 +226,8 @@ function editRows(){
     {% if collections %}
     {% for c in collections %}
         <tr>
-        <td>Collection</td>
-        <td><a href="{% url 'lmdb:collectionDetail' c.objectid %}">{{ c.objectid }}</a></td>
+        <td><a href="{% url 'lmdb:collectionDetail' c.objectid %}">Collection</a></td>
+        <td>{{ c.objectid }}</td>
         <td>{{ c.projectid_id }}</td>
         <td>{{ c.organismid_id }}</td>
         <td>{{ c.locationid }}</td>
@@ -230,8 +239,8 @@ function editRows(){
     {% if changes %}
     {% for c in changes %}
         <tr>
-        <td>Change</td>
-        <td><a href="{% url 'lmdb:changeDetail' c.objectid %}">{{ c.objectid }}</a></td>
+        <td><a href="{% url 'lmdb:changeDetail' c.objectid %}">Change</a></td>
+        <td>{{ c.objectid }}</td>
         <td>{{ c.projectid_id }}</td>
         <td>{{ c.parameterid_id }}</td>
         <td>{{ c.locationid }}</td>

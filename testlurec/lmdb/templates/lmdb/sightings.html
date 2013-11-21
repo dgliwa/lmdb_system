@@ -18,6 +18,7 @@
 
     <table id="example">
     <thead>
+        <th>Type</th>
         <th>ID</th>
         <th>Project</th>
         <th>Organism</th>
@@ -28,7 +29,8 @@
     <tbody>
     {% for s in sightings %}
         <tr>
-        <td><a href="{% url 'lmdb:sightingDetail' s.objectid %}">{{ s.objectid }}</a></td>
+        <td><a href="{% url 'lmdb:sightingDetail' s.objectid %}">Sighting</a></td>
+        <td>{{ s.objectid }}</td>
         <td>{{ s.projectid_id }}</td>
         <td>{{ s.organismid_id }}</td>
         <td>{{ s.locationid }}</td>
@@ -39,6 +41,7 @@
     </tbody>
     <tfoot>
    <tr>
+            <th><input style="width:100%" type="text" name="type" value="Type" class="search_init" /></th>
 			<th><input style="width:100%" type="text" name="id" value="Search Ids" class="search_init" /></th>
 			<th><input style="width:100%" type="text" name="project" value="Search Projects" class="search_init" /></th>
 			<th><input style="width:100%" type="text" name="organism" value="Search Organisms" class="search_init" /></th>

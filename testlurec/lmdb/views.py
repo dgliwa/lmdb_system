@@ -52,13 +52,9 @@ def dataUpdate(request):
 @login_required(login_url='/login/')
 def dataUpdateForm(request):
     if request.POST:
-        changes = []
         changeforms =[]
-        sightings = []
         sightingforms = []
-        measurements = []
         measurementforms = []
-        collections = []
         collectionforms = []
         dict = request.POST
         vals = dict.keys()
@@ -69,22 +65,18 @@ def dataUpdateForm(request):
                     c = Change.objects.get(objectid=int(split[1]))
                     form = ChangeForm(instance=c)
                     changeforms.append(form)
-                    changes.append(c)
                 elif split[0] == 'Sighting':
                     s = Sighting.objects.get(objectid=int(split[1]))
                     form = SightingForm(instance=s)
                     sightingforms.append(form)
-                    sightings.append(s)
                 elif split[0] == 'Measurement':
                     m = Measurement.objects.get(objectid=int(split[1]))
                     form = MeasurementForm(instance=m)
                     measurementforms.append(form)
-                    measurements.append(m)
                 elif split[0] == 'Collection':
                     c = Collection.objects.get(objectid=int(split[1]))
                     form = CollectionForm(instance=c)
                     collectionforms.append(form)
-                    collections.append(c)
         if len(collectionforms) == 0:
             collectionforms = None
         if len(changeforms) == 0:
@@ -92,8 +84,20 @@ def dataUpdateForm(request):
         if len(measurementforms) == 0:
             measurementforms = None
         if len(sightingforms) == 0:
-            sightingforms = None         
-    return render(request,'lmdb/dataUpdateForm.html',{'collectionforms':collectionforms, 'changeforms':changeforms,'measurementforms':measurementforms,'sightingforms':sightingforms})
+            sightingforms = None 
+        points = []
+        lines = []
+        polys = []
+        locations = Location.objects.values()
+        for location in locations:
+            if location['pointid'] != None:
+                points.append(location['pointid'])
+            elif location['lineid'] != None:
+                lines.append(location['lineid'])
+            elif location['areaid'] != None:
+                polys.append(location['areaid'])
+        
+    return render(request,'lmdb/dataUpdateForm.html',{'collectionforms':collectionforms, 'changeforms':changeforms,'measurementforms':measurementforms,'sightingforms':sightingforms, 'points':points, 'lines':lines,'polys':polys})
 
 @login_required(login_url='/login/')
 @permission_required('users.can_add')
@@ -422,42 +426,49 @@ def createOrganismFromData(request):
 
 #########################################################################################
 # FUNCTIONS THAT HANDLE AJAX CALLS FROM THE CREATE ORGANISMS PAGE  #
+@login_required(login_url='/login/')
 def kingdomFilter(request, king_id):
 	from django.core import serializers
 	b = Organism.objects.filter(kingdom=king_id).values('phylum').distinct()  
 	data = json.dumps([dict(phylum = org['phylum']) for org in b])
 	return HttpResponse(data, mimetype="application/javascript")
-	
+
+@login_required(login_url='/login/')	
 def phylumFilter(request, phyl_id):
 	from django.core import serializers
 	b = Organism.objects.filter(phylum=phyl_id).values('class_field').distinct()  
 	data = json.dumps([dict(class_field = org['class_field']) for org in b])
 	return HttpResponse(data, mimetype="application/javascript")
 
+@login_required(login_url='/login/')
 def classFilter(request, class_id):
 	from django.core import serializers
 	b = Organism.objects.filter(class_field=class_id).values('order_field').distinct()  
 	data = json.dumps([dict(order_field = org['order_field']) for org in b])
 	return HttpResponse(data, mimetype="application/javascript")
 	
+@login_required(login_url='/login/')
 def orderFilter(request, order_id):
 	from django.core import serializers
 	b = Organism.objects.filter(order_field=order_id).values('family').distinct()  
 	data = json.dumps([dict(family = org['family']) for org in b])
 	return HttpResponse(data, mimetype="application/javascript")
 
+@login_required(login_url='/login/')
 def familyFilter(request, family_id):
 	from django.core import serializers
 	b = Organism.objects.filter(family=family_id).values('genus').distinct()  
 	data = json.dumps([dict(genus = org['genus']) for org in b])
 	return HttpResponse(data, mimetype="application/javascript")
 
+@login_required(login_url='/login/')
 def genusFilter(request, genus_id):
 	from django.core import serializers
 	b = Organism.objects.filter(genus=genus_id).values('organismname','objectid').distinct()  
 	data = json.dumps([dict(organismname = org['organismname'], objectid=org['objectid']) for org in b])
 	return HttpResponse(data, mimetype="application/javascript")
 
+@login_required(login_url='/login/')
 def species(request,column, filter):
     print column
     if column=='kingdom':
@@ -485,6 +496,7 @@ def species(request,column, filter):
 #   BEGINNING OF FUNCTIONS FOR SIGHTINGS #
 #########################################################################################
 
+@login_required(login_url='/login/')
 def sightings(request):    # !!!!!!   NEED TO APPLY FKEY RESTRAINTS
     sightings = Sighting.objects.values()
     points = []
@@ -510,6 +522,7 @@ def sightings(request):    # !!!!!!   NEED TO APPLY FKEY RESTRAINTS
     })
     return HttpResponse(template.render(context))
 
+@login_required(login_url='/login/')
 def sightingDetail(request, sight_id):
     sighting = get_object_or_404(Sighting, pk=sight_id)
     organism = get_object_or_404(Organism, pk=sighting.organismid.objectid)
@@ -519,6 +532,7 @@ def sightingDetail(request, sight_id):
     return render(request, 'lmdb/sightingDetail.html', {'person': person, 'project' : project,'sighting' : sighting, 'organism' : organism, 'location' : location})
 
 
+@login_required(login_url='/login/')
 def createSighting(request):
     if request.POST:
         postVals = request.POST.copy()
@@ -545,6 +559,18 @@ def createSighting(request):
     return render(request, 'lmdb/createSighting.html', {'form' : form, 'points':points, 'lines':lines,'polys':polys})
 
 
+@login_required(login_url='/login/')
+def dataUpdateSighting(request, id):
+    if request.POST:
+        s = Sighting.objects.get(objectid=id)
+        form = SightingForm(request.POST, instance = s)
+        if form.is_valid():
+            form.save()
+            return HttpResponse('success')
+        else:
+            return render(request, 'lmdb/createSighting.html', {'form' : form})
+    else:
+        return HttpResponse('failed')
 
 #########################################################################################
 #   END OF FUNCTIONS FOR SIGHTINGS #
@@ -552,6 +578,7 @@ def createSighting(request):
 #########################################################################################
 #   BEGINNING OF FUNCTIONS FOR CHANGES #
 #########################################################################################
+@login_required(login_url='/login/')
 def changes(request):     # !!!!!!   NEED TO APPLY FKEY RESTRAINTS
     changes = Change.objects.values()
     points = []
@@ -576,6 +603,7 @@ def changes(request):     # !!!!!!   NEED TO APPLY FKEY RESTRAINTS
     })
     return HttpResponse(template.render(context))
 
+@login_required(login_url='/login/')
 def changeDetail(request, change_id):
     change = get_object_or_404(Change, pk=change_id)
     parameter = get_object_or_404(Parameter, pk=change.parameterid.objectid)
@@ -585,6 +613,7 @@ def changeDetail(request, change_id):
     return render(request, 'lmdb/changeDetail.html', {'person': person, 'project' : project,'change' : change, 'parameter' : parameter, 'location' : location})
 
 
+@login_required(login_url='/login/')
 def createChange(request):
     if request.POST:
         postVals = request.POST.copy()
@@ -611,6 +640,18 @@ def createChange(request):
 
     return render(request, 'lmdb/createChange.html', {'form' : form, 'points':points, 'lines':lines,'polys':polys})
 
+@login_required(login_url='/login/')
+def dataUpdateChange(request, id):
+    if request.POST:
+        c = Change.objects.get(objectid=id)
+        form = ChangeForm(request.POST, instance = c)
+        if form.is_valid():
+            form.save()
+            return HttpResponse('success')
+        else:
+           return render(request, 'lmdb/createChange.html', {'form' : form})
+    else:
+        return HttpResponse('failed')
 
 #########################################################################################
 #   END OF FUNCTIONS FOR CHANGES #
@@ -618,6 +659,7 @@ def createChange(request):
 #########################################################################################
 #   BEGINNING OF FUNCTIONS FOR MEASUREMENTS #
 #########################################################################################
+@login_required(login_url='/login/')
 def measurements(request):
     measurements = Measurement.objects.values()
     points = []
@@ -641,6 +683,7 @@ def measurements(request):
     return HttpResponse(template.render(context))
 
 
+@login_required(login_url='/login/')
 def measurementDetail(request, meas_id):
     measurement = get_object_or_404(Measurement, pk=meas_id)
     parameter = get_object_or_404(Parameter, pk=measurement.parameterid.objectid)
@@ -649,6 +692,7 @@ def measurementDetail(request, meas_id):
     person =get_object_or_404(People, pk=measurement.personid.objectid)
     return render(request, 'lmdb/measurementDetail.html', {'person': person, 'project' : project,'measurement' : measurement, 'parameter' : parameter, 'location' : location})
 
+@login_required(login_url='/login/')
 def createMeasurement(request):
     if request.POST:
         postVals = request.POST.copy()
@@ -674,6 +718,18 @@ def createMeasurement(request):
 
     return render(request, 'lmdb/createMeasurement.html', {'form' : form, 'points':points, 'lines':lines,'polys':polys})
 
+@login_required(login_url='/login/')
+def dataUpdateMeasurement(request, id):
+    if request.POST:
+        m = Measurement.objects.get(objectid=id)
+        form = MeasurementForm(request.POST, instance = m)
+        if form.is_valid():
+            form.save()
+            return HttpResponse('success')
+        else:
+           return render(request, 'lmdb/createMeasurement.html', {'form' : form})
+    else:
+        return HttpResponse('failed')
 
 
 #########################################################################################
@@ -682,6 +738,7 @@ def createMeasurement(request):
 #########################################################################################
 #   BEGINNING OF FUNCTIONS FOR COLLECTIONS #
 #########################################################################################
+@login_required(login_url='/login/')
 def collections(request):    # !!!!!!   NEED TO APPLY FKEY RESTRAINTS
     collections = Collection.objects.values()
     points = {}
@@ -711,6 +768,7 @@ def collections(request):    # !!!!!!   NEED TO APPLY FKEY RESTRAINTS
     return HttpResponse(template.render(context))
 
 
+@login_required(login_url='/login/')
 def collectionDetail(request, coll_id):
     collection = get_object_or_404(Collection, pk=coll_id)
     organism = get_object_or_404(Organism, pk=collection.organismid.objectid)
@@ -720,6 +778,7 @@ def collectionDetail(request, coll_id):
     return render(request, 'lmdb/collectionDetail.html', {'person': person, 'project' : project,'collection' : collection, 'organism' : organism, 'location' : location})
     
 
+@login_required(login_url='/login/')
 def createCollection(request):
     if request.POST:
         postVals = request.POST.copy()
@@ -747,7 +806,18 @@ def createCollection(request):
 
     return render(request, 'lmdb/createCollection.html', {'form' : form, 'points':points, 'lines':lines,'polys':polys})
 
-
+@login_required(login_url='/login/')
+def dataUpdateCollection(request, id):
+    if request.POST:
+        c = Collection.objects.get(objectid=id)
+        form = CollectionForm(request.POST, instance = c)
+        if form.is_valid():
+            form.save()
+            return HttpResponse('success')
+        else:
+           return render(request, 'lmdb/createCollection.html', {'form' : form})
+    else:
+        return HttpResponse('failed')
 
 
 #########################################################################################

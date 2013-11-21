@@ -18,6 +18,7 @@
 
     <table id="example">
     <thead>
+        <th>Type</th>
         <th>ID</th>
         <th>Project</th>
         <th>Parameter</th>
@@ -28,7 +29,8 @@
     <tbody>
    {% for m in measurements %}
         <tr>
-        <td><a href="{% url 'lmdb:measurementDetail' m.objectid %}">{{ m.objectid }}</a></td>
+        <td><a href="{% url 'lmdb:measurementDetail' m.objectid %}">Measurement</a></td>
+        <td>{{ m.objectid }}</td>
         <td>{{ m.projectid_id }}</td>
         <td>{{ m.parameterid_id }}</td>
         <td>{{ m.locationid }}</td>
@@ -39,7 +41,8 @@
     </tbody>
     <tfoot>
    <tr>
-			<th><input style="width:100%" type="text" name="id" value="Search Ids" class="search_init" /></th>
+			<th><input style="width:100%" type="text" name="type" value="Type" class="search_init" /></th>
+            <th><input style="width:100%" type="text" name="id" value="Search Ids" class="search_init" /></th>
 			<th><input style="width:100%" type="text" name="project" value="Search Projects" class="search_init" /></th>
 			<th><input style="width:100%" type="text" name="organism" value="Search Organisms" class="search_init" /></th>
 			<th><input style="width:100%" type="text" name="location" value="Search Locations" class="search_init" /></th>

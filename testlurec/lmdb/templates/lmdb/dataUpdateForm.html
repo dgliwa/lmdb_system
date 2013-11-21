@@ -4,11 +4,557 @@
     {% load static %}
     <script type="text/javascript" src="{% static "datepicker/jquery.simple-dtpicker.js" %}"></script>
 	<link type="text/css" href="{% static "datepicker/jquery.simple-dtpicker.css" %}" rel="stylesheet" />
+    <link rel="stylesheet" href="http://js.arcgis.com/3.6/js/dojo/dijit/themes/claro/claro.css">
+    <link rel="stylesheet" href="http://js.arcgis.com/3.6/js/esri/css/esri.css">
+    <script src="http://js.arcgis.com/3.6/"></script>
 
+    <script>
+        $(document).ready(function() {
+            $('.changelocation').click(function(e){
+                a = $(this).parent();
+                changeLocation(a);
+            
+            });
+            $('.measurementForm').submit(function(e){
+            e.preventDefault();
+            var values = $(this).serialize();
+            var objectid = $(this)[0][1].value;
+            
+            var a = $.post('/lmdb/data/update/form/measurement/'+ objectid + '/', values, function(response) {
+                // log the response to the console
+                console.log("Response: "+response);
+                if(response==="success"){
+                    alert("Measurement Successfully Updated!");
+                
+                }
+                else{
+                    alert("Error Updating Measurement!");
+                }
+                
+             });
+                console.log(a);
+            return false;
+                });
+                    
+            
+             $('.collectionForm').submit(function(e){
+            e.preventDefault();
+            var values = $(this).serialize();
+            var objectid = $(this)[0][1].value;
+            
+            var a = $.post('/lmdb/data/update/form/collection/'+ objectid + '/', values, function(response) {
+                // log the response to the console
+                console.log("Response: "+response);
+                if(response==="success"){
+                    alert("Collection Successfully Updated!");
+                
+                }
+                else{
+                    alert("Error Updating Collection!");
+                }
+             });
+                console.log(a);
+            return false;            
+            });
+            
+             $('.changeForm').submit(function(e){
+            e.preventDefault();
+            var values = $(this).serialize();
+            var objectid = $(this)[0][1].value;
+            
+            var a = $.post('/lmdb/data/update/form/change/'+ objectid + '/', values, function(response) {
+                // log the response to the console
+                console.log("Response: "+response);
+                if(response==="success"){
+                    alert("Change Successfully Updated!");
+                
+                }
+                else{
+                    alert("Error Updating Change!");
+                }
+             });
+                console.log(a);
+            return false;
+            });
+            
+             $('.sightingForm').submit(function(e){
+            e.preventDefault();
+            var values = $(this).serialize();
+            var objectid = $(this)[0][1].value;
+            
+            var a = $.post('/lmdb/data/update/form/sighting/'+ objectid + '/', values, function(response) {
+                // log the response to the console
+                console.log("Response: "+response);
+                if(response==="success"){
+                    alert("Sighting Successfully Updated!");
+                
+                }
+                else{
+                    alert("Error Updating Sighting!");
+                }
+             });
+                console.log(a);
+            return false;            
+            });
+        });
+        
+        function changeLocation(a){
+            console.log(a);
+            $(".dim").css('visibility','visible');
+            $(".dialog_wrapper").css('visibility','visible');
+            $(".dialog").css('visibility','visible');
+            $(".layerTile").css('visibility','visible');
+
+            document.getElementById('newlocation').value = a[0].id
+        }
+        
+        function verify(a){
+        var b = document.getElementById('newlocation')
+        
+        var c = document.getElementById(document.getElementById('newlocation').value)
+        if(c.className==='measurementForm'){
+                c[13].value = a
+
+        }
+        else if(c.className==='changeForm'){
+                c[15].value = a
+        }
+        else if(c.className==='collectionForm'){
+                c[16].value = a
+        }
+        else if(c.className==='sightingForm'){
+                c[15].value = a
+
+        }
+        
+        $(".dim").css('visibility','hidden');
+        $(".dialog_wrapper").css('visibility','hidden');
+        $(".dialog").css('visibility','hidden');
+        $(".layerTile").css('visibility','hidden');
+
+        map.infoWindow.hide();
+
+        }
+        
+        function closeWindow(){
+        $(".dim").css('visibility','hidden');
+        $(".dialog_wrapper").css('visibility','hidden');
+        $(".dialog").css('visibility','hidden');
+        $(".layerTile").css('visibility','hidden');
+
+        map.infoWindow.hide();
+        }
+         
+    </script>
+    <style>
+    .dim{
+            height:100%;
+            width:100%;
+            position:fixed;
+            left:0;
+            top:10px;
+            z-index:1 !important;
+            background-color:black;
+            filter: alpha(opacity=75); /* internet explorer */
+            -khtml-opacity: 0.75;      /* khtml, old safari */
+            -moz-opacity: 0.75;       /* mozilla, netscape */
+            opacity: 0.75;           /* fx, safari, opera */
+    }
+
+
+    .dialog_wrapper{ 
+            width: 100%; 
+            top: 10px; 
+            left: 0px; 
+            position: absolute; 
+            z-index: 5; 
+            display: block;  
+            }
+
+    .dialog { 
+            width: 75%; 
+            height: 75%; 
+            margin: 0 auto; 
+            padding: 40px; 
+            background-color: #fff;
+            border: 1px solid #ccc; 
+            color: #333; }
+    </style>
+    
+<script>
+    var featureLayer;
+dojo.require("esri.map");
+dojo.require("esri.layers.FeatureLayer");
+dojo.require("esri.layers.FeatureEditResult");
+dojo.require("esri.geometry.Geometry");
+dojo.require("dijit.TooltipDialog");
+dojo.require("dijit.layout.BorderContainer");
+dojo.require("dijit.layout.ContentPane");
+dojo.require("esri.dijit.editing.TemplatePicker-all");
+dojo.require("esri.tasks.gp");
+
+var map;
+require([
+    "esri/map",
+    "esri/toolbars/draw",
+    "esri/toolbars/edit",
+    "esri/graphic",
+    "esri/config",
+
+    "esri/layers/FeatureLayer",
+    "esri/geometry/Point",
+    "esri/symbols/SimpleMarkerSymbol",
+    "esri/symbols/SimpleLineSymbol",
+    "esri/symbols/SimpleFillSymbol",
+
+    "esri/dijit/editing/TemplatePicker",
+
+    "dojo/_base/array",
+    "dojo/_base/event",
+    "dojo/_base/lang",
+    "dojo/parser",
+    "dijit/registry",
+
+    "dijit/layout/BorderContainer", "dijit/layout/ContentPane",
+    "dijit/form/Button", "dojo/domReady!"
+], function (
+    Map, Draw, Edit, Graphic, esriConfig,
+    FeatureLayer,Point,
+    SimpleMarkerSymbol, SimpleLineSymbol, SimpleFillSymbol,
+    TemplatePicker,
+    arrayUtils, event, lang, parser, registry
+) {
+   // parser.parse();
+
+    // refer to "Using the Proxy Page" for more information:  https://developers.arcgis.com/en/javascript/jshelp/ags_proxy.html
+    esriConfig.defaults.io.proxyUrl = "/proxy";
+
+    // This service is for development and testing purposes only. We recommend that you create your own geometry service for use within your applications. 
+    esriConfig.defaults.geometryService = new esri.tasks.GeometryService("http://tasks.arcgisonline.com/ArcGIS/rest/services/Geometry/GeometryServer");
+
+    map = new Map("map", {
+        basemap: "satellite",
+        logo: true,
+        center: [-88.366193, 42.289993],
+        zoom: 14
+    });
+
+    map.on("layers-add-result", initEditing);
+    if({{points}}.length != 0){
+    pointLayer = new FeatureLayer("http://147.126.65.155/gis/rest/services/campus/lurec_lmdb/FeatureServer/0", {
+        mode: FeatureLayer.MODE_SNAPSHOT,
+        outFields: ["*"]
+
+    });
+    var queryString = ""
+    for( var i=0;  i<{{points}}.length; i++){
+        if (queryString == ""){
+            queryString += "objectid =" + {{points}}[i];
+        }
+        else{
+            queryString += "OR objectid =" + {{points}}[i];
+        }
+    
+    }
+    pointLayer.setDefinitionExpression(queryString);
+    }
+    if ({{lines}}.length != 0){
+    lineLayer = new FeatureLayer("http://147.126.65.155/gis/rest/services/campus/lurec_lmdb/FeatureServer/1", {
+        mode: FeatureLayer.MODE_SNAPSHOT,
+        outFields: ["*"]
+    });
+    var queryString = ""
+    for( var i=0; i<{{lines}}.length;i++){
+        if (queryString == ""){
+            queryString += "objectid =" + {{lines}}[i];
+        }
+        else{
+            queryString += "OR objectid =" + {{lines}}[i];
+        }
+    
+    }
+    lineLayer.setDefinitionExpression(queryString);    }
+    if({{polys}}.length!=0){
+    polyLayer = new FeatureLayer("http://147.126.65.155/gis/rest/services/campus/lurec_lmdb/FeatureServer/2", {
+        mode: FeatureLayer.MODE_SNAPSHOT,
+        outFields: ["*"]
+    });
+   var queryString = ""
+    for( var i=0; i<{{polys}}.length; i++){
+        if (queryString == ""){
+            queryString += "objectid =" + {{polys}}[i];
+        }
+        else{
+            queryString += "OR objectid =" + {{polys}}[i];
+        }
+    
+    }
+    polyLayer.setDefinitionExpression(queryString);}
+    infoTemplate = new esri.InfoTemplate("Object ID : ${objectid}",
+        "<input class=\"hidden\" id = \"locId\" value=\"${objectid}\"/>" +
+        "You have selected this location.  Click the button to verify." +
+        "<button type='button' onclick='verify(${objectid})'>Verify</button>");
+
+    if (pointLayer != null){
+       pointLayer.setInfoTemplate(infoTemplate);
+    }
+    if (lineLayer != null){
+        lineLayer.setInfoTemplate(infoTemplate);
+    }
+    if (polyLayer != null){
+        polyLayer.setInfoTemplate(infoTemplate);
+    }
+
+    dojo.connect(map, "onLayersAddResult", initEditing);
+
+    dojo.connect(pointLayer, "onEditsComplete",
+        function (addResults) {
+            if (addResults.length > 0) {
+                alert("objectid is: " + addResults[0].objectId);
+
+                try{
+                jQuery.post('/lmdb/reference/locations/create/popup/',{'csrfmiddlewaretoken' : '{{ csrf_token }}','indicator': 'yes', 'type': 'point', 'objectid' :addResults[0].objectId}, function() {
+  alert( "success" );
+}); 
+                }
+                catch(err){
+                console.log(err);
+                }
+
+
+var graphic = pointLayer.graphics[pointLayer.graphics.length - 1];
+                graphic.attributes["additionalinformation"] = graphic.attributes["objectid"];
+                try{
+                x = graphic.geometry.x;
+                y = graphic.geometry.y;
+                sr = map.spatialReference;
+                p = new Point(x,y,sr)
+                pointLayer = pointLayer.clearSelection();
+                map.infoWindow.show(p);
+                
+                map.infoWindow.setContent(graphic.getContent());
+                }
+                catch(err){
+                console.log(err);
+                }
+            }
+
+
+        });
+
+
+    dojo.connect(lineLayer, "onEditsComplete",
+        function (addResults) {
+            if (addResults.length > 0) {
+                alert("objectid is: " + addResults[0].objectId);
+
+
+try{                jQuery.post('/lmdb/reference/locations/create/popup/',{'csrfmiddlewaretoken' : '{{ csrf_token }}','indicator': 'yes', 'type': 'line', 'objectid' :addResults[0].objectId}, function() {
+  alert( "success" );
+}); 
+                }
+                catch(err){
+                console.log(err);
+                }
+
+
+
+
+                 var graphic = lineLayer.graphics[lineLayer.graphics.length - 1];
+             graphic.attributes["additionalinformation"] = graphic.attributes["objectid"];
+                try{
+                x = graphic.geometry.paths[0][0][0];
+                y = graphic.geometry.paths[0][0][1];
+                sr = map.spatialReference;
+                p = new Point(x,y,sr)
+                map.infoWindow.show(p);
+                
+                map.infoWindow.setContent(graphic.getContent());
+                }
+                catch(err){
+                console.log(err);
+                }
+                        }
+
+
+        });
+
+
+
+
+    dojo.connect(polyLayer, "onEditsComplete",
+        function (addResults) {
+            if (addResults.length > 0) {
+                alert("objectid is: " + addResults[0].objectId);
+
+try{
+               jQuery.post('/lmdb/reference/locations/create/popup/',{'csrfmiddlewaretoken' : '{{ csrf_token }}','indicator': 'yes', 'type': 'poly', 'objectid' :addResults[0].objectId}, function() {
+  alert( "success" );
+}); 
+                }
+                catch(err){
+                console.log(err);
+                }
+
+
+
+
+                var graphic = polyLayer.graphics[polyLayer.graphics.length - 1];
+             graphic.attributes["additionalinformation"] = graphic.attributes["objectid"];
+                try{
+                x = graphic.geometry.rings[0][0][0];
+                y = graphic.geometry.rings[0][0][1];
+                sr = map.spatialReference;
+                p = new Point(x,y,sr)
+                map.infoWindow.show(p);
+                
+                map.infoWindow.setContent(graphic.getContent());
+                }
+                catch(err){
+                console.log(err);
+                }
+            }
+
+
+        });
+
+      if( pointLayer == null || lineLayer == null || polyLayer == null){
+         if(pointLayer!=null && lineLayer !=null){
+             map.addLayers([pointLayer,lineLayer]);
+         }
+         else if(pointLayer!=null && polyLayer!=null){
+             map.addLayers([pointLayer,polyLayer]);
+         }
+         else if(lineLayer!=null && polyLayer!=null){
+             map.addLayers([lineLayer,polyLayer]);
+         }
+         else if(pointLayer==null && lineLayer == null){
+             map.addLayers([polyLayer]);
+         }
+         else if(lineLayer==null && polyLayer==null){
+             map.addLayers([pointLayer]);
+         }
+         else if(pointLayer==null && polyLayer==null){
+             map.addLayers([lineLayer]);
+         }
+    }
+    else{
+        map.addLayers([pointLayer,lineLayer,polyLayer]);
+    }
+    map.addLayers([pointLayer,lineLayer,polyLayer]);
+
+
+
+    function initEditing(evt) {
+        console.log("initEditing", evt);
+        // var map = this;
+        var currentLayer = null;
+        var layers = arrayUtils.map(evt.layers, function (result) {
+            return result.layer;
+        });
+        console.log("layers", layers);
+
+        var editToolbar = new Edit(map);
+        editToolbar.on("deactivate", function (evt) {
+            currentLayer.applyEdits(null, [evt.graphic], null);
+        });
+
+        arrayUtils.forEach(layers, function (layer) {
+            var editingEnabled = false;
+            layer.on("dbl-click", function (evt) {
+                event.stop(evt);
+                if (editingEnabled === false) {
+                    editingEnabled = true;
+                    editToolbar.activate(Edit.EDIT_VERTICES, evt.graphic);
+                } else {
+                    currentLayer = this;
+                    editToolbar.deactivate();
+                    editingEnabled = false;
+                }
+            });
+
+            layer.on("click", function (evt) {
+                event.stop(evt);
+               
+            });
+        });
+
+        var templatePicker = new TemplatePicker({
+            featureLayers: layers,
+            rows: "auto",
+            columns: 2,
+            grouping: true,
+            style: "height: auto; overflow: auto;"
+        }, "templatePickerDiv");
+
+        templatePicker.startup();
+
+        var drawToolbar = new Draw(map);
+
+        var selectedTemplate;
+        templatePicker.on("selection-change", function () {
+            if (templatePicker.getSelected()) {
+                selectedTemplate = templatePicker.getSelected();
+            }
+            switch (selectedTemplate.featureLayer.geometryType) {
+            case "esriGeometryPoint":
+                drawToolbar.activate(Draw.POINT);
+                break;
+            case "esriGeometryPolyline":
+                drawToolbar.activate(Draw.POLYLINE);
+                break;
+            case "esriGeometryPolygon":
+                drawToolbar.activate(Draw.POLYGON);
+                break;
+            }
+        });
+
+        drawToolbar.on("draw-end", function (evt) {
+            drawToolbar.deactivate();
+            editToolbar.deactivate();
+            var newAttributes = lang.mixin({}, selectedTemplate.template.prototype.attributes);
+            var newGraphic = new Graphic(evt.geometry, null, newAttributes);
+            selectedTemplate.featureLayer.applyEdits([newGraphic], null, null);
+
+        });
+    }
+    
+
+});
+
+
+   
+</script> 
+{% endblock %}
+
+{% block customclass %}
+class ="claro"
 {% endblock %}
 {% block content %}
 
 {% if measurementforms or changeforms or collectionforms or sightingforms %}
+    <!-- The first DIV for creating an Overlay -->
+<div style="visibility:hidden" class="dim" >
+</div>  
+
+<!-- The second div. Note, that the wrapper is only need to center the real dialog div -->
+<div style="visibility:hidden" class="dialog_wrapper">
+<input type="text" id="newlocation" type="hidden" value=""/>
+
+<div class="dialog">
+<button type="button" onclick="closeWindow()">Close</button>
+<div class="dialog" data-dojo-type="dijit/layout/BorderContainer" data-dojo-props="gutters:true, design:'headline'" style="width:100%;height:100%;">
+      <div data-dojo-type="dijit/layout/ContentPane"  id="header" data-dojo-props="region:'top'">
+      To add a location, click on the desired type of location (point, line, polygon) and then click where it is located on the map.
+      A popup will appear stating that it has been successfully added.
+           </div>
+      <div id="map" data-dojo-type="dijit/layout/ContentPane" data-dojo-props="region:'center'"></div>
+      <div id="bottomPane" data-dojo-type="dijit/layout/ContentPane" data-dojo-props="region:'bottom'">
+        <div id="templatePickerDiv"></div>
+
+          </div>
+          </div></div>
+</div>
     {% if measurementforms %}
     <h3>Measurements</h3>
         {% for form in measurementforms %}
@@ -16,7 +562,7 @@
             <tbody>
             <tr>
             <td style="width:75%">
-            <form id="measurementForm{{form.objectid.value}}" action="{% url 'lmdb:createMeasurement' %}" method="post">
+            <form id="measurementForm{{form.objectid.value}}" class="measurementForm" method="post">
             {% csrf_token %}
             {{form.non_field_errors}}
             {{form.objectid.errors}}
@@ -46,7 +592,8 @@
             Person:  {{form.personid}}<br>
 
             {{form.locationid.errors}}
-            Location:  {{form.locationid}} <br>
+            Location:  {{form.locationid}} <button type="button" class="changelocation">Change Location</button><br>
+            <input type="submit" value="Submit"/>
 
             </form>
             </td>
@@ -85,7 +632,7 @@
         <tbody>
         <tr>
         <td style="width:75%">
-        <form id= "changeForm{{form.objectid.value}}" action="{% url 'lmdb:createChange' %}" method="post">
+        <form id= "changeForm{{form.objectid.value}}" class="changeForm" method="post">
         {% csrf_token %}
         {{form.non_field_errors}}
         {{form.objectid.errors}}
@@ -117,8 +664,8 @@
         Person:  {{form.personid}}<br>
 
         {{form.locationid.errors}}
-        Location:  {{form.locationid}} <br>
-
+        Location:  {{form.locationid}} <button type="button" class="changelocation">Change Location</button><br> 
+        <input type="submit" value="Submit"/>
         </form>
         </td>
         <td>
@@ -152,7 +699,7 @@
             <tbody>
             <tr>
             <td style="width:75%">
-            <form id = "collectionForm{{form.objectid.value}}" action="{% url 'lmdb:createCollection' %}" method="post">
+            <form id = "collectionForm{{form.objectid.value}}" class="collectionForm"  method="post">
             {% csrf_token %}
             {{form.non_field_errors}}
             {{form.objectid.errors}}
@@ -199,7 +746,8 @@
             {{form.personid.errors}}
             Person:  {{form.personid}}<br>
             {{form.locationid.errors}}
-            Location:  {{form.locationid}} <br>
+            Location:  {{form.locationid}} <button type="button" class="changelocation">Change Location</button><br> 
+            <input type="submit" value="Submit"/>
 
             </form>
             </td>
@@ -251,7 +799,7 @@
         <tbody>
         <tr>
         <td style="width:75%">
-        <form id = "sightingForm{{form.objectid.value}}" action="{% url 'lmdb:createSighting' %}" method="post">
+        <form id = "sightingForm{{form.objectid.value}}" class="sightingForm"  method="post">
 
 
         {% csrf_token %}
@@ -298,7 +846,8 @@
         Person:  {{form.personid}}<br>
 
         {{form.locationid.errors}}
-        Location:  {{form.locationid}} <br>
+        Location:  {{form.locationid}} <button type="button" class="changelocation">Change Location</button><br> 
+        <input type="submit" value="Submit"/>
 
         </form>
 
