@@ -244,6 +244,16 @@ require([
     
     }
     polyLayer.setDefinitionExpression(queryString);}
+    // var relatedQuery = new RelationshipQuery();
+//           relatedQuery.outFields = ["*"];
+//           relatedQuery.relationshipId = 1;
+//           
+//     relatedQuery.objectIds = {{points}};
+//             pointLayer.queryRelatedFeatures(relatedQuery, function(relatedRecords) {
+//               var fset = relatedRecords[5614];
+//               var count = (fset) ? fset.features.length : 0;
+//               console.log(fset);}
+    
     infoTemplate = new esri.InfoTemplate("Object ID : ${objectid}",
         "<input class=\"hidden\" id = \"locId\" value=\"${objectid}\"/>" +
         "You have selected to use this location to record your change.");

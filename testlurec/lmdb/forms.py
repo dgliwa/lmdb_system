@@ -81,7 +81,7 @@ class OrganismForm(forms.ModelForm):
 
 class MeasurementForm(forms.ModelForm):
     objectid = forms.IntegerField(widget=forms.HiddenInput())
-    parameterid = forms.ModelChoiceField(queryset = Parameter.objects.all())
+    parameterid = forms.ModelChoiceField(queryset = Parameter.objects.all(), widget=forms.Select(attrs={'class':'paramfield'}))
     projectid = forms.ModelChoiceField(queryset = Project.objects.all(),required=False)
     personid = forms.ModelChoiceField(queryset = People.objects.all())
     locationid = forms.IntegerField(widget=forms.HiddenInput())
@@ -99,7 +99,7 @@ class MeasurementForm(forms.ModelForm):
 class SightingForm(forms.ModelForm):
     objectid = forms.IntegerField(widget=forms.HiddenInput())
     personid = forms.ModelChoiceField(queryset = People.objects.all())
-    organismid = forms.ModelChoiceField(queryset = Organism.objects.all())
+    organismid = forms.ModelChoiceField(queryset = Organism.objects.all(), widget=forms.Select(attrs={'class':'organismfield'}))
     projectid = forms.ModelChoiceField(queryset = Project.objects.all(),required=False)
     locationid = forms.IntegerField(widget=forms.HiddenInput())
     number = forms.IntegerField(required=False)
@@ -112,7 +112,7 @@ class SightingForm(forms.ModelForm):
 class CollectionForm(forms.ModelForm):
     objectid = forms.IntegerField(widget=forms.HiddenInput())
     projectid = forms.ModelChoiceField(queryset = Project.objects.all())
-    organismid = forms.ModelChoiceField(queryset = Organism.objects.all())
+    organismid = forms.ModelChoiceField(queryset = Organism.objects.all(), widget=forms.Select(attrs={'class':'organismfield'}))
     datecollect = forms.DateTimeField(widget=forms.TextInput(attrs={'class':'datefield'}))
     methodcollect = forms.CharField(max_length=255)
     stored = forms.IntegerField()
@@ -130,7 +130,7 @@ class ChangeForm(forms.ModelForm):
     justification = forms.CharField(max_length=255)
     permanent = forms.IntegerField()
     chemicalapplication = forms.IntegerField()
-    parameterid = forms.ModelChoiceField(queryset = Parameter.objects.all(), required=False)
+    parameterid = forms.ModelChoiceField(queryset = Parameter.objects.all(), required=False, widget=forms.Select(attrs={'class':'paramfield'}))
     chemicalused = forms.CharField(max_length=255, required=False)
     chemicalquantity = forms.DecimalField(required=False, max_digits=38, decimal_places=8, )
     chemicalunits = forms.CharField(max_length=50, required=False)

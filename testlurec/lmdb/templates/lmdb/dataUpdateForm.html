@@ -10,6 +10,8 @@
 
     <script>
         $(document).ready(function() {
+        
+
             $('.changelocation').click(function(e){
                 a = $(this).parent();
                 changeLocation(a);
@@ -96,11 +98,189 @@
                 console.log(a);
             return false;            
             });
+            
+            $(".paramForm").submit(function(e){
+            e.preventDefault();
+            var values = $(this).serialize();
+            
+            var name = $(this).attr('name')
+      
+            var a = $.post('/lmdb/reference/parameters/createFromData/', values, function(response) {
+    // log the response to the console
+    console.log("Response: "+response);
+    console.log(response['commonname']);
+    var last = $(this).closest('tr').find('paramfield').length-1;
+        $('.paramfield').append('<option value="' + response['id'] + '">' + response['commonname'] + '</option>');
+      $('#'+name+' > .paramfield option:last').attr('selected','selected');
+       },'json');
+    console.log(a);
+    this.reset();
+        $(this).css('visibility','hidden')
+
+    });
+
+        $(".paramButton").click(function(e){
+            $(this).closest("tr").find(".paramForm").css('visibility','visible');        
         });
+        
+        $(".organismButton").click(function(e){
+            $(this).closest("tr").find(".organismForm").css('visibility','visible');        
+        });               
+        });
+        
+        
+//Organism AJAX functions
+
+    $(function(){
+    $("select.kingdom").change(function(){
+      var name = $(this).parent().attr('id');
+      $.getJSON("/lmdb/reference/organisms/kingdomFilter/"+$(this).val()+"/", function(j) {
+        var options = '<option value="">---------- </option>';
+        for (var i = 0; i < j.length; i++) {
+          options += '<option value="' + j[i].phylum + '">' + j[i].phylum + '</option>';
+        }
+        $("#"+name+" > .phylum").html(options);
+        $("#"+name+" > .phylum").attr('selected', 'selected');
+        $("#"+name+" > .phylum").attr('disabled', false);
+      })
+      $(this).attr('selected', 'selected');
+      $.getJSON( "/lmdb/reference/organisms/kingdom/"+$(this).val()+"/", function( data ) {
+        var options = '<option value="">---------- </option>';
+        for (var i = 0; i < data.length; i++) {
+          options += '<option value="' + data[i].objectid + '">' + data[i].organismname + '</option>';
+        }
+        $("#"+name+" > .organismfield").html(options);
+        $("#"+name+" > .organismfield option:first").attr('selected', 'selected');
+});
+
+    })
+  })
+  
+  
+$(function(){
+    $("select.phylum").change(function(){
+      var name = $(this).parent().attr('id');
+      console.log(name);
+      $.getJSON("/lmdb/reference/organisms/phylumFilter/"+$(this).val()+"/", function(j) {
+        console.log(j);
+        var options = '<option value="">---------- </option>';
+        for (var i = 0; i < j.length; i++) {
+          options += '<option value="' + j[i].class_field + '">' + j[i].class_field + '</option>';
+        }
+        $("#"+name + " >.class_field").html(options);
+        $("#"+name + " >.class_field option:first").attr('selected', 'selected');
+        $("#"+name + " >.class_field").attr('disabled', false);
+      })
+      $(this).attr('selected', 'selected');
+    $.getJSON( "/lmdb/reference/organisms/phylum/"+$(this).val()+"/", function( data ) {
+        var options = '<option value="">---------- </option>';
+        for (var i = 0; i < data.length; i++) {
+          options += '<option value="' + data[i].objectid + '">' + data[i].organismname + '</option>';
+        }
+        $("#"+name+" > .organismfield").html(options);
+        $("#"+name+" > .organismfield option:first").attr('selected', 'selected');
+});
+    })
+  })
+  
+$(function(){
+    $("select.class_field").change(function(){
+      var name = $(this).parent().attr('id'); 
+      $.getJSON("/lmdb/reference/organisms/classFilter/"+$(this).val()+"/", function(j) {
+        var options = '<option value="">---------- </option>';
+        for (var i = 0; i < j.length; i++) {
+          options += '<option value="' + j[i].order_field + '">' + j[i].order_field + '</option>';
+        }
+        $("#" + name + "> .order_field").html(options);
+        $("#" + name + "> .order_field option:first").attr('selected', 'selected');
+        $("#" + name + "> .order_field").attr('disabled', false);
+      })
+      $(this).attr('selected', 'selected');
+      $.getJSON( "/lmdb/reference/organisms/class_field/"+$(this).val()+"/", function( data ) {
+        var options = '<option value="">---------- </option>';
+        for (var i = 0; i < data.length; i++) {
+          options += '<option value="' + data[i].objectid + '">' + data[i].organismname + '</option>';
+        }
+       $("#"+name+" > .organismfield").html(options);
+       $("#"+name+" > .organismfield option:first").attr('selected', 'selected');
+});
+    })
+  })
+  
+$(function(){
+    $("select.order_field").change(function(){
+      var name = $(this).parent().attr('id');
+      $.getJSON("/lmdb/reference/organisms/orderFilter/"+$(this).val()+"/", function(j) {
+        var options = '<option value="">---------- </option>';
+        for (var i = 0; i < j.length; i++) {
+          options += '<option value="' + j[i].family + '">' + j[i].family + '</option>';
+        }
+        $("#" + name + " > .family").html(options);
+        $("#" + name +" > .family option:first").attr('selected', 'selected');
+        $("#" + name +" > .family").attr('disabled', false);
+      })
+      $(this).attr('selected', 'selected');
+      $.getJSON( "/lmdb/reference/organisms/order_field/"+$(this).val()+"/", function( data ) {
+        var options = '<option value="">---------- </option>';
+        for (var i = 0; i < data.length; i++) {
+          options += '<option value="' + data[i].objectid + '">' + data[i].organismname + '</option>';
+        }
+        $("#"+name+" > .organismfield").html(options);
+        $("#"+name+" > .organismfield option:first").attr('selected', 'selected');
+});
+    })
+  })
+  
+$(function(){
+    $("select.family").change(function(){
+      var name = $(this).parent().attr('id');
+      $.getJSON("/lmdb/reference/organisms/familyFilter/"+$(this).val()+"/", function(j) {
+        var options = '<option value="">---------- </option>';
+        for (var i = 0; i < j.length; i++) {
+          options += '<option value="' + j[i].genus + '">' + j[i].genus + '</option>';
+        }
+        $("#" + name + " > .genus").html(options);
+        $("#" + name + " > .genus option:first").attr('selected', 'selected');
+        $("#" + name + " > .genus").attr('disabled', false);
+      })
+      $(this).attr('selected', 'selected');
+      $.getJSON( "/lmdb/reference/organisms/family/"+$(this).val()+"/", function( data ) {
+        var options = '<option value="">---------- </option>';
+        for (var i = 0; i < data.length; i++) {
+          options += '<option value="' + data[i].objectid + '">' + data[i].organismname + '</option>';
+        }
+       $("#"+name+" > .organismfield").html(options);
+       $("#"+name+" > .organismfield option:first").attr('selected', 'selected');
+});
+    })
+  })
+
+$(function(){
+    $("select.genus").change(function(){
+      var name = $(this).parent().attr('id');
+      $.getJSON("/lmdb/reference/organisms/genusFilter/"+$(this).val()+"/", function(j) {
+        var options = '';
+        console.log(j);
+        for (var i = 0; i < j.length; i++) {
+          options += '<option value="' + j[i].objectid + '">' + j[i].organismname + '</option>';
+        }
+       $("#"+name+" > .organismfield").html(options);
+       $("#"+name+" > .organismfield option:first").attr('selected', 'selected');
+      })
+      $(this).attr('selected', 'selected');
+    })
+  })
+        
+      
+        
+        
+        
+//   
         
         function changeLocation(a){
             console.log(a);
             $(".dim").css('visibility','visible');
+            $("#map_container.container").css('display','block');
             $(".dialog_wrapper").css('visibility','visible');
             $(".dialog").css('visibility','visible');
             $(".layerTile").css('visibility','visible');
@@ -144,6 +324,11 @@
 
         map.infoWindow.hide();
         }
+        
+        
+    </script> 
+
+
          
     </script>
     <style>
@@ -178,7 +363,11 @@
             padding: 40px; 
             background-color: #fff;
             border: 1px solid #ccc; 
-            color: #333; }
+            color: #333;
+        }
+    #map_container.container{
+            display: none;
+    }    
     </style>
     
 <script>
@@ -329,7 +518,7 @@ var graphic = pointLayer.graphics[pointLayer.graphics.length - 1];
                 y = graphic.geometry.y;
                 sr = map.spatialReference;
                 p = new Point(x,y,sr)
-                pointLayer = pointLayer.clearSelection();
+                //pointLayer = pointLayer.clearSelection();
                 map.infoWindow.show(p);
                 
                 map.infoWindow.setContent(graphic.getContent());
@@ -570,7 +759,7 @@ class ="claro"
             {{form.mname.errors}}
             Name:  {{form.mname}}<br>
             {{form.parameterid.errors}}
-            Parameter:  {{form.parameterid}}  <button type="button" onclick="addParameter();">Add Parameter</button>
+            Parameter:  {{form.parameterid}}  <button type="button" class="paramButton">Add Parameter</button>
 
             <br>
             {{form.projectid.errors}}
@@ -598,7 +787,7 @@ class ="claro"
             </form>
             </td>
             <td>
-            <form id = "paramSubmit" style = "visibility:hidden;" id="paramForm" name="paramForm" >
+            <form style = "visibility:hidden;" id="paramMeasurement{{form.objectid.value}}" class="paramForm" name="measurementForm{{form.objectid.value}}" >
             {% csrf_token %}
             <p>If you do not know the CAS or EPA Number(s), you can search for them <a href="http://ofmpub.epa.gov/sor_internet/registry/substreg/searchandretrieve/substancesearch/search.do" target="_blank">here</a></p>
 
@@ -642,7 +831,7 @@ class ="claro"
         {{form.justification.errors}}
         Justification:  {{form.justification}} <br>
         {{form.parameterid.errors}}
-        Parameter:  {{form.parameterid}}  <button type="button" onclick="addParameter();">Add Parameter</button><br>
+        Parameter:  {{form.parameterid}}  <button type="button" class="paramButton">Add Parameter</button><br>
         {{form.projectid.errors}}
         Project:  {{form.projectid}} <br>
         {{form.permanent.errors}}
@@ -669,7 +858,7 @@ class ="claro"
         </form>
         </td>
         <td>
-        <form id = "paramSubmit" style = "visibility:hidden;" id="paramForm" name="paramForm" >
+        <form style = "visibility:hidden;" id="paramChange{{form.objectid.value}}" class="paramForm" name="changeForm{{form.objectid.value}}" >
         {% csrf_token %}
         <p>If you do not know the CAS or EPA Number(s), you can search for them <a href="http://ofmpub.epa.gov/sor_internet/registry/substreg/searchandretrieve/substancesearch/search.do" target="_blank">here</a></p>
 
@@ -705,7 +894,7 @@ class ="claro"
             {{form.objectid.errors}}
             {{form.objectid}}
 
-            Organism Kingdom:  <select id="id_kingdom" name="kingdom">
+            Organism Kingdom:  <select id="id_kingdom" class="kingdom" name="kingdom">
             <option value="" selected="selected">---------- </option>
             <option value="Bacteria">Bacteria</option>
             <option value="Archaea">Archaea</option>
@@ -715,22 +904,22 @@ class ="claro"
             <option value="Animalia">Animalia</option>
             </select><br>
 
-            Organism Phylum: <select disabled="True" id="id_phylum" name="phylum">
+            Organism Phylum: <select disabled="True" id="id_phylum" class="phylum" name="phylum">
             </select> <br>
  
-            Organism Class:  <select disabled="True" id="id_class_field" name="class_field">
+            Organism Class:  <select disabled="True" id="id_class_field" class="class_field" name="class_field">
             </select><br>
 
-            Organism Order:  <select disabled="True" id="id_order_field" name="order_field">
+            Organism Order:  <select disabled="True" id="id_order_field" class="order_field" name="order_field">
             </select><br>
 
-            Organism Family:  <select disabled="True" id="id_family" name="family">
+            Organism Family:  <select disabled="True" id="id_family" class="family" name="family">
             </select><br>
 
-            Organism Genus:  <select disabled="True" id="id_genus" name="genus">
+            Organism Genus:  <select disabled="True" id="id_genus" class="genus" name="genus">
             </select><br>
             {{form.organismid.errors}}
-            Organism:  {{form.organismid}}  <button type="button" onclick="addOrganism();">Add Organism</button><br> 
+            Organism:  {{form.organismid}}  <button type="button" class="organismButton">Add Organism</button><br> 
             {{form.projectid.errors}}
             Project:  {{form.projectid}} <br>
             {{form.methodcollect.errors}}
@@ -753,7 +942,7 @@ class ="claro"
             </td>
             <td>
             <div>
-            <form style="visibility:hidden" id="organismSubmit">
+            <form style="visibility:hidden" id="organismCollection{{form.objectid.value}}" class="organismForm">
             {% csrf_token %}
 
             Organism Kingdom:  <select id="kingdom" name="kingdom">
@@ -831,7 +1020,7 @@ class ="claro"
         Organism Genus:  <select disabled="True" id="id_genus" name="genus">
         </select><br>
         {{form.organismid.errors}}
-        Organism:  {{form.organismid}}  <button type="button" onclick="addOrganism();">Add Organism</button><br> 
+        Organism:  {{form.organismid}}  <button type="button" class="organismButton">Add Organism</button><br> 
         {{form.projectid.errors}}
         Project:  {{form.projectid}} <br>
 
@@ -854,7 +1043,7 @@ class ="claro"
         </td>
         <td>
         <div>
-        <form style="visibility:hidden" id="organismSubmit">
+        <form style="visibility:hidden" id="organismSighting{{form.objectid.value}}" class="organismForm">
         Organism Kingdom:  <select id="kingdom" name="kingdom">
         <option value="" selected="selected">---------- </option>
         <option value="Bacteria">Bacteria</option>
