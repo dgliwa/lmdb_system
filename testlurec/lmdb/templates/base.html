@@ -53,7 +53,7 @@
           <p class="brand">{% block pageName %}LUREC LMDB{% endblock %}</p>
           <div class="nav-collapse collapse">
           <p class="navbar-text pull-right">
-                 <a href="{% url 'lmdb:logout' %}">Logout</a></p>
+                 Hello, <a href="{% url 'lmdb:updateUser' %}">{{ user.username}}</a> | <a href="{% url 'lmdb:logout' %}">Logout</a></p>
             <ul class="nav">
             {% block topBar %}
               <li ><a href="{% url 'lmdb:index' %}">Home</a></li>

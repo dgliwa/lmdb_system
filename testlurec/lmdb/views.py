@@ -1,6 +1,6 @@
 from django.shortcuts import render, get_object_or_404
 from django.template import RequestContext, loader
-from lmdb.models import Event, Project, Parameter, Project, Permit, People, Location, Organism, Sighting, Measurement, Change, Collection
+from lmdb.models import *
 
 from django.db import connection, transaction
 
@@ -14,25 +14,30 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.models import User
 
 from django.contrib.auth.decorators import permission_required
+from lmdb.decorators import user_uploaded 
 
 
-from forms import ParamForm, PermitForm, EventForm, ProjectForm, LocationForm, OrganismForm, MeasurementForm, SightingForm, CollectionForm, ChangeForm
+from forms import *
 import json
 
+@user_uploaded
 @login_required(login_url='/login/')
 def index(request):
     canAdd = request.user.has_perm("user.can_add")
     return render(request,'lmdb/index.html',{'canAdd' : canAdd})
 
+@user_uploaded
 @login_required(login_url='/login/')
 def reference(request):
     
     return render(request,'lmdb/reference.html',{})
 
+@user_uploaded
 @login_required(login_url='/login/')
 def data(request):
     return render(request,'lmdb/data.html',{})
 
+@user_uploaded
 @login_required(login_url='/login/')
 def dataUpdate(request):
     if request.user.is_staff:
@@ -43,12 +48,14 @@ def dataUpdate(request):
     else:
         id = request.user.id
         person = People.objects.get(objectid = id)
+        print person
         sightings = Sighting.objects.get_query_set().filter(personid = person)
         measurements = Measurement.objects.get_query_set().filter(personid = person)
-        collections = Collections.objects.get_query_set().filter(personid = person)
-        changes = Changes.objects.get_query_set().filter(personid = person)
+        collections = Collection.objects.get_query_set().filter(personid = person)
+        changes = Change.objects.get_query_set().filter(personid = person)
     return render(request,'lmdb/dataUpdate.html',{'sightings':sightings,'measurements':measurements,'collections':collections,'changes':changes})
 
+@user_uploaded
 @login_required(login_url='/login/')
 def dataUpdateForm(request):
     if request.POST:
@@ -99,32 +106,89 @@ def dataUpdateForm(request):
         
     return render(request,'lmdb/dataUpdateForm.html',{'collectionforms':collectionforms, 'changeforms':changeforms,'measurementforms':measurementforms,'sightingforms':sightingforms, 'points':points, 'lines':lines,'polys':polys})
 
+#########################################################################################
+#   USER MANAGEMENT #
+#########################################################################################
 @login_required(login_url='/login/')
-@permission_required('users.can_add')
-def userMan(request):
+def updateUser(request):
     if request.POST:
-        users = User.objects.all().order_by('id')
-        people = People.objects.all().order_by('objectid')
-        if len(users)>len(people):
-            for i in range(len(people),len(users)):
-                print users[i]
-                #u = users[i]
-                #p = Person(objectid=u.id, firstname=u.first_name,lastname=u.last_name, email=u.email,
-    return render(request, 'lmdb/userMan.html',{})
-
-
+        postVals = request.POST.copy()
+        postVals['objectid'] = request.user.id
+        postVals['firstname'] = request.user.first_name
+        postVals['lastname'] = request.user.last_name
+        form = PeopleForm(postVals)
+        if form.is_valid():
+            form.save()
+            return HttpResponseRedirect('/lmdb/')
+    else:   
+        updater = request.user
+        person = User.objects.get(id = updater.id)
+        form = PeopleForm()
+        form.initial['objectid'] = updater.id
+        form.initial['firstname'] = updater.first_name
+        form.initial['lastname'] = updater.last_name
+        form.initial['displayname'] = updater.first_name + ' ' + updater.last_name
+        form.initial['email'] = updater.email
+    return render(request,'lmdb/updateUser.html',{'form' : form})
+# @login_required(login_url='/login/')
+# @permission_required('users.can_add')
+# def userMan(request):
+#     users = User.objects.all().order_by('id')
+#     people = People.objects.all().order_by('objectid')
+#     userArr = []
+#     peopleArr = []
+#     unsyncedUsers = []
+#     unsyncedPeople = []
+#     for user in users:
+#         userArr.append(user.id)
+#     for person in people:
+#         peopleArr.append(person.objectid)
+#     #print peopleArr
+#     #print userArr
+#     for i in range(len(userArr)):
+#         if userArr[i] not in peopleArr:
+#             unsyncedUsers.append(users[i])
+#     for i in range(len(peopleArr)):
+#         if peopleArr[i] not in userArr:
+#             unsyncedPeople.append(people[i])
+#             #u = users[i]
+#             #p = Person(objectid=u.id, firstname=u.first_name,lastname=u.last_name, email=u.email,)
+#     if len(unsyncedPeople)==0:
+#         unsyncedPeople = None
+#     if len(unsyncedUsers)==0:
+#         unsyncedUsers = None
+#     #print unsyncedUsers
+#     return render(request, 'lmdb/userMan.html',{'users' : unsyncedUsers, 'people' : unsyncedPeople})
+# 
+# @login_required(login_url='/login/')
+# @permission_required('users.can_add')
+# def userManForm(request):
+#     if request.POST:
+#         peopleForms = []
+#         dict = request.POST
+#         vals = dict.keys()
+#         print vals
+#         for val in vals:
+#             if val != 'csrfmiddlewaretoken':
+#                 user = User.objects.get(id=val)
+#                 print user
+#         return render(request, 'lmdb/userManForm.html',{'peopleForms' : peopleForms})
+#     else:
+#         return HttpResponseRedirect('/lmdb/userMan/')
 
 #########################################################################################
 #   BEGINNING OF FUNCTIONS FOR EVENTS #
 #########################################################################################
     
+@user_uploaded
 @login_required(login_url='/login/')
 def eventDetail(request, event_id):
     event = get_object_or_404(Event, pk=event_id)
     person = get_object_or_404(People, pk=event.personid.objectid)
     projects = Project.objects.get_query_set().filter(eventid=event.objectid)
     return render(request, 'lmdb/eventDetail.html', {'event' : event, 'person' : person, 'projects' : projects})
-    
+
+@user_uploaded    
 @login_required(login_url='/login/')
 def events(request):
     events = Event.objects.values()
@@ -134,8 +198,9 @@ def events(request):
     })
     return HttpResponse(template.render(context))
 
+@user_uploaded
 @login_required(login_url='/login/')
-@permission_required('events.can_add')    
+@permission_required('events.can_add', raise_exception=True)    
 def createEvent(request):
     if request.POST:  #inserts new event into database
         postVals = request.POST.copy()
@@ -156,6 +221,7 @@ def createEvent(request):
 #   BEGINNING OF FUNCTIONS FOR PARAMETERS #
 #########################################################################################
 
+@user_uploaded
 @login_required(login_url='/login/')
 def parameters(request):
     parameters = Parameter.objects.values()
@@ -165,11 +231,13 @@ def parameters(request):
     })
     return HttpResponse(template.render(context))
 
+@user_uploaded
 @login_required(login_url='/login/')
 def paramDetail(request, param_id):
     param = get_object_or_404(Parameter, pk=param_id)
     return render(request, 'lmdb/paramDetail.html', {'param' : param})
     
+@user_uploaded
 @login_required(login_url='/login/')
 def createParam(request):
     if request.POST:
@@ -185,6 +253,7 @@ def createParam(request):
     return render(request, 'lmdb/createParam.html', {'form' : form})
 
 
+@user_uploaded
 @login_required(login_url='/login/')
 def createParamFromData(request):
     if request.POST:
@@ -204,6 +273,7 @@ def createParamFromData(request):
 #   BEGINNING OF FUNCTIONS FOR PROJECTS #
 #########################################################################################
 
+@user_uploaded
 @login_required(login_url='/login/')
 def projects(request):
     projects = Project.objects.values()
@@ -213,6 +283,7 @@ def projects(request):
     })
     return HttpResponse(template.render(context))
     
+@user_uploaded
 @login_required(login_url='/login/')
 def projectDetail(request, project_id):
     project = get_object_or_404(Project, pk=project_id)
@@ -224,6 +295,7 @@ def projectDetail(request, project_id):
     collections = Collection.objects.filter(projectid=project_id)
     return render(request, 'lmdb/projectDetail.html', {'project' : project, 'person' : person, 'event' : event, 'sightings' : sightings, 'changes' : changes, 'measurements' : measurements, 'collections' : collections})
     
+@user_uploaded
 @login_required(login_url='/login/')
 def createProject(request):
     if request.POST:  #inserts new project into database
@@ -245,6 +317,7 @@ def createProject(request):
 #   BEGINNING OF FUNCTIONS FOR PERMITS #
 #########################################################################################
 
+@user_uploaded
 @login_required(login_url='/login/')
 def permits(request):
     permits = Permit.objects.values()
@@ -254,11 +327,13 @@ def permits(request):
     })
     return HttpResponse(template.render(context))
     
+@user_uploaded
 @login_required(login_url='/login/')
 def permitDetail(request, permit_id):
     permit = get_object_or_404(Permit, pk=permit_id)
     return render(request, 'lmdb/permitDetail.html', {'permit' : permit})
 
+@user_uploaded
 @login_required(login_url='/login/')
 def createPermit(request):
     if request.POST:
@@ -280,6 +355,7 @@ def createPermit(request):
 #   BEGINNING OF FUNCTIONS FOR LOCATIONS #
 #########################################################################################
 
+@user_uploaded
 @login_required(login_url='/login/')
 def locations(request):
     locations = Location.objects.all().order_by('pointid','lineid','areaid')
@@ -289,16 +365,19 @@ def locations(request):
     })
     return HttpResponse(template.render(context))
     
+@user_uploaded
 @login_required(login_url='/login/')
 def locationDetail(request, location_id):
     location = get_object_or_404(Location, pk=location_id)
     return render(request, 'lmdb/locationDetail.html', {'location' : location})
 
+@user_uploaded
 @login_required(login_url='/login/')
 def createLocationMap(request):
         return render(request,'lmdb/createLocationMap.html',{})
     
     
+@user_uploaded
 @login_required(login_url='/login/')
 @csrf_exempt
 def createLocation(request):
@@ -331,7 +410,7 @@ def createLocation(request):
     else:
         return HttpResponseRedirect('/lmdb/reference/locations/create/map/')
 
-
+@user_uploaded
 @login_required(login_url='/login/')
 def createLocationPopUp(request):
     if request.POST:
@@ -352,9 +431,10 @@ def createLocationPopUp(request):
     else:
         return HttpResponseRedirect('/lmdb/reference/locations/')
 
+@user_uploaded
 @login_required(login_url='/login/')
-@permission_required('locations.can_add')    
-@permission_required('locations.can_delete')    
+@permission_required('locations.can_add', raise_exception=True)    
+@permission_required('locations.can_delete', raise_exception=True)    
 def locationCleanup(request):
     locations = Location.objects.values()
     points = []
@@ -379,6 +459,7 @@ def locationCleanup(request):
 #   BEGINNING OF FUNCTIONS FOR ORGANISMS #
 #########################################################################################
 
+@user_uploaded
 @login_required(login_url='/login/')
 def organisms(request):
     organisms = Organism.objects.all().order_by('organismname')
@@ -388,11 +469,13 @@ def organisms(request):
     })
     return HttpResponse(template.render(context))
 
+@user_uploaded
 @login_required(login_url='/login/')   
 def organismDetail(request, org_id):
     organism = get_object_or_404(Organism, pk=org_id)
     return render(request, 'lmdb/organismDetail.html', {'organism' : organism})
 
+@user_uploaded
 @login_required(login_url='/login/')
 def createOrganism(request):
     if request.POST:
@@ -496,6 +579,7 @@ def species(request,column, filter):
 #   BEGINNING OF FUNCTIONS FOR SIGHTINGS #
 #########################################################################################
 
+@user_uploaded
 @login_required(login_url='/login/')
 def sightings(request):    # !!!!!!   NEED TO APPLY FKEY RESTRAINTS
     sightings = Sighting.objects.values()
@@ -522,6 +606,7 @@ def sightings(request):    # !!!!!!   NEED TO APPLY FKEY RESTRAINTS
     })
     return HttpResponse(template.render(context))
 
+@user_uploaded
 @login_required(login_url='/login/')
 def sightingDetail(request, sight_id):
     sighting = get_object_or_404(Sighting, pk=sight_id)
@@ -532,6 +617,7 @@ def sightingDetail(request, sight_id):
     return render(request, 'lmdb/sightingDetail.html', {'person': person, 'project' : project,'sighting' : sighting, 'organism' : organism, 'location' : location})
 
 
+@user_uploaded
 @login_required(login_url='/login/')
 def createSighting(request):
     if request.POST:
@@ -558,7 +644,7 @@ def createSighting(request):
 
     return render(request, 'lmdb/createSighting.html', {'form' : form, 'points':points, 'lines':lines,'polys':polys})
 
-
+@user_uploaded
 @login_required(login_url='/login/')
 def dataUpdateSighting(request, id):
     if request.POST:
@@ -578,6 +664,7 @@ def dataUpdateSighting(request, id):
 #########################################################################################
 #   BEGINNING OF FUNCTIONS FOR CHANGES #
 #########################################################################################
+@user_uploaded
 @login_required(login_url='/login/')
 def changes(request):     # !!!!!!   NEED TO APPLY FKEY RESTRAINTS
     changes = Change.objects.values()
@@ -603,6 +690,7 @@ def changes(request):     # !!!!!!   NEED TO APPLY FKEY RESTRAINTS
     })
     return HttpResponse(template.render(context))
 
+@user_uploaded
 @login_required(login_url='/login/')
 def changeDetail(request, change_id):
     change = get_object_or_404(Change, pk=change_id)
@@ -613,6 +701,7 @@ def changeDetail(request, change_id):
     return render(request, 'lmdb/changeDetail.html', {'person': person, 'project' : project,'change' : change, 'parameter' : parameter, 'location' : location})
 
 
+@user_uploaded
 @login_required(login_url='/login/')
 def createChange(request):
     if request.POST:
@@ -640,6 +729,7 @@ def createChange(request):
 
     return render(request, 'lmdb/createChange.html', {'form' : form, 'points':points, 'lines':lines,'polys':polys})
 
+@user_uploaded
 @login_required(login_url='/login/')
 def dataUpdateChange(request, id):
     if request.POST:
@@ -659,6 +749,8 @@ def dataUpdateChange(request, id):
 #########################################################################################
 #   BEGINNING OF FUNCTIONS FOR MEASUREMENTS #
 #########################################################################################
+
+@user_uploaded
 @login_required(login_url='/login/')
 def measurements(request):
     measurements = Measurement.objects.values()
@@ -683,6 +775,7 @@ def measurements(request):
     return HttpResponse(template.render(context))
 
 
+@user_uploaded
 @login_required(login_url='/login/')
 def measurementDetail(request, meas_id):
     measurement = get_object_or_404(Measurement, pk=meas_id)
@@ -692,6 +785,7 @@ def measurementDetail(request, meas_id):
     person =get_object_or_404(People, pk=measurement.personid.objectid)
     return render(request, 'lmdb/measurementDetail.html', {'person': person, 'project' : project,'measurement' : measurement, 'parameter' : parameter, 'location' : location})
 
+@user_uploaded
 @login_required(login_url='/login/')
 def createMeasurement(request):
     if request.POST:
@@ -718,6 +812,7 @@ def createMeasurement(request):
 
     return render(request, 'lmdb/createMeasurement.html', {'form' : form, 'points':points, 'lines':lines,'polys':polys})
 
+@user_uploaded
 @login_required(login_url='/login/')
 def dataUpdateMeasurement(request, id):
     if request.POST:
@@ -738,6 +833,8 @@ def dataUpdateMeasurement(request, id):
 #########################################################################################
 #   BEGINNING OF FUNCTIONS FOR COLLECTIONS #
 #########################################################################################
+
+@user_uploaded
 @login_required(login_url='/login/')
 def collections(request):    # !!!!!!   NEED TO APPLY FKEY RESTRAINTS
     collections = Collection.objects.values()
@@ -768,6 +865,7 @@ def collections(request):    # !!!!!!   NEED TO APPLY FKEY RESTRAINTS
     return HttpResponse(template.render(context))
 
 
+@user_uploaded
 @login_required(login_url='/login/')
 def collectionDetail(request, coll_id):
     collection = get_object_or_404(Collection, pk=coll_id)
@@ -778,6 +876,7 @@ def collectionDetail(request, coll_id):
     return render(request, 'lmdb/collectionDetail.html', {'person': person, 'project' : project,'collection' : collection, 'organism' : organism, 'location' : location})
     
 
+@user_uploaded
 @login_required(login_url='/login/')
 def createCollection(request):
     if request.POST:
@@ -806,6 +905,7 @@ def createCollection(request):
 
     return render(request, 'lmdb/createCollection.html', {'form' : form, 'points':points, 'lines':lines,'polys':polys})
 
+@user_uploaded
 @login_required(login_url='/login/')
 def dataUpdateCollection(request, id):
     if request.POST:
@@ -828,6 +928,7 @@ def dataUpdateCollection(request, id):
 #########################################################################################
 
 
+@user_uploaded
 @login_required(login_url='/login/')
 def reporting(request):
     

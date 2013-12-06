@@ -88,9 +88,9 @@ $(document).ready( function() {
       oTable.fnDraw();
   } );
      
-    $("tfoot input").keyup( function () {
+    $("thead input").keyup( function () {
         /* Filter on the column (the index) of this element */
-        oTable.fnFilter( this.value, $("tfoot input").index(this) );
+        oTable.fnFilter( this.value, $("thead input").index(this) );
     } );
      
      
@@ -99,11 +99,11 @@ $(document).ready( function() {
      * Support functions to provide a little bit of 'user friendlyness' to the textboxes in
      * the footer
      */
-    $("tfoot input").each( function (i) {
+    $("thead input").each( function (i) {
         asInitVals[i] = this.value;
     } );
      
-    $("tfoot input").focus( function () {
+    $("thead input").focus( function () {
         if ( this.className == "search_init" )
         {
             this.className = "";
@@ -111,11 +111,11 @@ $(document).ready( function() {
         }
     } );
      
-    $("tfoot input").blur( function (i) {
+    $("thead input").blur( function (i) {
         if ( this.value === "" )
         {
             this.className = "search_init";
-            this.value = asInitVals[$("tfoot input").index(this)];
+            this.value = asInitVals[$("thead input").index(this)];
         }
     } );
   
@@ -158,9 +158,14 @@ function editRows(){
     
     for (var i = 0; i< rows.length; i++){
         var row = rows[i];
-        var trim = row.innerText.trim()
+    if(document.all){
+     var trim = row.innerText.trim();
+} else{
+    var trim = row.textContent.trim();
+}        
         trim = trim.replace(/(\r\n|\n|\r)/gm,"");
         trim = trim.replace(/        /gm,"	");
+        trim = trim.replace(/ +/gm,"	");
         var arr = trim.split("	");
         
         var val = document.createElement("input");
@@ -188,6 +193,18 @@ function editRows(){
 
     <table id="example">
     <thead>
+    
+    <tr>
+			<th><input style="width:100%" type="text" name="type" value="Search Type" class="search_init" /></th>
+			<th><input style="width:100%" type="text" name="id" value="Search Ids" class="search_init" /></th>
+			<th><input style="width:100%" type="text" name="project" value="Search Projects" class="search_init" /></th>
+			<th><input style="width:100%" type="text" name="organism" value="Search Organisms" class="search_init" /></th>
+			<th><input style="width:100%" type="text" name="location" value="Search Locations" class="search_init" /></th>
+			<th><input style="width:100%" type="text" name="person" value="Search People" class="search_init" /></th>
+			<th><input style="width:100%" type="text" name="date" value="Search Dates" class="search_init" /></th>
+
+		</tr>
+    <tr>
         <th>Type</th>
         <th>ID</th>
         <th>Project</th>
@@ -195,6 +212,8 @@ function editRows(){
         <th>Location</th>
         <th>Collector</th>
         <th>Date</th>
+    </tr>    
+    
     </thead>
     <tbody>
     {% if sightings %}
@@ -251,16 +270,7 @@ function editRows(){
     {% endif %}
     </tbody>
     <tfoot>
-   <tr>
-			<th><input style="width:100%" type="text" name="type" value="Search Type" class="search_init" /></th>
-			<th><input style="width:100%" type="text" name="id" value="Search Ids" class="search_init" /></th>
-			<th><input style="width:100%" type="text" name="project" value="Search Projects" class="search_init" /></th>
-			<th><input style="width:100%" type="text" name="organism" value="Search Organisms" class="search_init" /></th>
-			<th><input style="width:100%" type="text" name="location" value="Search Locations" class="search_init" /></th>
-			<th><input style="width:100%" type="text" name="person" value="Search People" class="search_init" /></th>
-			<th><input style="width:100%" type="text" name="date" value="Search Dates" class="search_init" /></th>
-
-		</tr>
+   
 	</tfoot>
     </table>
        

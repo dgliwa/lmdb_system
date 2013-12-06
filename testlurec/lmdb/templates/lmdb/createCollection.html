@@ -606,7 +606,7 @@ Organism Family:  <select disabled="True" id="id_family" name="family">
 Organism Genus:  <select disabled="True" id="id_genus" name="genus">
 </select><br>
 {{form.organismid.errors}}
-Organism:  {{form.organismid}}  <button type="button" onclick="addOrganism();">Add Organism</button><br> 
+Organism:  {{form.organismid}}  <button class="btn btn-lg btn-primary" type="button" onclick="addOrganism();">Add Organism</button><br> 
 {{form.projectid.errors}}
 Project:  {{form.projectid}} <br>
 {{form.methodcollect.errors}}
@@ -661,7 +661,7 @@ Organism Species <input type="text" id = "species" name="species"/>
 
 Organism Name:  <input type="text" id = "organismname" name="organismname"/>
 
-<input type="submit" value="Submit"/>
+<input class="btn btn-lg btn-primary" type="submit" value="Submit"/>
 </form>
 </div>
 </td>
@@ -680,7 +680,7 @@ Organism Name:  <input type="text" id = "organismname" name="organismname"/>
 
           </div>
           </div>
-<input id="createCollection" type="submit" value="Create Collection" />
+<input class="btn btn-lg btn-primary" id="createCollection" type="submit" value="Create Collection" />
 
 
 {% endblock %}

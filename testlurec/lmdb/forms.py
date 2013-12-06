@@ -2,6 +2,7 @@ from django import forms
 from models import Parameter, Permit, Event, Project, People, Location, Organism, Measurement, Sighting, Collection, Change
 from django.forms.extras.widgets import Select
 from django.contrib.auth.models import User
+from validators import *
 
 
 
@@ -140,4 +141,17 @@ class ChangeForm(forms.ModelForm):
     class Meta:
         model = Change
         
-    
+class PeopleForm(forms.ModelForm):
+    objectid = forms.IntegerField(widget=forms.HiddenInput())
+    title = forms.CharField(max_length=10)
+    firstname = forms.CharField(widget=forms.TextInput(attrs={'readonly' : 'True'}), max_length=50)
+    lastname = forms.CharField(widget=forms.TextInput(attrs={'readonly' : 'True'}), max_length=50)
+    displayname = forms.CharField(max_length=50, required=False)
+    email = forms.CharField(max_length=80)
+    phonenumber = forms.CharField(max_length=10, required=False, validators=[is_num])
+    affiliation = forms.CharField(max_length=100)
+    position = forms.CharField(max_length=50)
+    department = forms.CharField(max_length=50, required=False)
+    password = forms.CharField(max_length=100, required=False)
+    class Meta:
+        model = People   

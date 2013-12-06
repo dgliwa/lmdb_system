@@ -109,7 +109,6 @@
     // log the response to the console
     console.log("Response: "+response);
     console.log(response['commonname']);
-    var last = $(this).closest('tr').find('paramfield').length-1;
         $('.paramfield').append('<option value="' + response['id'] + '">' + response['commonname'] + '</option>');
       $('#'+name+' > .paramfield option:last').attr('selected','selected');
        },'json');
@@ -124,8 +123,33 @@
         });
         
         $(".organismButton").click(function(e){
+            $(this).closest("tr").find(".organismForm").find(".kingdom").val($(this).parent().find(".kingdom").val());
+            $(this).closest("tr").find(".organismForm").find(".phylum").val($(this).parent().find(".phylum").val());
+            $(this).closest("tr").find(".organismForm").find(".class_field").val($(this).parent().find(".class_field").val());
+            $(this).closest("tr").find(".organismForm").find(".order_field").val($(this).parent().find(".order_field").val());
+            $(this).closest("tr").find(".organismForm").find(".family").val($(this).parent().find(".family").val());
+            $(this).closest("tr").find(".organismForm").find(".genus").val($(this).parent().find(".genus").val());
             $(this).closest("tr").find(".organismForm").css('visibility','visible');        
-        });               
+        });
+        
+        $(".organismForm").submit(function(e){
+            e.preventDefault();
+            var values = $(this).serialize();
+            var name = $(this).attr('name')
+            var a = $.post('/lmdb/reference/organisms/createFromData/', values, function(response) {
+    // log the response to the console
+    //console.log("Response: "+response);
+    //console.log(response['commonname']);
+ $(".organismfield").append('<option value="' + response['id'] + '">' + response['organismname'] + '</option>');
+      $('#'+name+' > .organismfield option:last').attr('selected', 'selected');
+       },'json');
+    console.log(a);
+    this.reset();
+    $(this).css('visibility','hidden')
+
+    });
+        
+                       
         });
         
         
@@ -792,13 +816,13 @@ class ="claro"
             <p>If you do not know the CAS or EPA Number(s), you can search for them <a href="http://ofmpub.epa.gov/sor_internet/registry/substreg/searchandretrieve/substancesearch/search.do" target="_blank">here</a></p>
 
             Scientific Name:
-            <input id="sciname" type = "text" name="sciname"/>
+            <input class="sciname" type = "text" name="sciname"/>
             Common Name:
-            <input id="comname" type = "text" name ="commonname"/>
+            <input class="comname" type = "text" name ="commonname"/>
             CAS Number:
-            <input id="casnum" type = "text" name ="casnumber"/>
+            <input class="casnum" type = "text" name ="casnumber"/>
             EPA Number:
-            <input id="epanum" type = "text" name="epanumber"/>
+            <input class="epanum" type = "text" name="epanumber"/>
 
             <input type="submit" value="Submit"/>
             </form>
@@ -942,10 +966,10 @@ class ="claro"
             </td>
             <td>
             <div>
-            <form style="visibility:hidden" id="organismCollection{{form.objectid.value}}" class="organismForm">
+            <form style="visibility:hidden" id="organismCollection{{form.objectid.value}}" name="collectionForm{{form.objectid.value}}" class="organismForm">
             {% csrf_token %}
 
-            Organism Kingdom:  <select id="kingdom" name="kingdom">
+            Organism Kingdom:  <select class="kingdom" name="kingdom">
             <option value="" selected="selected">---------- </option>
             <option value="Bacteria">Bacteria</option>
             <option value="Archaea">Archaea</option>
@@ -955,20 +979,20 @@ class ="claro"
             <option value="Animalia">Animalia</option>
             </select><br>
 
-            Organism Phylum: <input type="text" id="phylum" name="phylum"/>
+            Organism Phylum: <input type="text" class="phylum" name="phylum"/>
  
-            Organism Class:  <input type="text" id="class_field" name="class_field"/>
+            Organism Class:  <input type="text" class="class_field" name="class_field"/>
 
 
-            Organism Order:  <input type="text" id="order_field" name="order_field"/>
+            Organism Order:  <input type="text" class="order_field" name="order_field"/>
 
-            Organism Family:  <input type="text" id="family" name="family"/>
+            Organism Family:  <input type="text" class="family" name="family"/>
 
-            Organism Genus:  <input type="text" id="genus" name="genus"/>
+            Organism Genus:  <input type="text" class="genus" name="genus"/>
 
-            Organism Species <input type="text" id = "species" name="species"/>
+            Organism Species <input type="text" class= "species" name="species"/>
 
-            Organism Name:  <input type="text" id = "organismname" name="organismname"/>
+            Organism Name:  <input type="text" class = "organismname" name="organismname"/>
 
             <input type="submit" value="Submit"/>
             </form>
@@ -1043,8 +1067,8 @@ class ="claro"
         </td>
         <td>
         <div>
-        <form style="visibility:hidden" id="organismSighting{{form.objectid.value}}" class="organismForm">
-        Organism Kingdom:  <select id="kingdom" name="kingdom">
+        <form style="visibility:hidden" id="organismSighting{{form.objectid.value}}" name="sightingForm{{form.objectid.value}}" class="organismForm">
+        Organism Kingdom:  <select class="kingdom" name="kingdom">
         <option value="" selected="selected">---------- </option>
         <option value="Bacteria">Bacteria</option>
         <option value="Archaea">Archaea</option>
@@ -1054,20 +1078,20 @@ class ="claro"
         <option value="Animalia">Animalia</option>
         </select><br>
 
-        Organism Phylum: <input type="text" id="phylum" name="phylum"/>
+        Organism Phylum: <input type="text" class="phylum" name="phylum"/>
  
-        Organism Class:  <input type="text" id="class_field" name="class_field"/>
+        Organism Class:  <input type="text" class="class_field" name="class_field"/>
 
 
-        Organism Order:  <input type="text" id="order_field" name="order_field"/>
+        Organism Order:  <input type="text" class="order_field" name="order_field"/>
 
-        Organism Family:  <input type="text" id="family" name="family"/>
+        Organism Family:  <input type="text" class="family" name="family"/>
 
-        Organism Genus:  <input type="text" id="genus" name="genus"/>
+        Organism Genus:  <input type="text" class="genus" name="genus"/>
 
-        Organism Species <input type="text" id = "species" name="species"/>
+        Organism Species <input type="text" class = "species" name="species"/>
 
-        Organism Name:  <input type="text" id = "organismname" name="organismname"/>
+        Organism Name:  <input type="text" class = "organismname" name="organismname"/>
 
         <input type="submit" value="Submit"/>
         </form>

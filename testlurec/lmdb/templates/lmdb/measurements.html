@@ -12,12 +12,23 @@
           
            <br>          
 
-    <input type = "text" id="datepicker_min"/>
-    <input type = "text" id="datepicker_max"/>
+    Date Min:<input type = "text" id="datepicker_min"/>
+    Date Max:<input type = "text" id="datepicker_max"/>
 
 
     <table id="example">
     <thead>
+    <tr>
+			<th><input style="width:100%" type="text" name="type" value="Type" class="search_init" /></th>
+            <th><input style="width:100%" type="text" name="id" value="Search Ids" class="search_init" /></th>
+			<th><input style="width:100%" type="text" name="project" value="Search Projects" class="search_init" /></th>
+			<th><input style="width:100%" type="text" name="parameter" value="Search Parameters" class="search_init" /></th>
+			<th><input style="width:100%" type="text" name="location" value="Search Locations" class="search_init" /></th>
+			<th><input style="width:100%" type="text" name="person" value="Search People" class="search_init" /></th>
+			<th><input style="width:100%" type="text" name="date" value="Search Dates" class="search_init" /></th>
+
+		</tr>
+	<tr>
         <th>Type</th>
         <th>ID</th>
         <th>Project</th>
@@ -25,6 +36,7 @@
         <th>Location</th>
         <th>Collector</th>
         <th>Date</th>
+    </tr>
     </thead>
     <tbody>
    {% for m in measurements %}
@@ -40,16 +52,7 @@
     {% endfor %}
     </tbody>
     <tfoot>
-   <tr>
-			<th><input style="width:100%" type="text" name="type" value="Type" class="search_init" /></th>
-            <th><input style="width:100%" type="text" name="id" value="Search Ids" class="search_init" /></th>
-			<th><input style="width:100%" type="text" name="project" value="Search Projects" class="search_init" /></th>
-			<th><input style="width:100%" type="text" name="organism" value="Search Organisms" class="search_init" /></th>
-			<th><input style="width:100%" type="text" name="location" value="Search Locations" class="search_init" /></th>
-			<th><input style="width:100%" type="text" name="person" value="Search People" class="search_init" /></th>
-			<th><input style="width:100%" type="text" name="date" value="Search Dates" class="search_init" /></th>
-
-		</tr>
+   
 	</tfoot>
     </table>
     <br>

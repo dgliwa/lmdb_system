@@ -150,7 +150,7 @@ class People(models.Model):
     lastname = models.CharField(max_length=50)
     displayname = models.CharField(max_length=50, blank=True)
     email = models.CharField(max_length=80)
-    phonenumber = models.CharField(max_length=10, blank=True)
+    phonenumber = models.CharField(max_length=12, blank=True)
     affiliation = models.CharField(max_length=100)
     position = models.CharField(max_length=50)
     department = models.CharField(max_length=50, blank=True)

@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+{% block pageName %}User Management{% endblock %}
+{% block content %}
+<form action="{% url 'lmdb:updateUser' %}" method="post">
+
+{% csrf_token %}
+{{form.non_field_errors}}
+{{form.objectid.errors}}
+{{form.objectid}}
+{{form.objectid.errors}}
+Title: {{form.title}} <br>
+{{form.firstname.errors}}
+First Name:  {{form.firstname}} <br>
+{{form.lastname.errors}}
+Last Name:  {{form.lastname}} <br>
+{{form.displayname.errors}} 
+Display Name:  {{form.displayname}} <br>
+{{form.email.errors}}
+E-mail:  {{form.email}} <br>
+{{form.phonenumber.errors}}
+Phone Number:  {{form.phonenumber}} <br>
+{{form.affiliation.errors}}
+Affiliation:  {{form.affiliation}} <br>
+{{form.position.errors}}
+Position:  {{form.position}} <br>
+{{form.department.errors}}
+Department:  {{form.department}} <br>
+
+<input class="btn btn-lg btn-primary" type="submit" value="Update User" />
+</form>
+
+
+{% endblock %}
