@@ -1,0 +1,61 @@
+{% extends "base.html" %}
+{% block pageName %}Edit Project{% endblock %}
+{% block customjs %}
+{% load static %}
+    <script type="text/javascript" src="{% static "datepicker/jquery.simple-dtpicker.js" %}"></script>
+	<link type="text/css" href="{% static "datepicker/jquery.simple-dtpicker.css" %}" rel="stylesheet" />
+	<script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.16/jquery-ui.min.js" type="text/javascript"></script>
+    <link rel="stylesheet" href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.16/themes/base/jquery-ui.css" type="text/css" media="all" />
+
+{% endblock %}
+{% block content %}
+{% if form and project %}
+<form action="{% url 'lmdb:editProject' project.objectid %}" id='editProject' method="post">
+{% csrf_token %}
+{{form.non_field_errors}}
+{{form.objectid.errors}}
+{{form.objectid}}
+Project Name:  {{form.projectname}}<br>
+Project Description:  {{form.projectdescription}}<br>
+Project Objective:  {{form.projectobjective}}<br>
+Associated Event:  {{form.eventid}}<br>
+Permit:  {{form.permitid}}<br>
+{{form.locationid.errors}}
+Location:  {{form.locationid}} <br>
+{{form.projectstartdate.errors}}
+Project Start Date and Time: {{form.projectstartdate}}<br>
+<script type="text/javascript">
+		jQuery($(function(){
+			$('#id_projectstartdate').appendDtpicker();
+		}));
+	</script>
+{{form.projectenddate.errors}}
+Project End Date and Time:  {{form.projectenddate}}<br>
+<script type="text/javascript">
+		jQuery($(function(){
+			$('#id_projectenddate').appendDtpicker();
+		}));
+	</script>
+{{form.funded.errors}}
+Funded:  {{form.funded}} <br>
+{{form.funder.errors}}
+Funder:  {{form.funder}}<br>
+{{form.personid.errors}}
+Project Coordinator:  {{form.personid}}<br>
+
+<input type="submit" id='submitProject' value="Edit Project" />
+
+</form>
+
+<a href="{% url 'lmdb:addProjectPeople' project.objectid %}" class="btn">Add People to Project</a>
+<a href="{% url 'lmdb:removeProjectPeople' project.objectid %}" class="btn">Remove People from Project</a>
+{% if people %}
+<br>Current People on Project:
+<ul>
+{% for p in people %}
+<li>{{p.firstname}} {{p.lastname}}</li>
+{% endfor %}
+</ul>
+{% endif %}
+{% endif %}
+{% endblock %}

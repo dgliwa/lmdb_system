@@ -128,6 +128,63 @@ function fnGetSelected( oTableLocal )
     return oTableLocal.$('tr.row_selected');
 }
 
+
+function deleteRows(){
+    var rows = fnGetSelected(oTable);
+    console.log(rows);
+    if(rows.length===0){
+    alert("You haven't selected any rows!");
+    }
+    else{
+        if(window.confirm("Are you sure you want to delete this (these) row(s)?")){
+            var vals = {'csrfmiddlewaretoken' : '{{ csrf_token }}'}
+   
+   
+                            method = "post"; // Set method to post by default, if not specified.
+
+                        // The rest of this code assumes you are not using a library.
+                        // It can be made less wordy if you use one.
+                        var form = document.createElement("form");
+                        form.setAttribute("method", method);
+                        form.setAttribute("id", "deleteForm");
+                        form.setAttribute("action", '/lmdb/data/delete/');
+
+                        var csrfToken = document.createElement("input");
+                        csrfToken.setAttribute("type", "hidden");
+                        csrfToken.setAttribute("name", "csrfmiddlewaretoken");
+                        csrfToken.setAttribute("value", "{{ csrf_token }}");
+                        form.appendChild(csrfToken);   
+   
+            for (var i = 0; i< rows.length; i++){
+                var row = rows[i];
+            if(document.all){
+             var trim = row.innerText.trim();
+        } else{
+            var trim = row.textContent.trim();
+        }        
+                trim = trim.replace(/(\r\n|\n|\r)/gm,"");
+                trim = trim.replace(/        /gm,"	");
+                trim = trim.replace(/ +/gm,"	");
+                var arr = trim.split("	");
+       
+                var val = document.createElement("input");
+                        val.setAttribute("type", "hidden");
+                        val.setAttribute("name", i);
+                        val.setAttribute("value", [arr[0],arr[1]]);
+                        form.appendChild(val);
+                console.log(arr);
+            }
+            console.log(form);
+ 
+            document.body.appendChild(form);
+            form.submit();
+
+  
+            return false;}
+        }
+}
+
+
 function editRows(){
     var rows = fnGetSelected(oTable);
     console.log(rows);
@@ -187,7 +244,7 @@ function editRows(){
 {% endblock %}
 {% block content %}
 {% if sightings or measurements or collections or changes %}
-    <button type="button" onClick="editRows()">Edit Selected Rows</button> <br>
+    <button class="btn btn-lg btn-primary" type="button" onClick="editRows()">Edit Selected Rows</button> <button class="btn btn-lg btn-primary" type="button" onClick="deleteRows()">Delete Selected Rows</button><br><br>
     Date Min:<input type = "text" id="datepicker_min"/>
     Date Max:<input type = "text" id="datepicker_max"/>
 

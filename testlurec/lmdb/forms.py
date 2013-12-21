@@ -49,10 +49,9 @@ class ProjectForm(forms.ModelForm):
     permitid = forms.ModelChoiceField(queryset=Permit.objects.all())
     projectstartdate = forms.DateTimeField()
     projectenddate = forms.DateTimeField()
-    funded = forms.IntegerField()
+    funded = forms.IntegerField(widget=forms.RadioSelect(choices=((0,'Yes'),(1,'No'))))
     funder = forms.CharField()
     personid = forms.ModelChoiceField(queryset=People.objects.all())
-    people = forms.ModelMultipleChoiceField(queryset=User.objects.all(), widget=forms.CheckboxSelectMultiple())
     class Meta:
         model = Project
         
@@ -116,7 +115,7 @@ class CollectionForm(forms.ModelForm):
     organismid = forms.ModelChoiceField(queryset = Organism.objects.all(), widget=forms.Select(attrs={'class':'organismfield'}))
     datecollect = forms.DateTimeField(widget=forms.TextInput(attrs={'class':'datefield'}))
     methodcollect = forms.CharField(max_length=255)
-    stored = forms.IntegerField()
+    stored = forms.IntegerField(widget=forms.RadioSelect(choices=((0,'Yes'),(1,'No'))))
     storecollect = forms.CharField(max_length=255)
     locationid = forms.IntegerField(widget=forms.HiddenInput())
     personid = forms.ModelChoiceField(queryset = People.objects.all(), required = False)
@@ -129,8 +128,8 @@ class ChangeForm(forms.ModelForm):
     locationid = forms.IntegerField(widget=forms.HiddenInput())
     description = forms.CharField(max_length=255)
     justification = forms.CharField(max_length=255)
-    permanent = forms.IntegerField()
-    chemicalapplication = forms.IntegerField()
+    permanent = forms.IntegerField(widget=forms.RadioSelect(choices=((0,'Yes'),(1,'No'))))
+    chemicalapplication = forms.IntegerField(widget=forms.RadioSelect(choices=((0,'Yes'),(1,'No'))))
     parameterid = forms.ModelChoiceField(queryset = Parameter.objects.all(), required=False, widget=forms.Select(attrs={'class':'paramfield'}))
     chemicalused = forms.CharField(max_length=255, required=False)
     chemicalquantity = forms.DecimalField(required=False, max_digits=38, decimal_places=8, )

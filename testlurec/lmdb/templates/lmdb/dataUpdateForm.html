@@ -506,7 +506,7 @@ require([
     infoTemplate = new esri.InfoTemplate("Object ID : ${objectid}",
         "<input class=\"hidden\" id = \"locId\" value=\"${objectid}\"/>" +
         "You have selected this location.  Click the button to verify." +
-        "<button type='button' onclick='verify(${objectid})'>Verify</button>");
+        "<button class='btn btn-lg btn-primary' type='button' onclick='verify(${objectid})'>Verify</button>");
 
     if (pointLayer != null){
        pointLayer.setInfoTemplate(infoTemplate);
@@ -755,7 +755,7 @@ class ="claro"
 <input type="text" id="newlocation" type="hidden" value=""/>
 
 <div class="dialog">
-<button type="button" onclick="closeWindow()">Close</button>
+<button class="btn btn-lg btn-primary" type="button" onclick="closeWindow()">Close</button>
 <div class="dialog" data-dojo-type="dijit/layout/BorderContainer" data-dojo-props="gutters:true, design:'headline'" style="width:100%;height:100%;">
       <div data-dojo-type="dijit/layout/ContentPane"  id="header" data-dojo-props="region:'top'">
       To add a location, click on the desired type of location (point, line, polygon) and then click where it is located on the map.
@@ -783,7 +783,7 @@ class ="claro"
             {{form.mname.errors}}
             Name:  {{form.mname}}<br>
             {{form.parameterid.errors}}
-            Parameter:  {{form.parameterid}}  <button type="button" class="paramButton">Add Parameter</button>
+            Parameter:  {{form.parameterid}}  <button type="button" class="btn btn-lg btn-primary paramButton">Add Parameter</button>
 
             <br>
             {{form.projectid.errors}}
@@ -805,7 +805,7 @@ class ="claro"
             Person:  {{form.personid}}<br>
 
             {{form.locationid.errors}}
-            Location:  {{form.locationid}} <button type="button" class="changelocation">Change Location</button><br>
+            Location:  {{form.locationid}} <button type="button" class="btn btn-lg btn-primary changelocation">Change Location</button><br>
             <input type="submit" value="Submit"/>
 
             </form>
@@ -855,7 +855,7 @@ class ="claro"
         {{form.justification.errors}}
         Justification:  {{form.justification}} <br>
         {{form.parameterid.errors}}
-        Parameter:  {{form.parameterid}}  <button type="button" class="paramButton">Add Parameter</button><br>
+        Parameter:  {{form.parameterid}}  <button  type="button" class="btn btn-lg btn-primary paramButton">Add Parameter</button><br>
         {{form.projectid.errors}}
         Project:  {{form.projectid}} <br>
         {{form.permanent.errors}}
@@ -877,7 +877,7 @@ class ="claro"
         Person:  {{form.personid}}<br>
 
         {{form.locationid.errors}}
-        Location:  {{form.locationid}} <button type="button" class="changelocation">Change Location</button><br> 
+        Location:  {{form.locationid}} <button type="button" class="btn btn-lg btn-primary changelocation">Change Location</button><br> 
         <input type="submit" value="Submit"/>
         </form>
         </td>
@@ -943,7 +943,7 @@ class ="claro"
             Organism Genus:  <select disabled="True" id="id_genus" class="genus" name="genus">
             </select><br>
             {{form.organismid.errors}}
-            Organism:  {{form.organismid}}  <button type="button" class="organismButton">Add Organism</button><br> 
+            Organism:  {{form.organismid}}  <button type="button" class="btn btn-lg btn-primary organismButton">Add Organism</button><br> 
             {{form.projectid.errors}}
             Project:  {{form.projectid}} <br>
             {{form.methodcollect.errors}}
@@ -959,7 +959,7 @@ class ="claro"
             {{form.personid.errors}}
             Person:  {{form.personid}}<br>
             {{form.locationid.errors}}
-            Location:  {{form.locationid}} <button type="button" class="changelocation">Change Location</button><br> 
+            Location:  {{form.locationid}} <button type="button" class="btn btn-lg btn-primary changelocation">Change Location</button><br> 
             <input type="submit" value="Submit"/>
 
             </form>
@@ -1044,7 +1044,7 @@ class ="claro"
         Organism Genus:  <select disabled="True" id="id_genus" name="genus">
         </select><br>
         {{form.organismid.errors}}
-        Organism:  {{form.organismid}}  <button type="button" class="organismButton">Add Organism</button><br> 
+        Organism:  {{form.organismid}}  <button type="button" class="btn btn-lg btn-primary organismButton">Add Organism</button><br> 
         {{form.projectid.errors}}
         Project:  {{form.projectid}} <br>
 
@@ -1059,7 +1059,7 @@ class ="claro"
         Person:  {{form.personid}}<br>
 
         {{form.locationid.errors}}
-        Location:  {{form.locationid}} <button type="button" class="changelocation">Change Location</button><br> 
+        Location:  {{form.locationid}} <button type="button" class="btn btn-lg btn-primary changelocation">Change Location</button><br> 
         <input type="submit" value="Submit"/>
 
         </form>

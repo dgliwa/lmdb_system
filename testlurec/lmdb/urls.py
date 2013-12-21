@@ -20,6 +20,9 @@ urlpatterns = patterns('',
     url(r'^reference/parameters/createFromData/$', views.createParamFromData, name='createParamFromData'),
     url(r'^reference/projects/$', views.projects, name='projects'),
     url(r'^reference/projects/(?P<project_id>\d+)/$', views.projectDetail, name='projectDetail'),
+    url(r'^reference/projects/(?P<project_id>\d+)/edit/$', views.editProject, name='editProject'),
+    url(r'^reference/projects/(?P<project_id>\d+)/edit/addPeople/$', views.addProjectPeople, name='addProjectPeople'),
+    url(r'^reference/projects/(?P<project_id>\d+)/edit/removePeople/$', views.removeProjectPeople, name='removeProjectPeople'),
     url(r'^reference/projects/create/$', views.createProject, name='createProject'),
     url(r'^reference/permits/$', views.permits, name='permits'),
     url(r'^reference/permits/(?P<permit_id>\d+)/$', views.permitDetail, name='permitDetail'),
@@ -43,6 +46,7 @@ urlpatterns = patterns('',
     url(r'^reference/organisms/(?P<column>\w+)/(?P<filter>\w+)/$', views.species, name='species'),
     url(r'^data/$', views.data, name='data'),
     url(r'^data/update/$', views.dataUpdate, name='dataUpdate'),
+    url(r'^data/delete/$', views.dataDelete, name='dataDelete'),
     url(r'^data/update/form/$', views.dataUpdateForm, name='dataUpdateForm'),
     url(r'^data/update/form/measurement/(?P<id>\d+)/$', views.dataUpdateMeasurement, name='dataUpdateMeasurement'),        
     url(r'^data/update/form/collection/(?P<id>\d+)/$', views.dataUpdateCollection, name='dataUpdateCollection'),
@@ -61,11 +65,5 @@ urlpatterns = patterns('',
     url(r'^data/collections/(?P<coll_id>\d+)/$', views.collectionDetail, name='collectionDetail'),
     url(r'^data/collections/create/$', views.createCollection, name='createCollection'),
     url(r'^reporting/$', views.reporting, name='reporting'),
-
-
-
-
-
-
 
 )

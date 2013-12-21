@@ -2,6 +2,7 @@
 {% block pageName %}Project Detail{% endblock %}
 {% block content %}
 <h1>{{project.projectname}}</h1>
+<h3><a href="{% url 'lmdb:editProject' project.objectid %}">Edit Project</a></h3>
 <ul>
     <li>ID:  {{project.objectid}}</li>
     <li>Project Description:  {{project.projectdescription}}</li>
@@ -18,6 +19,16 @@
     </li>
     <li>Funder:  {{project.funder}}</li>
     <li>Project Coordinator:  {{person.firstname}} {{person.lastname}}</li>
+
+            {% if people %}
+            <li>People Assigned to Project:
+                {% for p in people %}
+                    <ul>
+                        <li>{{p.firstname}} {{p.lastname}}</li>
+                    </ul>
+                {% endfor %}
+            </li>
+            {% endif %}
 </ul>
 <h3>Changes</h3>
 {% if changes %}

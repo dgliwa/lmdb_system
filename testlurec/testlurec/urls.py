@@ -12,11 +12,11 @@ urlpatterns = patterns('',
     # url(r'^testlurec/', include('testlurec.foo.urls')),
 
     # Uncomment the admin/doc line below to enable admin documentation:
-     url(r'^admin/doc/', include('django.contrib.admindocs.urls')),
+     url(r'^lmdb/admin/doc/', include('django.contrib.admindocs.urls')),
 
     # Uncomment the next line to enable the admin:
-     url(r'^admin/', include(admin.site.urls)),
+     url(r'^lmdb/admin/', include(admin.site.urls)),
      url(r'^lmdb/', include('lmdb.urls', namespace='lmdb')),
-     url(r'^login/$', 'lmdb.views.login_user'),
+     url(r'^lmdb/login/$', 'lmdb.views.login_user'),
      
 )

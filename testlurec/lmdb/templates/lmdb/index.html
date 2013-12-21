@@ -1,11 +1,26 @@
 {% extends "base.html" %}
+{% block sideBar %}
+ <div class="span3">
+          <div class="well sidebar-nav">
+            <ul class="nav nav-list">
+              <li class="nav-header">Sidebar</li>
+<li><a href="{% url 'lmdb:reference' %}">Reference Data</a></li>
+<li><a href="{% url 'lmdb:data' %}">Data Input</a></li>
+<li><a href="{% url 'lmdb:reporting' %}">Reporting</a></li>
+</ul>
+</div>
+</div>
+{% endblock %}
 {% block content %}
     
-
-<a href="{% url 'lmdb:reference' %}">Reference Data</a><br>
-<a href="{% url 'lmdb:data' %}">Data Input</a><br>
-<a href="{% url 'lmdb:reporting' %}">Reporting</a><br>
-
+{% if projects %}
+<h1>Projects Managed by User</h1>
+<ul>
+{% for p in projects %}
+<li><a href="{% url 'lmdb:projectDetail' p.objectid %}">{{p.projectname}}</a></li>
+{% endfor %}
+</ul>
+{% endif %}
 
 
 

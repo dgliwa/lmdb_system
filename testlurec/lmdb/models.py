@@ -159,6 +159,14 @@ class People(models.Model):
         db_table = 'people'
     def __unicode__(self):
         return self.firstname + " " + self.lastname
+        
+class PeopleProject(models.Model):
+    objectid = models.IntegerField(primary_key=True,unique=True)
+    personid = models.ForeignKey('People',db_column='personid')
+    projectid = models.ForeignKey('Project',db_column='projectid')
+    class Meta:
+        db_table = 'people_project'
+        unique_together = ('personid', 'projectid')
 
 class Permit(models.Model):
     objectid = models.IntegerField(primary_key=True,unique=True)
@@ -183,7 +191,6 @@ class Project(models.Model):
     funded = models.SmallIntegerField()
     funder = models.CharField(max_length=255, blank=True)
     personid = models.ForeignKey('People', db_column='personid')
-    people = models.ManyToManyField(User)
     class Meta:
         db_table = 'project'
     def __unicode__(self):
