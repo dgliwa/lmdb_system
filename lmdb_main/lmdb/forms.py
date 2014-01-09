@@ -79,6 +79,19 @@ class OrganismForm(forms.ModelForm):
     class Meta:
         model = Organism
 
+class EditOrganismForm(forms.ModelForm):
+    objectid = forms.IntegerField(widget=forms.HiddenInput())
+    organismname = forms.CharField()
+    family = forms.CharField() #last added line!!!!  
+    order_field = forms.CharField() 
+    class_field = forms.CharField() # Field renamed because it was a Python reserved word.
+    phylum = forms.CharField()
+    kingdom = forms.CharField()
+    genus = forms.CharField()
+    species = forms.CharField(max_length=255)
+    class Meta:
+        model = Organism
+
 class MeasurementForm(forms.ModelForm):
     objectid = forms.IntegerField(widget=forms.HiddenInput())
     parameterid = forms.ModelChoiceField(queryset = Parameter.objects.all(), widget=forms.Select(attrs={'class':'paramfield'}))

@@ -2,6 +2,7 @@
 {% block pageName %}Organism Detail{% endblock %}
 {% block content %}
 <h1>{{organism.organismname}}</h1>
+<h3><a href="{% url 'lmdb:editOrganism' organism.objectid %}">Edit Organism</a></h3>
 <ul>
     <li>ID:  {{organism.objectid}}</li>
     <li>Kingdom:  {{organism.kingdom}}</li>

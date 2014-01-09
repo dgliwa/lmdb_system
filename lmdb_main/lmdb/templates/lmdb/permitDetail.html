@@ -2,6 +2,7 @@
 {% block pageName %}Permit Detail{% endblock %}
 {% block content %}
 <h1>{{permit.objectid}}</h1>
+<h3><a href="{% url 'lmdb:editPermit' permit.objectid %}">Edit Permit</a></h3>
 <ul>
     <li>Permit Start Date:  {{permit.permitstartdate}}</li>
     {% if permit.permitenddate %}

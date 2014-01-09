@@ -2,6 +2,7 @@
 {% block pageName %}Event Detail{% endblock %}
 {% block content %}
 <h1>{{event.eventname}}</h1>
+<h3><a href="{% url 'lmdb:editEvent' event.objectid %}">Edit Event</a></h3>
 <ul>
     <li>ID:  {{event.objectid}}</li>
     <li>Event Type:  {{event.eventtype}}</li>

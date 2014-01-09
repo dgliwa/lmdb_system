@@ -2,6 +2,7 @@
 {% block pageName %}Parameter Detail{% endblock %}
 {% block content %}
 <h1>{{param.commonname}}</h1>
+<h3><a href="{% url 'lmdb:editParam' param.objectid %}">Edit Parameter</a></h3>
 <ul>
     <li>ID:  {{param.objectid}}</li>
     {% if param.sciname %}

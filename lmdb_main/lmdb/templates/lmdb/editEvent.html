@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+{% block pageName %}Edit Event{% endblock %}
+{% block customjs %}
+{% load static %}
+    <script type="text/javascript" src="{% static "datepicker/jquery.simple-dtpicker.js" %}"></script>
+	<link type="text/css" href="{% static "datepicker/jquery.simple-dtpicker.css" %}" rel="stylesheet" />
+
+{% endblock %}
+{% block content %}
+<form action="{% url 'lmdb:editEvent' event.objectid %}" method="post">
+
+{% csrf_token %}
+{{form.non_field_errors}}
+{{form.objectid.errors}}
+{{form.objectid}}
+{{form.eventname.errors}}
+Event Name:  {{form.eventname}}<br>
+{{form.eventtype.errors}}
+Event Type:  {{form.eventtype}}<br>
+{{form.eventstartdate.errors}}
+Event Start Date and Time: {{form.eventstartdate}}<br>
+<script type="text/javascript">
+		jQuery($(function(){
+			$('#id_eventstartdate').appendDtpicker();
+		}));
+	</script>
+{{form.eventenddate.errors}}
+Event End Date and Time:  {{form.eventenddate}}<br>
+<script type="text/javascript">
+		jQuery($(function(){
+			$('#id_eventenddate').appendDtpicker();
+		}));
+	</script>
+{{form.eventparticipants.errors}}
+Number of Participants:  {{form.eventparticipants}}<br>
+{{form.eventdescription.errors}}
+Event Description:  {{form.eventdescription}}<br>
+{{form.personid.errors}}
+Event Coordinator:  {{form.personid}}<br>
+<input class="btn btn-lg btn-primary" type="submit" value="Edit Event" />
+</form>
+{% endblock %}

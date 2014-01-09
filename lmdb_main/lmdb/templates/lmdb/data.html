@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+
+{% block pageName %}Data Entry{% endblock %}
+{% block sideBar %}
+ <div class="span3">
+          <div class="well sidebar-nav">
+            <ul class="nav nav-list">
+              <li class="nav-header">Sidebar</li>
+<li><a href="{% url 'lmdb:dataUpdate' %}">Update or Delete Records</a></li>
+<li><a href="{% url 'lmdb:sightings' %}">Sightings</a></li>
+<li><a href="{% url 'lmdb:changes' %}">Changes</a></li>
+<li><a href="{% url 'lmdb:measurements' %}">Measurements</a></li>
+<li><a href="{% url 'lmdb:collections' %}">Collections</a></li>
+</ul>
+</div>
+</div>
+{% endblock %}
+{% block content %}
+
+{% endblock %}

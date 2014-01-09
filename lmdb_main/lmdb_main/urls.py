@@ -8,8 +8,8 @@ admin.autodiscover()
 
 urlpatterns = patterns('',
     # Examples:
-    # url(r'^$', 'testlurec.views.home', name='home'),
-    # url(r'^testlurec/', include('testlurec.foo.urls')),
+    # url(r'^$', 'lmdb_main.views.home', name='home'),
+    # url(r'^lmdb_main/', include('testlurec.foo.urls')),
 
     # Uncomment the admin/doc line below to enable admin documentation:
      url(r'^lmdb/admin/doc/', include('django.contrib.admindocs.urls')),

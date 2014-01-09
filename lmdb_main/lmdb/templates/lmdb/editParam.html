@@ -1,9 +1,9 @@
 {% extends "base.html" %}
-{% block pageName %}Create Location{% endblock %}
+{% block pageName %}Edit Parameter{% endblock %}
 {% block content %}
 
 
-<form action="{% url 'lmdb:createParam' %}" method="post" id="parameter_form">
+<form action="{% url 'lmdb:editParam' param.objectid %}" method="post" id="parameter_form">
 {% csrf_token %}
 {{form.non_field_errors}}
 {{form.sciname.errors}}

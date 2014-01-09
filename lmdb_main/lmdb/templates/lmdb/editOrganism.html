@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+{% block pageName %}Edit Organism{% endblock %}
+{% block customjs %}
+{% load static %}
+    <script type="text/javascript" src="{% static "datepicker/jquery.simple-dtpicker.js" %}"></script>
+	<link type="text/css" href="{% static "datepicker/jquery.simple-dtpicker.css" %}" rel="stylesheet" />
+
+{% endblock %}
+{% block content %}
+<form action="{% url 'lmdb:editOrganism' organism.objectid %}" method="post">
+{% csrf_token %}
+{{form.non_field_errors}}
+{{form.objectid.errors}}
+{{form.objectid}}
+{{form.organismname.errors}}
+Organism Name:  {{form.organismname}}<br>
+{{form.kingdom.errors}}
+Organism Kingdom:  {{form.kingdom}}<br>
+{{form.phylum.errors}}
+Organism Phylum: {{form.phylum}} <br>
+{{form.class_field.errors}} 
+Organism Class:  {{form.class_field}}<br>
+{{form.order_field.errors}}
+Organism Order:  {{form.order_field}}<br>
+{{form.family.errors}}
+Organism Family:  {{form.family}}<br>
+{{form.genus.errors}}
+Organism Genus:  {{form.genus}}<br>
+{{form.species.errors}}
+Organism Species:  {{form.species}}<br>
+<input type="submit" value="Edit Organism" />
+</form>
+{% endblock %}
+
+
+
+
+
+

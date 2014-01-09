@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+{% block pageName %}Edit Permit{% endblock %}
+{% block customjs %}
+{% load static %}
+    <script type="text/javascript" src="{% static "datepicker/jquery.simple-dtpicker.js" %}"></script>
+	<link type="text/css" href="{% static "datepicker/jquery.simple-dtpicker.css" %}" rel="stylesheet" />
+
+{% endblock %}
+{% block content %}
+
+
+<form action="{% url 'lmdb:editPermit' permit.objectid %}" method="post" id="parameter_form">
+{% csrf_token %}
+{{form.non_field_errors}}
+{{form.permitstartdate.errors}}
+Permit Start Date:  {{form.permitstartdate}}<br>
+<script type="text/javascript">
+		jQuery($(function(){
+			$('#id_permitstartdate').appendDtpicker();
+		}));
+	</script>
+
+{{form.permitenddate.errors}}
+Permit End Date:  {{form.permitenddate}}<br>
+<script type="text/javascript">
+		jQuery($(function(){
+			$('#id_permitenddate').appendDtpicker();
+		}));
+	</script>
+
+{{form.permitagency.errors}}
+Permit Agency:  {{form.permitagency}}<br>
+{{form.description.errors}}
+Description:  {{form.description}}<br>
+
+<input type="submit" value="Save" class="default" name="_save" />
+{% endblock %}

@@ -47,7 +47,6 @@ def dataUpdate(request):
     else:
         id = request.user.id
         person = People.objects.get(objectid = id)
-        print person
         sightings = Sighting.objects.get_query_set().filter(personid = person)
         measurements = Measurement.objects.get_query_set().filter(personid = person)
         collections = Collection.objects.get_query_set().filter(personid = person)
@@ -67,7 +66,6 @@ def dataDelete(request):
                     if split[0] == 'Change':
                         c = Change.objects.get(objectid=int(split[1]))
                         c.delete()
-                        print c
                     elif split[0] == 'Sighting':
                         s = Sighting.objects.get(objectid=int(split[1]))
                         s.delete()
@@ -90,7 +88,6 @@ def dataDelete(request):
                         c = Change.objects.get(objectid=int(split[1]))
                         if request.user.id == c.personid.objectid:
                             c.delete()
-                        print c
                     elif split[0] == 'Sighting':
                         s = Sighting.objects.get(objectid=int(split[1]))
                         if request.user.id == s.personid.objectid:
@@ -268,6 +265,19 @@ def createEvent(request):
         form = EventForm()
         form.initial['objectid'] = 1
     return render(request, 'lmdb/createEvent.html', {'form' : form})
+
+@user_uploaded
+@login_required(login_url='/lmdb/login/')
+def editEvent(request, event_id):
+    event = Event.objects.get(objectid=event_id)    
+    if request.POST:
+        form = EventForm(request.POST, instance = event)
+        if form.is_valid():
+            form.save()
+            return HttpResponseRedirect('/lmdb/reference/events/'+ event_id + '/')
+    else:
+        form = EventForm(instance=event)
+    return render(request, 'lmdb/editEvent.html', {'form':form, 'event':event})
   
 #########################################################################################
 #   END OF FUNCTIONS FOR EVENTS #
@@ -307,6 +317,20 @@ def createParam(request):
         form.initial['objectid'] = 1
     return render(request, 'lmdb/createParam.html', {'form' : form})
 
+
+@user_uploaded
+@login_required(login_url='/lmdb/login/')
+def editParam(request, param_id):
+    param = Parameter.objects.get(objectid=param_id)    
+    if request.POST:
+        form = ParamForm(request.POST, instance = param)
+        if form.is_valid():
+            form.save()
+            return HttpResponseRedirect('/lmdb/reference/parameters/'+ param_id + '/')
+    else:
+        form = ParamForm(instance=param)
+    return render(request, 'lmdb/editParam.html', {'form':form, 'param':param})
+ 
 
 @user_uploaded
 @login_required(login_url='/lmdb/login/')
@@ -352,7 +376,6 @@ def projectDetail(request, project_id):
     people = []
     for p in peopleprojects:
         people.append(People.objects.get(objectid=p.personid.objectid))
-    print people
     return render(request, 'lmdb/projectDetail.html', {'project' : project, 'person' : person, 'event' : event, 'sightings' : sightings, 'changes' : changes, 'measurements' : measurements, 'collections' : collections, 'people' : people})
     
 @user_uploaded
@@ -489,6 +512,19 @@ def createPermit(request):
         form.initial['objectid'] = 1
     return render(request, 'lmdb/createPermit.html', {'form' : form})
 
+@user_uploaded
+@login_required(login_url='/lmdb/login/')
+def editPermit(request, permit_id):
+    permit = Permit.objects.get(objectid=permit_id)    
+    if request.POST:
+        form = PermitForm(request.POST, instance = permit)
+        if form.is_valid():
+            form.save()
+            return HttpResponseRedirect('/lmdb/reference/permits/'+ permit_id + '/')
+    else:
+        form = PermitForm(instance=permit)
+    return render(request, 'lmdb/editParam.html', {'form':form, 'permit':permit})
+
 #########################################################################################
 #   END OF FUNCTIONS FOR PERMITS #
 #
@@ -535,7 +571,6 @@ def createLocation(request):
         return render(request, 'lmdb/createLocation.html', {'form': form})    
 
     if request.POST:
-        print request.POST['objectid']
         if request.POST.has_key('indicator'):
             form = LocationForm()
             form.initial['objectid'] = request.POST['objectid']
@@ -555,7 +590,6 @@ def createLocation(request):
 @login_required(login_url='/lmdb/login/')
 def createLocationPopUp(request):
     if request.POST:
-        print request.POST['objectid']
         if request.POST.has_key('indicator'):
             l = Location(objectid = request.POST['objectid'])
             if request.POST['type'] == 'point':
@@ -590,6 +624,20 @@ def locationCleanup(request):
             polys.append(location['areaid'])
 
     return render(request, 'lmdb/locationCleanup.html', {'points':points, 'lines':lines,'polys':polys})
+
+
+@user_uploaded
+@login_required(login_url='/lmdb/login/')
+def editLocation(request, location_id):
+    location = Location.objects.get(objectid=location_id)    
+    if request.POST:
+        form = LocationForm(request.POST, instance = location)
+        if form.is_valid():
+            form.save()
+            return HttpResponseRedirect('/lmdb/reference/locations/'+ location_id + '/')
+    else:
+        form = LocationForm(instance=location)
+    return render(request, 'lmdb/editLocation.html', {'form':form, 'location':location})
 
 ##  !!!! Need to add a sync locations view to allow for locations not tagged to be added to the db !!!! ##
 
@@ -648,6 +696,19 @@ def createOrganismFromData(request):
         return HttpResponse(json.dumps({'id': org.objectid, 'organismname' : org.organismname}))
     return HttpResponse('failed')
 
+@user_uploaded
+@login_required(login_url='/lmdb/login/')
+def editOrganism(request, org_id):
+    organism = Organism.objects.get(objectid=org_id)    
+    if request.POST:
+        form = EditOrganismForm(request.POST, instance = organism)
+        if form.is_valid():
+            form.save()
+            return HttpResponseRedirect('/lmdb/reference/organisms/'+ org_id + '/')
+    else:
+        form = EditOrganismForm(instance=organism)
+    return render(request, 'lmdb/editOrganism.html', {'form':form, 'organism':organism})
+
 #########################################################################################
 # FUNCTIONS THAT HANDLE AJAX CALLS FROM THE CREATE ORGANISMS PAGE  #
 @login_required(login_url='/lmdb/login/')
@@ -694,7 +755,6 @@ def genusFilter(request, genus_id):
 
 @login_required(login_url='/lmdb/login/')
 def species(request,column, filter):
-    print column
     if column=='kingdom':
         b = Organism.objects.filter(kingdom = filter).values('organismname','objectid').distinct()
     elif column=='phylum':

@@ -1,4 +1,4 @@
-# Django settings for testlurec project.
+# Django settings for lmdb_main project.
 import os
 
 DEBUG = True
@@ -122,13 +122,13 @@ MIDDLEWARE_CLASSES = (
     # 'django.middleware.clickjacking.XFrameOptionsMiddleware',
 )
 
-ROOT_URLCONF = 'testlurec.urls'
+ROOT_URLCONF = 'lmdb_main.urls'
 
 # Python dotted path to the WSGI application used by Django's runserver.
-WSGI_APPLICATION = 'testlurec.wsgi.application'
+WSGI_APPLICATION = 'lmdb_main.wsgi.application'
 
 TEMPLATE_DIRS = (
-    '/testlurec/templates/admin',
+    '/lmdb_main/templates/admin',
     # Put strings here, like "/home/html/django_templates" or "C:/www/django/templates".
     # Always use forward slashes, even on Windows.
     # Don't forget to use absolute paths, not relative paths.
