@@ -6,7 +6,7 @@
  <script>
 $(function(){
     $("select#id_kingdom").change(function(){
-      $.getJSON("/lmdb/reference/organisms/kingdomFilter/"+$(this).val()+"/", function(j) {
+      $.getJSON("/reference/organisms/kingdomFilter/"+$(this).val()+"/", function(j) {
         var options = '<option value="">---------- </option>';
         for (var i = 0; i < j.length; i++) {
           options += '<option value="' + j[i].phylum + '">' + j[i].phylum + '</option>';
@@ -22,7 +22,7 @@ $(function(){
   
 $(function(){
     $("select#id_phylum").change(function(){
-      $.getJSON("/lmdb/reference/organisms/phylumFilter/"+$(this).val()+"/", function(j) {
+      $.getJSON("/reference/organisms/phylumFilter/"+$(this).val()+"/", function(j) {
         var options = '<option value="">---------- </option>';
         for (var i = 0; i < j.length; i++) {
           options += '<option value="' + j[i].class_field + '">' + j[i].class_field + '</option>';
@@ -37,7 +37,7 @@ $(function(){
   
 $(function(){
     $("select#id_class_field").change(function(){
-      $.getJSON("/lmdb/reference/organisms/classFilter/"+$(this).val()+"/", function(j) {
+      $.getJSON("/reference/organisms/classFilter/"+$(this).val()+"/", function(j) {
         var options = '<option value="">---------- </option>';
         for (var i = 0; i < j.length; i++) {
           options += '<option value="' + j[i].order_field + '">' + j[i].order_field + '</option>';
@@ -52,7 +52,7 @@ $(function(){
   
 $(function(){
     $("select#id_order_field").change(function(){
-      $.getJSON("/lmdb/reference/organisms/orderFilter/"+$(this).val()+"/", function(j) {
+      $.getJSON("/reference/organisms/orderFilter/"+$(this).val()+"/", function(j) {
         var options = '<option value="">---------- </option>';
         for (var i = 0; i < j.length; i++) {
           options += '<option value="' + j[i].family + '">' + j[i].family + '</option>';
@@ -67,7 +67,7 @@ $(function(){
   
 $(function(){
     $("select#id_family").change(function(){
-      $.getJSON("/lmdb/reference/organisms/familyFilter/"+$(this).val()+"/", function(j) {
+      $.getJSON("/reference/organisms/familyFilter/"+$(this).val()+"/", function(j) {
         var options = '<option value="">---------- </option>';
         for (var i = 0; i < j.length; i++) {
           options += '<option value="' + j[i].genus + '">' + j[i].genus + '</option>';
@@ -81,7 +81,7 @@ $(function(){
   })
 
 function manClassUpdate(phyl){
-jQuery.getJSON("/lmdb/reference/organisms/phylumFilter/"+phyl+"/", function(j) {
+jQuery.getJSON("/reference/organisms/phylumFilter/"+phyl+"/", function(j) {
         var options = '<option value="">---------- </option>';
         for (var i = 0; i < j.length; i++) {
           options += '<option value="' + j[i].class_field + '">' + j[i].class_field + '</option>';
@@ -96,7 +96,7 @@ jQuery.getJSON("/lmdb/reference/organisms/phylumFilter/"+phyl+"/", function(j) {
 
 
 function manOrderUpdate(class_field){
-jQuery.getJSON("/lmdb/reference/organisms/classFilter/"+class_field+"/", function(j) {
+jQuery.getJSON("/reference/organisms/classFilter/"+class_field+"/", function(j) {
         var options = '<option value="">---------- </option>';
         for (var i = 0; i < j.length; i++) {
           options += '<option value="' + j[i].order_field + '">' + j[i].order_field + '</option>';
@@ -110,7 +110,7 @@ jQuery.getJSON("/lmdb/reference/organisms/classFilter/"+class_field+"/", functio
 };
 
 function manFamilyUpdate(order_field){
-jQuery.getJSON("/lmdb/reference/organisms/orderFilter/"+order_field+"/", function(j) {
+jQuery.getJSON("/reference/organisms/orderFilter/"+order_field+"/", function(j) {
         var options = '<option value="">---------- </option>';
         for (var i = 0; i < j.length; i++) {
           options += '<option value="' + j[i].family + '">' + j[i].family + '</option>';
@@ -125,7 +125,7 @@ jQuery.getJSON("/lmdb/reference/organisms/orderFilter/"+order_field+"/", functio
 
 
 function manGenusUpdate(family){
-jQuery.getJSON("/lmdb/reference/organisms/familyFilter/"+family+"/", function(j) {
+jQuery.getJSON("/reference/organisms/familyFilter/"+family+"/", function(j) {
         var options = '<option value="">---------- </option>';
         for (var i = 0; i < j.length; i++) {
           options += '<option value="' + j[i].genus + '">' + j[i].genus + '</option>';

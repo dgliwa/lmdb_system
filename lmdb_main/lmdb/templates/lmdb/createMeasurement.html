@@ -63,7 +63,7 @@
             e.preventDefault();
             var values = $(this).serialize();
             
-            var a = $.post('/lmdb/reference/parameters/createFromData/', values, function(response) {
+            var a = $.post('/reference/parameters/createFromData/', values, function(response) {
     // log the response to the console
     console.log("Response: "+response);
     console.log(response['commonname']);
@@ -213,7 +213,7 @@ require([
                 alert("objectid is: " + addResults[0].objectId);
 
                 try{
-                jQuery.post('/lmdb/reference/locations/create/popup/',{'csrfmiddlewaretoken' : '{{ csrf_token }}','indicator': 'yes', 'type': 'point', 'objectid' :addResults[0].objectId}, function() {
+                jQuery.post('/reference/locations/create/popup/',{'csrfmiddlewaretoken' : '{{ csrf_token }}','indicator': 'yes', 'type': 'point', 'objectid' :addResults[0].objectId}, function() {
   alert( "success" );
 }); 
                 }
@@ -250,7 +250,7 @@ var graphic = pointLayer.graphics[pointLayer.graphics.length - 1];
                 alert("objectid is: " + addResults[0].objectId);
 
 
-try{                jQuery.post('/lmdb/reference/locations/create/popup/',{'csrfmiddlewaretoken' : '{{ csrf_token }}','indicator': 'yes', 'type': 'line', 'objectid' :addResults[0].objectId}, function() {
+try{                jQuery.post('/reference/locations/create/popup/',{'csrfmiddlewaretoken' : '{{ csrf_token }}','indicator': 'yes', 'type': 'line', 'objectid' :addResults[0].objectId}, function() {
   alert( "success" );
 }); 
                 }
@@ -290,7 +290,7 @@ try{                jQuery.post('/lmdb/reference/locations/create/popup/',{'csrf
                 alert("objectid is: " + addResults[0].objectId);
 
 try{
-               jQuery.post('/lmdb/reference/locations/create/popup/',{'csrfmiddlewaretoken' : '{{ csrf_token }}','indicator': 'yes', 'type': 'poly', 'objectid' :addResults[0].objectId}, function() {
+               jQuery.post('/reference/locations/create/popup/',{'csrfmiddlewaretoken' : '{{ csrf_token }}','indicator': 'yes', 'type': 'poly', 'objectid' :addResults[0].objectId}, function() {
   alert( "success" );
 }); 
                 }

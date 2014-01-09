@@ -147,7 +147,7 @@ function deleteRows(){
                         var form = document.createElement("form");
                         form.setAttribute("method", method);
                         form.setAttribute("id", "deleteForm");
-                        form.setAttribute("action", '/lmdb/data/delete/');
+                        form.setAttribute("action", '/data/delete/');
 
                         var csrfToken = document.createElement("input");
                         csrfToken.setAttribute("type", "hidden");
@@ -197,7 +197,7 @@ function editRows(){
                 // It can be made less wordy if you use one.
                 var form = document.createElement("form");
                 form.setAttribute("method", method);
-                form.setAttribute("action", '/lmdb/data/update/form/');
+                form.setAttribute("action", '/data/update/form/');
 
                 var csrfToken = document.createElement("input");
                 csrfToken.setAttribute("type", "hidden");

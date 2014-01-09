@@ -62,7 +62,7 @@
             e.preventDefault();
             var values = $(this).serialize();
             
-            var a = $.post('/lmdb/reference/organisms/createFromData/', values, function(response) {
+            var a = $.post('/reference/organisms/createFromData/', values, function(response) {
     // log the response to the console
     //console.log("Response: "+response);
     //console.log(response['commonname']);
@@ -79,7 +79,7 @@
         
     $(function(){
     $("select#id_kingdom").change(function(){
-      $.getJSON("/lmdb/reference/organisms/kingdomFilter/"+$(this).val()+"/", function(j) {
+      $.getJSON("/reference/organisms/kingdomFilter/"+$(this).val()+"/", function(j) {
         var options = '<option value="">---------- </option>';
         for (var i = 0; i < j.length; i++) {
           options += '<option value="' + j[i].phylum + '">' + j[i].phylum + '</option>';
@@ -89,7 +89,7 @@
         $("#id_phylum").attr('disabled', false);
       })
       $("#id_kingdom").attr('selected', 'selected');
-      $.getJSON( "/lmdb/reference/organisms/kingdom/"+$(this).val()+"/", function( data ) {
+      $.getJSON( "/reference/organisms/kingdom/"+$(this).val()+"/", function( data ) {
         var options = '<option value="">---------- </option>';
         for (var i = 0; i < data.length; i++) {
           options += '<option value="' + data[i].objectid + '">' + data[i].organismname + '</option>';
@@ -104,7 +104,7 @@
   
 $(function(){
     $("select#id_phylum").change(function(){
-      $.getJSON("/lmdb/reference/organisms/phylumFilter/"+$(this).val()+"/", function(j) {
+      $.getJSON("/reference/organisms/phylumFilter/"+$(this).val()+"/", function(j) {
         var options = '<option value="">---------- </option>';
         for (var i = 0; i < j.length; i++) {
           options += '<option value="' + j[i].class_field + '">' + j[i].class_field + '</option>';
@@ -114,7 +114,7 @@ $(function(){
         $("#id_class_field").attr('disabled', false);
       })
       $("#id_phylum").attr('selected', 'selected');
-    $.getJSON( "/lmdb/reference/organisms/phylum/"+$(this).val()+"/", function( data ) {
+    $.getJSON( "/reference/organisms/phylum/"+$(this).val()+"/", function( data ) {
         var options = '<option value="">---------- </option>';
         for (var i = 0; i < data.length; i++) {
           options += '<option value="' + data[i].objectid + '">' + data[i].organismname + '</option>';
@@ -127,7 +127,7 @@ $(function(){
   
 $(function(){
     $("select#id_class_field").change(function(){
-      $.getJSON("/lmdb/reference/organisms/classFilter/"+$(this).val()+"/", function(j) {
+      $.getJSON("/reference/organisms/classFilter/"+$(this).val()+"/", function(j) {
         var options = '<option value="">---------- </option>';
         for (var i = 0; i < j.length; i++) {
           options += '<option value="' + j[i].order_field + '">' + j[i].order_field + '</option>';
@@ -137,7 +137,7 @@ $(function(){
         $("#id_order_field").attr('disabled', false);
       })
       $("#id_class_field").attr('selected', 'selected');
-      $.getJSON( "/lmdb/reference/organisms/class_field/"+$(this).val()+"/", function( data ) {
+      $.getJSON( "/reference/organisms/class_field/"+$(this).val()+"/", function( data ) {
         var options = '<option value="">---------- </option>';
         for (var i = 0; i < data.length; i++) {
           options += '<option value="' + data[i].objectid + '">' + data[i].organismname + '</option>';
@@ -150,7 +150,7 @@ $(function(){
   
 $(function(){
     $("select#id_order_field").change(function(){
-      $.getJSON("/lmdb/reference/organisms/orderFilter/"+$(this).val()+"/", function(j) {
+      $.getJSON("/reference/organisms/orderFilter/"+$(this).val()+"/", function(j) {
         var options = '<option value="">---------- </option>';
         for (var i = 0; i < j.length; i++) {
           options += '<option value="' + j[i].family + '">' + j[i].family + '</option>';
@@ -160,7 +160,7 @@ $(function(){
         $("#id_family").attr('disabled', false);
       })
       $("#id_order_field").attr('selected', 'selected');
-      $.getJSON( "/lmdb/reference/organisms/order_field/"+$(this).val()+"/", function( data ) {
+      $.getJSON( "/reference/organisms/order_field/"+$(this).val()+"/", function( data ) {
         var options = '<option value="">---------- </option>';
         for (var i = 0; i < data.length; i++) {
           options += '<option value="' + data[i].objectid + '">' + data[i].organismname + '</option>';
@@ -173,7 +173,7 @@ $(function(){
   
 $(function(){
     $("select#id_family").change(function(){
-      $.getJSON("/lmdb/reference/organisms/familyFilter/"+$(this).val()+"/", function(j) {
+      $.getJSON("/reference/organisms/familyFilter/"+$(this).val()+"/", function(j) {
         var options = '<option value="">---------- </option>';
         for (var i = 0; i < j.length; i++) {
           options += '<option value="' + j[i].genus + '">' + j[i].genus + '</option>';
@@ -183,7 +183,7 @@ $(function(){
         $("#id_genus").attr('disabled', false);
       })
       $("#id_family").attr('selected', 'selected');
-      $.getJSON( "/lmdb/reference/organisms/family/"+$(this).val()+"/", function( data ) {
+      $.getJSON( "/reference/organisms/family/"+$(this).val()+"/", function( data ) {
         var options = '<option value="">---------- </option>';
         for (var i = 0; i < data.length; i++) {
           options += '<option value="' + data[i].objectid + '">' + data[i].organismname + '</option>';
@@ -196,7 +196,7 @@ $(function(){
 
 $(function(){
     $("select#id_genus").change(function(){
-      $.getJSON("/lmdb/reference/organisms/genusFilter/"+$(this).val()+"/", function(j) {
+      $.getJSON("/reference/organisms/genusFilter/"+$(this).val()+"/", function(j) {
         var options = '';
         console.log(j);
         for (var i = 0; i < j.length; i++) {
@@ -211,7 +211,7 @@ $(function(){
 
 
 function manClassUpdate(phyl){
-jQuery.getJSON("/lmdb/reference/organisms/phylumFilter/"+phyl+"/", function(j) {
+jQuery.getJSON("/reference/organisms/phylumFilter/"+phyl+"/", function(j) {
         var options = '<option value="">---------- </option>';
         for (var i = 0; i < j.length; i++) {
           options += '<option value="' + j[i].class_field + '">' + j[i].class_field + '</option>';
@@ -226,7 +226,7 @@ jQuery.getJSON("/lmdb/reference/organisms/phylumFilter/"+phyl+"/", function(j) {
 
 
 function manOrderUpdate(class_field){
-jQuery.getJSON("/lmdb/reference/organisms/classFilter/"+class_field+"/", function(j) {
+jQuery.getJSON("/reference/organisms/classFilter/"+class_field+"/", function(j) {
         var options = '<option value="">---------- </option>';
         for (var i = 0; i < j.length; i++) {
           options += '<option value="' + j[i].order_field + '">' + j[i].order_field + '</option>';
@@ -240,7 +240,7 @@ jQuery.getJSON("/lmdb/reference/organisms/classFilter/"+class_field+"/", functio
 };
 
 function manFamilyUpdate(order_field){
-jQuery.getJSON("/lmdb/reference/organisms/orderFilter/"+order_field+"/", function(j) {
+jQuery.getJSON("/reference/organisms/orderFilter/"+order_field+"/", function(j) {
         var options = '<option value="">---------- </option>';
         for (var i = 0; i < j.length; i++) {
           options += '<option value="' + j[i].family + '">' + j[i].family + '</option>';
@@ -255,7 +255,7 @@ jQuery.getJSON("/lmdb/reference/organisms/orderFilter/"+order_field+"/", functio
 
 
 function manGenusUpdate(family){
-jQuery.getJSON("/lmdb/reference/organisms/familyFilter/"+family+"/", function(j) {
+jQuery.getJSON("/reference/organisms/familyFilter/"+family+"/", function(j) {
         var options = '<option value="">---------- </option>';
         for (var i = 0; i < j.length; i++) {
           options += '<option value="' + j[i].genus + '">' + j[i].genus + '</option>';
@@ -420,7 +420,7 @@ require([
                 // It can be made less wordy if you use one.
                 var form = document.createElement("form");
                 form.setAttribute("method", method);
-                form.setAttribute("action", '/lmdb/reference/locations/create/popup/');
+                form.setAttribute("action", '/reference/locations/create/popup/');
                 form.setAttribute("target", '_blank');
 
                 var csrfToken = document.createElement("input");
@@ -492,7 +492,7 @@ require([
                 // It can be made less wordy if you use one.
                 var form = document.createElement("form");
                 form.setAttribute("method", method);
-                form.setAttribute("action", '/lmdb/reference/locations/create/popup/');
+                form.setAttribute("action", '/reference/locations/create/popup/');
                 form.setAttribute("target", '_blank');
 
 
@@ -570,7 +570,7 @@ require([
                 // It can be made less wordy if you use one.
                 var form = document.createElement("form");
                 form.setAttribute("method", method);
-                form.setAttribute("action", '/lmdb/reference/locations/create/popup/');
+                form.setAttribute("action", '/reference/locations/create/popup/');
                 form.setAttribute("target", '_blank');
 
                 var csrfToken = document.createElement("input");

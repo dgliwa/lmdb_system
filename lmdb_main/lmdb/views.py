@@ -19,7 +19,7 @@ from forms import *
 import json
 
 @user_uploaded
-@login_required(login_url='/lmdb/login/')
+@login_required(login_url='/login/')
 def index(request):
     id = request.user.id
     person = People.objects.get(objectid=id)
@@ -27,17 +27,17 @@ def index(request):
     return render(request,'lmdb/index.html',{'projects':projects})
 
 @user_uploaded
-@login_required(login_url='/lmdb/login/')
+@login_required(login_url='/login/')
 def reference(request):
     return render(request,'lmdb/reference.html',{})
 
 @user_uploaded
-@login_required(login_url='/lmdb/login/')
+@login_required(login_url='/login/')
 def data(request):
     return render(request,'lmdb/data.html',{})
 
 @user_uploaded
-@login_required(login_url='/lmdb/login/')
+@login_required(login_url='/login/')
 def dataUpdate(request):
     if request.user.is_staff:
         sightings = Sighting.objects.all()
@@ -54,7 +54,7 @@ def dataUpdate(request):
     return render(request,'lmdb/dataUpdate.html',{'sightings':sightings,'measurements':measurements,'collections':collections,'changes':changes})
 
 @user_uploaded
-@login_required(login_url='/lmdb/login/')
+@login_required(login_url='/login/')
 def dataDelete(request):
     if request.POST:
         dict = request.POST
@@ -79,7 +79,7 @@ def dataDelete(request):
             measurements = Measurement.objects.all()
             collections = Collection.objects.all()
             changes = Change.objects.all()
-            return HttpResponseRedirect('/lmdb/data/update/')
+            return HttpResponseRedirect('/data/update/')
         else:
             for val in vals:
                 if val != 'csrfmiddlewaretoken':
@@ -104,11 +104,11 @@ def dataDelete(request):
             measurements = Measurement.objects.all()
             collections = Collection.objects.all()
             changes = Change.objects.all()
-            return HttpResponseRedirect('/lmdb/data/update/')
-    return HttpResponseRedirect('/lmdb/data/update/')
+            return HttpResponseRedirect('/data/update/')
+    return HttpResponseRedirect('/data/update/')
 
 @user_uploaded
-@login_required(login_url='/lmdb/login/')
+@login_required(login_url='/login/')
 def dataUpdateForm(request):
     if request.POST:
         changeforms =[]
@@ -161,7 +161,7 @@ def dataUpdateForm(request):
 #########################################################################################
 #   USER MANAGEMENT #
 #########################################################################################
-@login_required(login_url='/lmdb/login/')
+@login_required(login_url='/login/')
 def updateUser(request):
     if request.POST:
         postVals = request.POST.copy()
@@ -171,7 +171,7 @@ def updateUser(request):
         form = PeopleForm(postVals)
         if form.is_valid():
             form.save()
-            return HttpResponseRedirect('/lmdb/')
+            return HttpResponseRedirect('/')
     else:   
         updater = request.user
         person = User.objects.get(id = updater.id)
@@ -182,7 +182,7 @@ def updateUser(request):
         form.initial['displayname'] = updater.first_name + ' ' + updater.last_name
         form.initial['email'] = updater.email
     return render(request,'lmdb/updateUser.html',{'form' : form})
-# @login_required(login_url='/lmdb/login/')
+# @login_required(login_url='/login/')
 # @permission_required('users.can_add')
 # def userMan(request):
 #     users = User.objects.all().order_by('id')
@@ -212,7 +212,7 @@ def updateUser(request):
 #     #print unsyncedUsers
 #     return render(request, 'lmdb/userMan.html',{'users' : unsyncedUsers, 'people' : unsyncedPeople})
 # 
-# @login_required(login_url='/lmdb/login/')
+# @login_required(login_url='/login/')
 # @permission_required('users.can_add')
 # def userManForm(request):
 #     if request.POST:
@@ -226,14 +226,14 @@ def updateUser(request):
 #                 print user
 #         return render(request, 'lmdb/userManForm.html',{'peopleForms' : peopleForms})
 #     else:
-#         return HttpResponseRedirect('/lmdb/userMan/')
+#         return HttpResponseRedirect('/userMan/')
 
 #########################################################################################
 #   BEGINNING OF FUNCTIONS FOR EVENTS #
 #########################################################################################
     
 @user_uploaded
-@login_required(login_url='/lmdb/login/')
+@login_required(login_url='/login/')
 def eventDetail(request, event_id):
     event = get_object_or_404(Event, pk=event_id)
     person = get_object_or_404(People, pk=event.personid.objectid)
@@ -241,7 +241,7 @@ def eventDetail(request, event_id):
     return render(request, 'lmdb/eventDetail.html', {'event' : event, 'person' : person, 'projects' : projects})
 
 @user_uploaded    
-@login_required(login_url='/lmdb/login/')
+@login_required(login_url='/login/')
 def events(request):
     events = Event.objects.values()
     template = loader.get_template('lmdb/events.html')
@@ -251,7 +251,7 @@ def events(request):
     return HttpResponse(template.render(context))
 
 @user_uploaded
-@login_required(login_url='/lmdb/login/')
+@login_required(login_url='/login/')
 @permission_required('events.can_add', raise_exception=True)    
 def createEvent(request):
     if request.POST:  #inserts new event into database
@@ -260,21 +260,21 @@ def createEvent(request):
         form = EventForm(postVals)
         if form.is_valid():
             form.save()
-            return HttpResponseRedirect('/lmdb/reference/events/')
+            return HttpResponseRedirect('/reference/events/')
     else:
         form = EventForm()
         form.initial['objectid'] = 1
     return render(request, 'lmdb/createEvent.html', {'form' : form})
 
 @user_uploaded
-@login_required(login_url='/lmdb/login/')
+@login_required(login_url='/login/')
 def editEvent(request, event_id):
     event = Event.objects.get(objectid=event_id)    
     if request.POST:
         form = EventForm(request.POST, instance = event)
         if form.is_valid():
             form.save()
-            return HttpResponseRedirect('/lmdb/reference/events/'+ event_id + '/')
+            return HttpResponseRedirect('/reference/events/'+ event_id + '/')
     else:
         form = EventForm(instance=event)
     return render(request, 'lmdb/editEvent.html', {'form':form, 'event':event})
@@ -287,7 +287,7 @@ def editEvent(request, event_id):
 #########################################################################################
 
 @user_uploaded
-@login_required(login_url='/lmdb/login/')
+@login_required(login_url='/login/')
 def parameters(request):
     parameters = Parameter.objects.values()
     template = loader.get_template('lmdb/parameters.html')
@@ -297,13 +297,13 @@ def parameters(request):
     return HttpResponse(template.render(context))
 
 @user_uploaded
-@login_required(login_url='/lmdb/login/')
+@login_required(login_url='/login/')
 def paramDetail(request, param_id):
     param = get_object_or_404(Parameter, pk=param_id)
     return render(request, 'lmdb/paramDetail.html', {'param' : param})
     
 @user_uploaded
-@login_required(login_url='/lmdb/login/')
+@login_required(login_url='/login/')
 def createParam(request):
     if request.POST:
         postVals = request.POST.copy()
@@ -311,7 +311,7 @@ def createParam(request):
         form = ParamForm(postVals)
         if form.is_valid():
             form.save()
-            return HttpResponseRedirect('/lmdb/reference/parameters/')
+            return HttpResponseRedirect('/reference/parameters/')
     else:
         form = ParamForm()
         form.initial['objectid'] = 1
@@ -319,21 +319,21 @@ def createParam(request):
 
 
 @user_uploaded
-@login_required(login_url='/lmdb/login/')
+@login_required(login_url='/login/')
 def editParam(request, param_id):
     param = Parameter.objects.get(objectid=param_id)    
     if request.POST:
         form = ParamForm(request.POST, instance = param)
         if form.is_valid():
             form.save()
-            return HttpResponseRedirect('/lmdb/reference/parameters/'+ param_id + '/')
+            return HttpResponseRedirect('/reference/parameters/'+ param_id + '/')
     else:
         form = ParamForm(instance=param)
     return render(request, 'lmdb/editParam.html', {'form':form, 'param':param})
  
 
 @user_uploaded
-@login_required(login_url='/lmdb/login/')
+@login_required(login_url='/login/')
 def createParamFromData(request):
     if request.POST:
         param = Parameter(objectid = Parameter.objects.all().order_by('-objectid')[0].objectid+1)
@@ -353,7 +353,7 @@ def createParamFromData(request):
 #########################################################################################
 
 @user_uploaded
-@login_required(login_url='/lmdb/login/')
+@login_required(login_url='/login/')
 def projects(request):
     projects = Project.objects.values()
     template = loader.get_template('lmdb/projects.html')
@@ -363,7 +363,7 @@ def projects(request):
     return HttpResponse(template.render(context))
     
 @user_uploaded
-@login_required(login_url='/lmdb/login/')
+@login_required(login_url='/login/')
 def projectDetail(request, project_id):
     project = get_object_or_404(Project, pk=project_id)
     person = get_object_or_404(People, pk=project.personid.objectid)
@@ -379,7 +379,7 @@ def projectDetail(request, project_id):
     return render(request, 'lmdb/projectDetail.html', {'project' : project, 'person' : person, 'event' : event, 'sightings' : sightings, 'changes' : changes, 'measurements' : measurements, 'collections' : collections, 'people' : people})
     
 @user_uploaded
-@login_required(login_url='/lmdb/login/')
+@login_required(login_url='/login/')
 def createProject(request):
     if request.POST:  #inserts new project into database
         postVals = request.POST.copy()
@@ -400,9 +400,9 @@ def createProject(request):
                 pp.projectid = project
                 print pp
                 pp.save()
-            return HttpResponseRedirect('/lmdb/reference/projects/')
+            return HttpResponseRedirect('/reference/projects/')
         else:
-            return HttpResponseRedirect('/lmdb/reference/projects/')
+            return HttpResponseRedirect('/reference/projects/')
     else:
         form = ProjectForm()
         form.initial['objectid'] = 1
@@ -411,14 +411,14 @@ def createProject(request):
 
 
 @user_uploaded
-@login_required(login_url='/lmdb/login/')
+@login_required(login_url='/login/')
 def editProject(request, project_id):
     project = Project.objects.get(objectid=project_id)    
     if request.POST:
         form = ProjectForm(request.POST, instance = project)
         if form.is_valid():
             form.save()
-            return HttpResponseRedirect('/lmdb/reference/projects/'+ project_id + '/')
+            return HttpResponseRedirect('/reference/projects/'+ project_id + '/')
     else:
         form = ProjectForm(instance=project)
     peopleprojects = PeopleProject.objects.filter(projectid=project)
@@ -430,7 +430,7 @@ def editProject(request, project_id):
     return render(request, 'lmdb/editProject.html', {'form':form, 'people':people, 'project' : project})
 
 @user_uploaded
-@login_required(login_url='/lmdb/login/')
+@login_required(login_url='/login/')
 def addProjectPeople(request, project_id):
     if request.POST:
         dict = request.POST
@@ -444,7 +444,7 @@ def addProjectPeople(request, project_id):
                 pp.personid = People.objects.get(objectid = dict[val])
                 pp.projectid = Project.objects.get(objectid = project_id)
                 pp.save()
-        return HttpResponseRedirect('/lmdb/reference/projects/' + project_id + '/edit/')
+        return HttpResponseRedirect('/reference/projects/' + project_id + '/edit/')
     project= Project.objects.get(objectid=project_id)
     peopleprojects = PeopleProject.objects.filter(projectid=project)
     people = People.objects.get_query_set().exclude(objectid=request.user.id)
@@ -453,7 +453,7 @@ def addProjectPeople(request, project_id):
     return render(request, 'lmdb/addProjectPeople.html', {'people':people, 'pid' : project_id})
 
 @user_uploaded
-@login_required(login_url='/lmdb/login/')
+@login_required(login_url='/login/')
 def removeProjectPeople(request, project_id):
     if request.POST:
         dict = request.POST
@@ -465,7 +465,7 @@ def removeProjectPeople(request, project_id):
                 pp = PeopleProject.objects.filter(projectid = project)
                 assigned = pp.filter(personid = person)
                 assigned.delete()
-        return HttpResponseRedirect('/lmdb/reference/projects/' + project_id + '/edit/')
+        return HttpResponseRedirect('/reference/projects/' + project_id + '/edit/')
     else:
         project = Project.objects.get(objectid=project_id)
         peopleproject = PeopleProject.objects.filter(projectid=project)
@@ -482,7 +482,7 @@ def removeProjectPeople(request, project_id):
 #########################################################################################
 
 @user_uploaded
-@login_required(login_url='/lmdb/login/')
+@login_required(login_url='/login/')
 def permits(request):
     permits = Permit.objects.values()
     template = loader.get_template('lmdb/permits.html')
@@ -492,13 +492,13 @@ def permits(request):
     return HttpResponse(template.render(context))
     
 @user_uploaded
-@login_required(login_url='/lmdb/login/')
+@login_required(login_url='/login/')
 def permitDetail(request, permit_id):
     permit = get_object_or_404(Permit, pk=permit_id)
     return render(request, 'lmdb/permitDetail.html', {'permit' : permit})
 
 @user_uploaded
-@login_required(login_url='/lmdb/login/')
+@login_required(login_url='/login/')
 def createPermit(request):
     if request.POST:
         postVals = request.POST.copy()
@@ -506,21 +506,21 @@ def createPermit(request):
         form = PermitForm(postVals)        
         if form.is_valid():
             form.save()
-            return HttpResponseRedirect('/lmdb/reference/permits/')
+            return HttpResponseRedirect('/reference/permits/')
     else:
         form = PermitForm()
         form.initial['objectid'] = 1
     return render(request, 'lmdb/createPermit.html', {'form' : form})
 
 @user_uploaded
-@login_required(login_url='/lmdb/login/')
+@login_required(login_url='/login/')
 def editPermit(request, permit_id):
     permit = Permit.objects.get(objectid=permit_id)    
     if request.POST:
         form = PermitForm(request.POST, instance = permit)
         if form.is_valid():
             form.save()
-            return HttpResponseRedirect('/lmdb/reference/permits/'+ permit_id + '/')
+            return HttpResponseRedirect('/reference/permits/'+ permit_id + '/')
     else:
         form = PermitForm(instance=permit)
     return render(request, 'lmdb/editParam.html', {'form':form, 'permit':permit})
@@ -533,7 +533,7 @@ def editPermit(request, permit_id):
 #########################################################################################
 
 @user_uploaded
-@login_required(login_url='/lmdb/login/')
+@login_required(login_url='/login/')
 def locations(request):
     locations = Location.objects.all().order_by('pointid','lineid','areaid')
     template = loader.get_template('lmdb/locations.html')
@@ -543,19 +543,19 @@ def locations(request):
     return HttpResponse(template.render(context))
     
 @user_uploaded
-@login_required(login_url='/lmdb/login/')
+@login_required(login_url='/login/')
 def locationDetail(request, location_id):
     location = get_object_or_404(Location, pk=location_id)
     return render(request, 'lmdb/locationDetail.html', {'location' : location})
 
 @user_uploaded
-@login_required(login_url='/lmdb/login/')
+@login_required(login_url='/login/')
 def createLocationMap(request):
         return render(request,'lmdb/createLocationMap.html',{})
     
     
 @user_uploaded
-@login_required(login_url='/lmdb/login/')
+@login_required(login_url='/login/')
 @csrf_exempt
 def createLocation(request):
 
@@ -565,7 +565,7 @@ def createLocation(request):
             form = LocationForm(request.POST)
             if form.is_valid():
                 form.save()
-                return HttpResponseRedirect('/lmdb/reference/locations/')
+                return HttpResponseRedirect('/reference/locations/')
         else:
             form = LocationForm()
         return render(request, 'lmdb/createLocation.html', {'form': form})    
@@ -584,10 +584,10 @@ def createLocation(request):
         else:
             return formValidation(request)
     else:
-        return HttpResponseRedirect('/lmdb/reference/locations/create/map/')
+        return HttpResponseRedirect('/reference/locations/create/map/')
 
 @user_uploaded
-@login_required(login_url='/lmdb/login/')
+@login_required(login_url='/login/')
 def createLocationPopUp(request):
     if request.POST:
         if request.POST.has_key('indicator'):
@@ -604,10 +604,10 @@ def createLocationPopUp(request):
             message = 'Success'
             return render(request, 'lmdb/createLocationPopUp.html', {'message' : message})
     else:
-        return HttpResponseRedirect('/lmdb/reference/locations/')
+        return HttpResponseRedirect('/reference/locations/')
 
 @user_uploaded
-@login_required(login_url='/lmdb/login/')
+@login_required(login_url='/login/')
 @permission_required('locations.can_add', raise_exception=True)    
 @permission_required('locations.can_delete', raise_exception=True)    
 def locationCleanup(request):
@@ -627,14 +627,14 @@ def locationCleanup(request):
 
 
 @user_uploaded
-@login_required(login_url='/lmdb/login/')
+@login_required(login_url='/login/')
 def editLocation(request, location_id):
     location = Location.objects.get(objectid=location_id)    
     if request.POST:
         form = LocationForm(request.POST, instance = location)
         if form.is_valid():
             form.save()
-            return HttpResponseRedirect('/lmdb/reference/locations/'+ location_id + '/')
+            return HttpResponseRedirect('/reference/locations/'+ location_id + '/')
     else:
         form = LocationForm(instance=location)
     return render(request, 'lmdb/editLocation.html', {'form':form, 'location':location})
@@ -649,7 +649,7 @@ def editLocation(request, location_id):
 #########################################################################################
 
 @user_uploaded
-@login_required(login_url='/lmdb/login/')
+@login_required(login_url='/login/')
 def organisms(request):
     organisms = Organism.objects.all().order_by('organismname')
     template = loader.get_template('lmdb/organisms.html')
@@ -659,13 +659,13 @@ def organisms(request):
     return HttpResponse(template.render(context))
 
 @user_uploaded
-@login_required(login_url='/lmdb/login/')   
+@login_required(login_url='/login/')   
 def organismDetail(request, org_id):
     organism = get_object_or_404(Organism, pk=org_id)
     return render(request, 'lmdb/organismDetail.html', {'organism' : organism})
 
 @user_uploaded
-@login_required(login_url='/lmdb/login/')
+@login_required(login_url='/login/')
 def createOrganism(request):
     if request.POST:
         postVals = request.POST.copy()
@@ -673,13 +673,13 @@ def createOrganism(request):
         form = OrganismForm(postVals)
         if form.is_valid():
             form.save()
-            return HttpResponseRedirect('/lmdb/reference/organisms/')
+            return HttpResponseRedirect('/reference/organisms/')
     else:
         form = OrganismForm()
         form.initial['objectid'] = 1
     return render(request, 'lmdb/createOrganism.html', {'form' : form})
     
-@login_required(login_url='/lmdb/login/')
+@login_required(login_url='/login/')
 def createOrganismFromData(request):
     if request.POST:
         org = Organism(objectid = Organism.objects.all().order_by('-objectid')[0].objectid+1)
@@ -697,63 +697,63 @@ def createOrganismFromData(request):
     return HttpResponse('failed')
 
 @user_uploaded
-@login_required(login_url='/lmdb/login/')
+@login_required(login_url='/login/')
 def editOrganism(request, org_id):
     organism = Organism.objects.get(objectid=org_id)    
     if request.POST:
         form = EditOrganismForm(request.POST, instance = organism)
         if form.is_valid():
             form.save()
-            return HttpResponseRedirect('/lmdb/reference/organisms/'+ org_id + '/')
+            return HttpResponseRedirect('/reference/organisms/'+ org_id + '/')
     else:
         form = EditOrganismForm(instance=organism)
     return render(request, 'lmdb/editOrganism.html', {'form':form, 'organism':organism})
 
 #########################################################################################
 # FUNCTIONS THAT HANDLE AJAX CALLS FROM THE CREATE ORGANISMS PAGE  #
-@login_required(login_url='/lmdb/login/')
+@login_required(login_url='/login/')
 def kingdomFilter(request, king_id):
 	from django.core import serializers
 	b = Organism.objects.filter(kingdom=king_id).values('phylum').distinct()  
 	data = json.dumps([dict(phylum = org['phylum']) for org in b])
 	return HttpResponse(data, mimetype="application/javascript")
 
-@login_required(login_url='/lmdb/login/')	
+@login_required(login_url='/login/')	
 def phylumFilter(request, phyl_id):
 	from django.core import serializers
 	b = Organism.objects.filter(phylum=phyl_id).values('class_field').distinct()  
 	data = json.dumps([dict(class_field = org['class_field']) for org in b])
 	return HttpResponse(data, mimetype="application/javascript")
 
-@login_required(login_url='/lmdb/login/')
+@login_required(login_url='/login/')
 def classFilter(request, class_id):
 	from django.core import serializers
 	b = Organism.objects.filter(class_field=class_id).values('order_field').distinct()  
 	data = json.dumps([dict(order_field = org['order_field']) for org in b])
 	return HttpResponse(data, mimetype="application/javascript")
 	
-@login_required(login_url='/lmdb/login/')
+@login_required(login_url='/login/')
 def orderFilter(request, order_id):
 	from django.core import serializers
 	b = Organism.objects.filter(order_field=order_id).values('family').distinct()  
 	data = json.dumps([dict(family = org['family']) for org in b])
 	return HttpResponse(data, mimetype="application/javascript")
 
-@login_required(login_url='/lmdb/login/')
+@login_required(login_url='/login/')
 def familyFilter(request, family_id):
 	from django.core import serializers
 	b = Organism.objects.filter(family=family_id).values('genus').distinct()  
 	data = json.dumps([dict(genus = org['genus']) for org in b])
 	return HttpResponse(data, mimetype="application/javascript")
 
-@login_required(login_url='/lmdb/login/')
+@login_required(login_url='/login/')
 def genusFilter(request, genus_id):
 	from django.core import serializers
 	b = Organism.objects.filter(genus=genus_id).values('organismname','objectid').distinct()  
 	data = json.dumps([dict(organismname = org['organismname'], objectid=org['objectid']) for org in b])
 	return HttpResponse(data, mimetype="application/javascript")
 
-@login_required(login_url='/lmdb/login/')
+@login_required(login_url='/login/')
 def species(request,column, filter):
     if column=='kingdom':
         b = Organism.objects.filter(kingdom = filter).values('organismname','objectid').distinct()
@@ -781,7 +781,7 @@ def species(request,column, filter):
 #########################################################################################
 
 @user_uploaded
-@login_required(login_url='/lmdb/login/')
+@login_required(login_url='/login/')
 def sightings(request):    # !!!!!!   NEED TO APPLY FKEY RESTRAINTS
     sightings = Sighting.objects.values()
     points = []
@@ -808,7 +808,7 @@ def sightings(request):    # !!!!!!   NEED TO APPLY FKEY RESTRAINTS
     return HttpResponse(template.render(context))
 
 @user_uploaded
-@login_required(login_url='/lmdb/login/')
+@login_required(login_url='/login/')
 def sightingDetail(request, sight_id):
     sighting = get_object_or_404(Sighting, pk=sight_id)
     organism = get_object_or_404(Organism, pk=sighting.organismid.objectid)
@@ -819,7 +819,7 @@ def sightingDetail(request, sight_id):
 
 
 @user_uploaded
-@login_required(login_url='/lmdb/login/')
+@login_required(login_url='/login/')
 def createSighting(request):
     if request.POST:
         postVals = request.POST.copy()
@@ -827,7 +827,7 @@ def createSighting(request):
         form = SightingForm(postVals)
         if form.is_valid():
             form.save()
-            return HttpResponseRedirect('/lmdb/data/sightings/')
+            return HttpResponseRedirect('/data/sightings/')
     else:
         form = SightingForm()
         form.initial['objectid'] = 1
@@ -846,7 +846,7 @@ def createSighting(request):
     return render(request, 'lmdb/createSighting.html', {'form' : form, 'points':points, 'lines':lines,'polys':polys})
 
 @user_uploaded
-@login_required(login_url='/lmdb/login/')
+@login_required(login_url='/login/')
 def dataUpdateSighting(request, id):
     if request.POST:
         s = Sighting.objects.get(objectid=id)
@@ -866,7 +866,7 @@ def dataUpdateSighting(request, id):
 #   BEGINNING OF FUNCTIONS FOR CHANGES #
 #########################################################################################
 @user_uploaded
-@login_required(login_url='/lmdb/login/')
+@login_required(login_url='/login/')
 def changes(request):     # !!!!!!   NEED TO APPLY FKEY RESTRAINTS
     changes = Change.objects.values()
     points = []
@@ -892,7 +892,7 @@ def changes(request):     # !!!!!!   NEED TO APPLY FKEY RESTRAINTS
     return HttpResponse(template.render(context))
 
 @user_uploaded
-@login_required(login_url='/lmdb/login/')
+@login_required(login_url='/login/')
 def changeDetail(request, change_id):
     change = get_object_or_404(Change, pk=change_id)
     parameter = get_object_or_404(Parameter, pk=change.parameterid.objectid)
@@ -903,7 +903,7 @@ def changeDetail(request, change_id):
 
 
 @user_uploaded
-@login_required(login_url='/lmdb/login/')
+@login_required(login_url='/login/')
 def createChange(request):
     if request.POST:
         postVals = request.POST.copy()
@@ -912,7 +912,7 @@ def createChange(request):
         form.initial['objectid'] = Change.objects.all().order_by('-objectid')[0].objectid+1
         if form.is_valid():
             form.save()
-            return HttpResponseRedirect('/lmdb/data/changes/')
+            return HttpResponseRedirect('/data/changes/')
     else:
         form = ChangeForm()
         form.initial['objectid'] = 1
@@ -931,7 +931,7 @@ def createChange(request):
     return render(request, 'lmdb/createChange.html', {'form' : form, 'points':points, 'lines':lines,'polys':polys})
 
 @user_uploaded
-@login_required(login_url='/lmdb/login/')
+@login_required(login_url='/login/')
 def dataUpdateChange(request, id):
     if request.POST:
         c = Change.objects.get(objectid=id)
@@ -952,7 +952,7 @@ def dataUpdateChange(request, id):
 #########################################################################################
 
 @user_uploaded
-@login_required(login_url='/lmdb/login/')
+@login_required(login_url='/login/')
 def measurements(request):
     measurements = Measurement.objects.values()
     points = []
@@ -977,7 +977,7 @@ def measurements(request):
 
 
 @user_uploaded
-@login_required(login_url='/lmdb/login/')
+@login_required(login_url='/login/')
 def measurementDetail(request, meas_id):
     measurement = get_object_or_404(Measurement, pk=meas_id)
     parameter = get_object_or_404(Parameter, pk=measurement.parameterid.objectid)
@@ -987,7 +987,7 @@ def measurementDetail(request, meas_id):
     return render(request, 'lmdb/measurementDetail.html', {'person': person, 'project' : project,'measurement' : measurement, 'parameter' : parameter, 'location' : location})
 
 @user_uploaded
-@login_required(login_url='/lmdb/login/')
+@login_required(login_url='/login/')
 def createMeasurement(request):
     if request.POST:
         postVals = request.POST.copy()
@@ -995,7 +995,7 @@ def createMeasurement(request):
         form = MeasurementForm(postVals)
         if form.is_valid():
             form.save()
-            return HttpResponseRedirect('/lmdb/data/measurements/')
+            return HttpResponseRedirect('/data/measurements/')
     else:
         form = MeasurementForm()
         form.initial['objectid'] = 1
@@ -1014,7 +1014,7 @@ def createMeasurement(request):
     return render(request, 'lmdb/createMeasurement.html', {'form' : form, 'points':points, 'lines':lines,'polys':polys})
 
 @user_uploaded
-@login_required(login_url='/lmdb/login/')
+@login_required(login_url='/login/')
 def dataUpdateMeasurement(request, id):
     if request.POST:
         m = Measurement.objects.get(objectid=id)
@@ -1036,7 +1036,7 @@ def dataUpdateMeasurement(request, id):
 #########################################################################################
 
 @user_uploaded
-@login_required(login_url='/lmdb/login/')
+@login_required(login_url='/login/')
 def collections(request):    # !!!!!!   NEED TO APPLY FKEY RESTRAINTS
     collections = Collection.objects.values()
     points = {}
@@ -1067,7 +1067,7 @@ def collections(request):    # !!!!!!   NEED TO APPLY FKEY RESTRAINTS
 
 
 @user_uploaded
-@login_required(login_url='/lmdb/login/')
+@login_required(login_url='/login/')
 def collectionDetail(request, coll_id):
     collection = get_object_or_404(Collection, pk=coll_id)
     organism = get_object_or_404(Organism, pk=collection.organismid.objectid)
@@ -1078,7 +1078,7 @@ def collectionDetail(request, coll_id):
     
 
 @user_uploaded
-@login_required(login_url='/lmdb/login/')
+@login_required(login_url='/login/')
 def createCollection(request):
     if request.POST:
         postVals = request.POST.copy()
@@ -1088,7 +1088,7 @@ def createCollection(request):
         if form.is_valid():
             form.cleaned_data['objectid']=Collection.objects.all().order_by('-objectid')[0].objectid+1
             form.save()
-            return HttpResponseRedirect('/lmdb/data/collections/')
+            return HttpResponseRedirect('/data/collections/')
     else:
         form = CollectionForm()
         form.initial['objectid'] = 1
@@ -1107,7 +1107,7 @@ def createCollection(request):
     return render(request, 'lmdb/createCollection.html', {'form' : form, 'points':points, 'lines':lines,'polys':polys})
 
 @user_uploaded
-@login_required(login_url='/lmdb/login/')
+@login_required(login_url='/login/')
 def dataUpdateCollection(request, id):
     if request.POST:
         c = Collection.objects.get(objectid=id)
@@ -1130,7 +1130,7 @@ def dataUpdateCollection(request, id):
 
 
 @user_uploaded
-@login_required(login_url='/lmdb/lmdb/login/')
+@login_required(login_url='/login/')
 def reporting(request):
     
     return render(request,'lmdb/reporting.html',{})
@@ -1159,7 +1159,7 @@ from django.contrib.auth.decorators import login_required
 
 def login_user(request):
     if request.user.is_authenticated():
-        return HttpResponseRedirect('/lmdb/')
+        return HttpResponseRedirect('/')
     username = password = ''
     if request.POST:
         username = request.POST['username']
@@ -1168,9 +1168,9 @@ def login_user(request):
     if user is not None:
         if user.is_active:
             login(request, user)
-            return HttpResponseRedirect('/lmdb/')
+            return HttpResponseRedirect('/')
     return render_to_response('login.html', context_instance=RequestContext(request))
     
 def userlogout(request):
     logout(request)
-    return HttpResponseRedirect('/lmdb/login/')
+    return HttpResponseRedirect('/login/')

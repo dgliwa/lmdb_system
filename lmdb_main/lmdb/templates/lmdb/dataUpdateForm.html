@@ -22,7 +22,7 @@
             var values = $(this).serialize();
             var objectid = $(this)[0][1].value;
             
-            var a = $.post('/lmdb/data/update/form/measurement/'+ objectid + '/', values, function(response) {
+            var a = $.post('/data/update/form/measurement/'+ objectid + '/', values, function(response) {
                 // log the response to the console
                 console.log("Response: "+response);
                 if(response==="success"){
@@ -44,7 +44,7 @@
             var values = $(this).serialize();
             var objectid = $(this)[0][1].value;
             
-            var a = $.post('/lmdb/data/update/form/collection/'+ objectid + '/', values, function(response) {
+            var a = $.post('/data/update/form/collection/'+ objectid + '/', values, function(response) {
                 // log the response to the console
                 console.log("Response: "+response);
                 if(response==="success"){
@@ -64,7 +64,7 @@
             var values = $(this).serialize();
             var objectid = $(this)[0][1].value;
             
-            var a = $.post('/lmdb/data/update/form/change/'+ objectid + '/', values, function(response) {
+            var a = $.post('/data/update/form/change/'+ objectid + '/', values, function(response) {
                 // log the response to the console
                 console.log("Response: "+response);
                 if(response==="success"){
@@ -84,7 +84,7 @@
             var values = $(this).serialize();
             var objectid = $(this)[0][1].value;
             
-            var a = $.post('/lmdb/data/update/form/sighting/'+ objectid + '/', values, function(response) {
+            var a = $.post('/data/update/form/sighting/'+ objectid + '/', values, function(response) {
                 // log the response to the console
                 console.log("Response: "+response);
                 if(response==="success"){
@@ -105,7 +105,7 @@
             
             var name = $(this).attr('name')
       
-            var a = $.post('/lmdb/reference/parameters/createFromData/', values, function(response) {
+            var a = $.post('/reference/parameters/createFromData/', values, function(response) {
     // log the response to the console
     console.log("Response: "+response);
     console.log(response['commonname']);
@@ -136,7 +136,7 @@
             e.preventDefault();
             var values = $(this).serialize();
             var name = $(this).attr('name')
-            var a = $.post('/lmdb/reference/organisms/createFromData/', values, function(response) {
+            var a = $.post('/reference/organisms/createFromData/', values, function(response) {
     // log the response to the console
     //console.log("Response: "+response);
     //console.log(response['commonname']);
@@ -158,7 +158,7 @@
     $(function(){
     $("select.kingdom").change(function(){
       var name = $(this).parent().attr('id');
-      $.getJSON("/lmdb/reference/organisms/kingdomFilter/"+$(this).val()+"/", function(j) {
+      $.getJSON("/reference/organisms/kingdomFilter/"+$(this).val()+"/", function(j) {
         var options = '<option value="">---------- </option>';
         for (var i = 0; i < j.length; i++) {
           options += '<option value="' + j[i].phylum + '">' + j[i].phylum + '</option>';
@@ -168,7 +168,7 @@
         $("#"+name+" > .phylum").attr('disabled', false);
       })
       $(this).attr('selected', 'selected');
-      $.getJSON( "/lmdb/reference/organisms/kingdom/"+$(this).val()+"/", function( data ) {
+      $.getJSON( "/reference/organisms/kingdom/"+$(this).val()+"/", function( data ) {
         var options = '<option value="">---------- </option>';
         for (var i = 0; i < data.length; i++) {
           options += '<option value="' + data[i].objectid + '">' + data[i].organismname + '</option>';
@@ -185,7 +185,7 @@ $(function(){
     $("select.phylum").change(function(){
       var name = $(this).parent().attr('id');
       console.log(name);
-      $.getJSON("/lmdb/reference/organisms/phylumFilter/"+$(this).val()+"/", function(j) {
+      $.getJSON("/reference/organisms/phylumFilter/"+$(this).val()+"/", function(j) {
         console.log(j);
         var options = '<option value="">---------- </option>';
         for (var i = 0; i < j.length; i++) {
@@ -196,7 +196,7 @@ $(function(){
         $("#"+name + " >.class_field").attr('disabled', false);
       })
       $(this).attr('selected', 'selected');
-    $.getJSON( "/lmdb/reference/organisms/phylum/"+$(this).val()+"/", function( data ) {
+    $.getJSON( "/reference/organisms/phylum/"+$(this).val()+"/", function( data ) {
         var options = '<option value="">---------- </option>';
         for (var i = 0; i < data.length; i++) {
           options += '<option value="' + data[i].objectid + '">' + data[i].organismname + '</option>';
@@ -210,7 +210,7 @@ $(function(){
 $(function(){
     $("select.class_field").change(function(){
       var name = $(this).parent().attr('id'); 
-      $.getJSON("/lmdb/reference/organisms/classFilter/"+$(this).val()+"/", function(j) {
+      $.getJSON("/reference/organisms/classFilter/"+$(this).val()+"/", function(j) {
         var options = '<option value="">---------- </option>';
         for (var i = 0; i < j.length; i++) {
           options += '<option value="' + j[i].order_field + '">' + j[i].order_field + '</option>';
@@ -220,7 +220,7 @@ $(function(){
         $("#" + name + "> .order_field").attr('disabled', false);
       })
       $(this).attr('selected', 'selected');
-      $.getJSON( "/lmdb/reference/organisms/class_field/"+$(this).val()+"/", function( data ) {
+      $.getJSON( "/reference/organisms/class_field/"+$(this).val()+"/", function( data ) {
         var options = '<option value="">---------- </option>';
         for (var i = 0; i < data.length; i++) {
           options += '<option value="' + data[i].objectid + '">' + data[i].organismname + '</option>';
@@ -234,7 +234,7 @@ $(function(){
 $(function(){
     $("select.order_field").change(function(){
       var name = $(this).parent().attr('id');
-      $.getJSON("/lmdb/reference/organisms/orderFilter/"+$(this).val()+"/", function(j) {
+      $.getJSON("/reference/organisms/orderFilter/"+$(this).val()+"/", function(j) {
         var options = '<option value="">---------- </option>';
         for (var i = 0; i < j.length; i++) {
           options += '<option value="' + j[i].family + '">' + j[i].family + '</option>';
@@ -244,7 +244,7 @@ $(function(){
         $("#" + name +" > .family").attr('disabled', false);
       })
       $(this).attr('selected', 'selected');
-      $.getJSON( "/lmdb/reference/organisms/order_field/"+$(this).val()+"/", function( data ) {
+      $.getJSON( "/reference/organisms/order_field/"+$(this).val()+"/", function( data ) {
         var options = '<option value="">---------- </option>';
         for (var i = 0; i < data.length; i++) {
           options += '<option value="' + data[i].objectid + '">' + data[i].organismname + '</option>';
@@ -258,7 +258,7 @@ $(function(){
 $(function(){
     $("select.family").change(function(){
       var name = $(this).parent().attr('id');
-      $.getJSON("/lmdb/reference/organisms/familyFilter/"+$(this).val()+"/", function(j) {
+      $.getJSON("/reference/organisms/familyFilter/"+$(this).val()+"/", function(j) {
         var options = '<option value="">---------- </option>';
         for (var i = 0; i < j.length; i++) {
           options += '<option value="' + j[i].genus + '">' + j[i].genus + '</option>';
@@ -268,7 +268,7 @@ $(function(){
         $("#" + name + " > .genus").attr('disabled', false);
       })
       $(this).attr('selected', 'selected');
-      $.getJSON( "/lmdb/reference/organisms/family/"+$(this).val()+"/", function( data ) {
+      $.getJSON( "/reference/organisms/family/"+$(this).val()+"/", function( data ) {
         var options = '<option value="">---------- </option>';
         for (var i = 0; i < data.length; i++) {
           options += '<option value="' + data[i].objectid + '">' + data[i].organismname + '</option>';
@@ -282,7 +282,7 @@ $(function(){
 $(function(){
     $("select.genus").change(function(){
       var name = $(this).parent().attr('id');
-      $.getJSON("/lmdb/reference/organisms/genusFilter/"+$(this).val()+"/", function(j) {
+      $.getJSON("/reference/organisms/genusFilter/"+$(this).val()+"/", function(j) {
         var options = '';
         console.log(j);
         for (var i = 0; i < j.length; i++) {
@@ -526,7 +526,7 @@ require([
                 alert("objectid is: " + addResults[0].objectId);
 
                 try{
-                jQuery.post('/lmdb/reference/locations/create/popup/',{'csrfmiddlewaretoken' : '{{ csrf_token }}','indicator': 'yes', 'type': 'point', 'objectid' :addResults[0].objectId}, function() {
+                jQuery.post('/reference/locations/create/popup/',{'csrfmiddlewaretoken' : '{{ csrf_token }}','indicator': 'yes', 'type': 'point', 'objectid' :addResults[0].objectId}, function() {
   alert( "success" );
 }); 
                 }
@@ -562,7 +562,7 @@ var graphic = pointLayer.graphics[pointLayer.graphics.length - 1];
                 alert("objectid is: " + addResults[0].objectId);
 
 
-try{                jQuery.post('/lmdb/reference/locations/create/popup/',{'csrfmiddlewaretoken' : '{{ csrf_token }}','indicator': 'yes', 'type': 'line', 'objectid' :addResults[0].objectId}, function() {
+try{                jQuery.post('/reference/locations/create/popup/',{'csrfmiddlewaretoken' : '{{ csrf_token }}','indicator': 'yes', 'type': 'line', 'objectid' :addResults[0].objectId}, function() {
   alert( "success" );
 }); 
                 }
@@ -601,7 +601,7 @@ try{                jQuery.post('/lmdb/reference/locations/create/popup/',{'csrf
                 alert("objectid is: " + addResults[0].objectId);
 
 try{
-               jQuery.post('/lmdb/reference/locations/create/popup/',{'csrfmiddlewaretoken' : '{{ csrf_token }}','indicator': 'yes', 'type': 'poly', 'objectid' :addResults[0].objectId}, function() {
+               jQuery.post('/reference/locations/create/popup/',{'csrfmiddlewaretoken' : '{{ csrf_token }}','indicator': 'yes', 'type': 'poly', 'objectid' :addResults[0].objectId}, function() {
   alert( "success" );
 }); 
                 }

@@ -4,9 +4,6 @@ from lmdb import views
 
 urlpatterns = patterns('',
     url(r'^logout/$', views.userlogout, name='logout'),
-    url(r'^login/$', 'django.contrib.auth.views.login', {
-    'template_name': 'login.html'
-}),
     url(r'^$', views.index, name='index'),
     url(r'^updateUser/$', views.updateUser, name='updateUser'),
 #    url(r'^userMan/form/$', views.userManForm, name='userManForm'),
