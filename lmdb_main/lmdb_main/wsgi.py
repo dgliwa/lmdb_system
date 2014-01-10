@@ -20,7 +20,7 @@ import sys
 # mod_wsgi daemon mode with each site in its own daemon process, or use
 # os.environ["DJANGO_SETTINGS_MODULE"] = "lmdb_main.settings"
 sys.path.append('/www/lmdb_deploy/www/lmdb_system/lmdb_main/')
-sys.path.append('/www/lmdb_deploy/www/lmdb_system/lmdb_main/lmdb_main')
+sys.path.append('/www/lmdb_deploy/www/lmdb_system/lmdb_main/lmdb_main/')
 sys.path.append('/www/lmdb_deploy/www/lmdb_system/')
 
 
