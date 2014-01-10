@@ -19,9 +19,8 @@ import sys
 # if running multiple sites in the same mod_wsgi process. To fix this, use
 # mod_wsgi daemon mode with each site in its own daemon process, or use
 # os.environ["DJANGO_SETTINGS_MODULE"] = "lmdb_main.settings"
-os.path.join(os.path.abspath(os.path.dirname(__file__)), '..')
-os.path.join(os.path.abspath(os.path.dirname(__file__)), '.')
-
+sys.path.insert(0,"/www/lmdb_deploy/www/lmdb_system/lmdb_main")
+sys.path.insert(0,"/www/lmdb_deploy/www/lmdb_system/lmdb_main/lmdb_main")
 
 
 
