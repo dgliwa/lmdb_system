@@ -20,6 +20,8 @@ import sys
 # mod_wsgi daemon mode with each site in its own daemon process, or use
 # os.environ["DJANGO_SETTINGS_MODULE"] = "lmdb_main.settings"
 os.path.join(os.path.abspath(os.path.dirname(__file__)), '..')
+os.path.join(os.path.abspath(os.path.dirname(__file__)), '.')
+
 
 
 
