@@ -28,7 +28,7 @@ from django.core.wsgi import get_wsgi_application
 application = get_wsgi_application()
 
 
-sys.path.append('/www/lmdb_deploy/lmdb_system/lmdb_main/')
+sys.path.append('/www/lmdb_deploy/www/lmdb_system/lmdb_main/lmdb_main')
 # Apply WSGI middleware here.
 # from helloworld.wsgi import HelloWorldApplication
 # application = HelloWorldApplication(application)
