@@ -11,5 +11,5 @@ def user_uploaded(view_func):
         if People.objects.filter(objectid=request.user.id).count() != 0:
             return view_func(request, *args, **kwargs)
         else:
-            return HttpResponseRedirect('/lmdb/updateUser/')
+            return HttpResponseRedirect('/updateUser/')
     return wrapper
