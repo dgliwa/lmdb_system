@@ -1,0 +1,120 @@
+{% extends "admin/base.html" %}
+{% load i18n admin_static admin_modify %}
+{% load admin_urls %}
+
+{% block extrastyle %}
+<link rel="stylesheet" type="text/css" href="{% static 'admin/css/forms.css' %}" />
+
+<script src="{% static 'admin/js/core.js' %}"></script>
+<script src="{% static 'admin/js/admin/RelatedObjectLookups.js' %}"></script>
+<script src="{% static 'admin/js/jquery.js' %}" ></script>
+<script src="{% static 'admin/js/jquery.init.js' %}" ></script>
+<script src="{% static 'admin/js/actions.js' %}" ></script>
+<script src="{% static 'admin/js/SelectBox.js' %}" ></script>
+<script src="{% static 'admin/js/admin/SelectFilter2.js' %}" ></script>
+<script src="{% static 'admin/js/calendar.js' %}" ></script>
+<script src="{% static 'admin/js/admin/DateTimeShortcuts.js' %}" ></script>
+
+{% endblock %}
+
+
+{% block title %}{{ title }} | {% trans 'Django site admin' %}{% endblock %}
+
+{% block branding %}
+<h1 id="site-name">{% trans 'Django administration' %}</h1>
+{% endblock %}
+
+{% block breadcrumbs %}
+    <div class="breadcrumbs">
+    <a href="{% url 'admin:index' %}">{% trans 'Home' %}</a> &rsaquo; <a href="/admin/auth/">Auth</a> &rsaquo; <a href="/admin/auth/user">Users</a> &rsaquo; Add
+    {% if title %} &rsaquo; {{ title }}{% endif %}
+    </div>
+    {% endblock %}
+
+{% block nav-global %}{% endblock %}
+{% block content %}
+
+<form id='add_users' action="/admin/auth/user/add/" method='post'>
+	{% csrf_token %}
+	Username: <input id="id_username" type="text" name="username" maxlength="30"></input><br>
+	Password: <input id="id_password1" type="password" name="password1"></input><br>
+	Password Verification: <input id="id_password2" type="password" name="password2"></input><br>
+	<div>
+		First Name: <input id="id_first_name" class="vTextField" type="text" name="first_name" maxlength="30"></input><br>
+		Last Name: <input id="id_last_name" class="vTextField" type="text" name="last_name" maxlength="30"></input><br>
+		Email: <input id="id_email" class="vTextField" type="text" name="email" maxlength="75"></input><br>
+	</div>
+
+	<div>
+		<input checked="checked" id="id_is_active" name="is_active" type="checkbox">
+		<label for="id_is_active" class="vCheckboxLabel">Active</label>
+		<p class="help">Designates whether this user should be treated as active. Unselect this instead of deleting accounts.</p>
+
+		<input checked="checked" id="id_is_staff" name="is_staff" type="checkbox">
+		<label for="id_is_staff" class="vCheckboxLabel">Staff status</label>
+		<p class="help">Designates whether the user can log into this admin site.</p>
+
+		<input checked="checked" id="id_is_superuser" name="is_superuser" type="checkbox">
+		<label for="id_is_superuser" class="vCheckboxLabel">Superuser status</label>
+		<p class="help">Designates that this user has all permissions without explicitly assigning them.</p>
+
+	</div>
+	<div>
+		Groups:
+		<p class="help">The groups this user belongs to. A user will get all permissions granted to each of his/her group. Hold down "Control", or "Command" on a Mac, to select more than one.</p>
+		<label for="id_groups">Groups:</label>
+
+		<div class="selector">
+			<div class="selector-available">
+				<h2>Available groups <img title="This is the list of available groups. You may choose some by selecting them in the box below and then clicking the &quot;Choose&quot; arrow between the two boxes." class="help help-tooltip" src="/static/admin/img/icon-unknown.gif" height="10" width="10"></h2>
+				<p class="selector-filter" id="id_groups_filter">
+				<label for="id_groups_input">
+					<img title="Type into this box to filter down the list of available groups." alt="" class="help-tooltip" src="/static/admin/img/selector-search.gif"></label> 
+				<input id="id_groups_input" placeholder="Filter" type="text"></p>
+
+				<select multiple="multiple" class="filtered" id="id_groups_from" name="groups_old">
+					
+				</select>
+				<a class="selector-chooseall" id="id_groups_add_all_link" href="javascript: (function(){ SelectBox.move_all(&quot;id_groups_from&quot;, &quot;id_groups_to&quot;); SelectFilter.refresh_icons(&quot;id_groups&quot;);})()" title="Click to choose all groups at once.">Choose all</a>
+			</div>
+			<ul class="selector-chooser">
+				<li><a class="selector-add" id="id_groups_add_link" href="javascript: (function(){ SelectBox.move(&quot;id_groups_from&quot;,&quot;id_groups_to&quot;); SelectFilter.refresh_icons(&quot;id_groups&quot;);})()" title="Choose">Choose</a></li>
+
+				<li><a class="selector-remove" id="id_groups_remove_link" href="javascript: (function(){ SelectBox.move(&quot;id_groups_to&quot;,&quot;id_groups_from&quot;); SelectFilter.refresh_icons(&quot;id_groups&quot;);})()" title="Remove">Remove</a></li>
+			</ul>
+			<div class="selector-chosen">
+				<h2>Chosen groups <img title="This is the list of chosen groups. You may remove some by selecting them in the box below and then clicking the &quot;Remove&quot; arrow between the two boxes." class="help help-tooltip" src="/static/admin/img/icon-unknown.gif" height="10" width="10"></h2>
+				<select style="height: 219px;" class="filtered" name="groups" size="0" multiple="multiple" id="id_groups_to">
+
+
+				</select>
+				<a class="selector-clearall" id="id_groups_remove_all_link" href="javascript: (function() { SelectBox.move_all(&quot;id_groups_to&quot;, &quot;id_groups_from&quot;); SelectFilter.refresh_icons(&quot;id_groups&quot;);})()" title="Click to remove all chosen groups at once.">Remove all</a>
+			</div>
+		</div>
+	</div>
+	<div>
+		<div><p class="help">Specific permissions for this user. Hold down "Control", or "Command" on a Mac, to select more than one.</p>
+                    
+                    
+                        <label for="id_user_permissions">User permissions:</label>
+                        
+                            <script type="text/javascript">addEvent(window, "load", function(e) {SelectFilter.init("id_user_permissions", "user permissions", 0, "/static/admin/"); });</script>
+
+                        
+                    
+                    
+                        
+                    
+                <div class="selector"><div class="selector-available"><h2>Available user permissions <img title="This is the list of available user permissions. You may choose some by selecting them in the box below and then clicking the &quot;Choose&quot; arrow between the two boxes." class="help help-tooltip" src="/static/admin/img/icon-unknown.gif" height="10" width="10"></h2><p class="selector-filter" id="id_user_permissions_filter"><label for="id_user_permissions_input"><img title="Type into this box to filter down the list of available user permissions." alt="" class="help-tooltip" src="/static/admin/img/selector-search.gif"></label> <input id="id_user_permissions_input" placeholder="Filter" type="text"></p><select multiple="multiple" class="filtered" id="id_user_permissions_from" name="user_permissions_old">
+
+                	{% for p in perms %}
+						<option value='{{p.objectid}}'>{{p.codename}} || {{p.name}}</option>
+					{% endfor %}
+
+
+                </select><a class="selector-chooseall active" id="id_user_permissions_add_all_link" href="javascript: (function(){ SelectBox.move_all(&quot;id_user_permissions_from&quot;, &quot;id_user_permissions_to&quot;); SelectFilter.refresh_icons(&quot;id_user_permissions&quot;);})()" title="Click to choose all user permissions at once.">Choose all</a></div><ul class="selector-chooser"><li><a class="selector-add" id="id_user_permissions_add_link" href="javascript: (function(){ SelectBox.move(&quot;id_user_permissions_from&quot;,&quot;id_user_permissions_to&quot;); SelectFilter.refresh_icons(&quot;id_user_permissions&quot;);})()" title="Choose">Choose</a></li><li><a class="selector-remove" id="id_user_permissions_remove_link" href="javascript: (function(){ SelectBox.move(&quot;id_user_permissions_to&quot;,&quot;id_user_permissions_from&quot;); SelectFilter.refresh_icons(&quot;id_user_permissions&quot;);})()" title="Remove">Remove</a></li></ul><div class="selector-chosen"><h2>Chosen user permissions <img title="This is the list of chosen user permissions. You may remove some by selecting them in the box below and then clicking the &quot;Remove&quot; arrow between the two boxes." class="help help-tooltip" src="/static/admin/img/icon-unknown.gif" height="10" width="10"></h2><select style="height: 219px;" class="filtered" name="user_permissions" size="0" multiple="multiple" id="id_user_permissions_to"><option value="2">auth | permission | Can change permission</option></select><a class="selector-clearall active" id="id_user_permissions_remove_all_link" href="javascript: (function() { SelectBox.move_all(&quot;id_user_permissions_to&quot;, &quot;id_user_permissions_from&quot;); SelectFilter.refresh_icons(&quot;id_user_permissions&quot;);})()" title="Click to remove all chosen user permissions at once.">Remove all</a></div></div></div>
+
+	</div>
+</form>
+
+{% endblock %}
