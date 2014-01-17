@@ -116,7 +116,7 @@ require([
 
     map.on("layers-add-result", initEditing);
     
-    pointLayer = new FeatureLayer("http://147.126.65.155/gis/rest/services/campus/lurec_lmdb/FeatureServer/0", {
+    pointLayer = new FeatureLayer("http://147.126.65.155:6080/arcgis/rest/services/campus/lurec_lmdb/FeatureServer/0", {
         mode: FeatureLayer.MODE_SNAPSHOT,
         outFields: ["*"]
 
@@ -126,17 +126,18 @@ require([
     
     for( var i=0;  i<{{points}}.length; i++){
         if (queryString == ""){
-            queryString += "objectid !=" + {{points}}[i];
+            queryString += "objectid <>" + {{points}}[i];
         }
         else{
-            queryString += "AND objectid !=" + {{points}}[i];
+            queryString += " AND objectid <>" + {{points}}[i];
         }
     
     }
+    console.log(queryString)
     pointLayer.setDefinitionExpression(queryString);
     }
    
-    lineLayer = new FeatureLayer("http://147.126.65.155/gis/rest/services/campus/lurec_lmdb/FeatureServer/1", {
+    lineLayer = new FeatureLayer("http://147.126.65.155:6080/arcgis/rest/services/campus/lurec_lmdb/FeatureServer/1", {
         mode: FeatureLayer.MODE_SNAPSHOT,
         outFields: ["*"]
     });
@@ -144,15 +145,16 @@ require([
     var queryString = ""
     for( var i=0; i<{{lines}}.length;i++){
         if (queryString == ""){
-            queryString += "objectid !=" + {{lines}}[i];
+            queryString += "objectid <>" + {{lines}}[i];
         }
         else{
-            queryString += "AND objectid !=" + {{lines}}[i];
+            queryString += " AND objectid <>" + {{lines}}[i];
         }
     
     }
+    console.log(queryString)
     lineLayer.setDefinitionExpression(queryString);    }
-    polyLayer = new FeatureLayer("http://147.126.65.155/gis/rest/services/campus/lurec_lmdb/FeatureServer/2", {
+    polyLayer = new FeatureLayer("http://147.126.65.155:6080/arcgis/rest/services/campus/lurec_lmdb/FeatureServer/2", {
         mode: FeatureLayer.MODE_SNAPSHOT,
         outFields: ["*"]
     });
@@ -161,13 +163,14 @@ require([
    var queryString = ""
     for( var i=0; i<{{polys}}.length; i++){
         if (queryString == ""){
-            queryString += "objectid !=" + {{polys}}[i];
+            queryString += "objectid <>" + {{polys}}[i];
         }
         else{
-            queryString += "AND objectid !=" + {{polys}}[i];
+            queryString += " AND objectid <>" + {{polys}}[i];
         }
     
     }
+    console.log(queryString)
     polyLayer.setDefinitionExpression(queryString);}
     pointinfoTemplate = new esri.InfoTemplate("ObjectID : ${objectid}",
         "<button onClick='addPoint(${objectid})'>Sync Point</button>");

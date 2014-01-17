@@ -414,9 +414,9 @@ require([
 
         var templatePicker = new TemplatePicker({
             featureLayers: layers,
-            rows: "auto",
-            columns: 2,
-            grouping: true,
+            rows: 1,
+            columns: 3,
+            grouping: false,
             style: "height: auto; overflow: auto;"
         }, "templatePickerDiv");
 
@@ -454,6 +454,65 @@ require([
     
 
 });
+
+function geocode(lonNum, latNum, name, desc) {
+    point = new esri.geometry.geographicToWebMercator(esri.geometry.Point(lonNum, latNum, new esri.SpatialReference({
+        wkid: 4326
+    })));
+    var myGraphic = new esri.Graphic(point);
+    myGraphic.setAttributes({
+        'description': desc
+    })
+    try {
+        lmdbPointLayer.applyEdits([myGraphic], null, null);
+    } catch (err) {
+        console.log(err);
+    }
+    addGraphic(point);
+}
+
+function addGraphic(geometry) {
+    map.graphics.clear();
+    var symbol = new esri.symbol.SimpleMarkerSymbol(esri.symbol.SimpleMarkerSymbol.STYLE_SQUARE, 10);
+    map.graphics.add(new esri.Graphic(geometry, symbol));
+}
+
+
+function latlonValidation() {
+    var lat = document.forms["registration"]["latitude"].value;
+    var latNum = Number(lat);
+    var lon = document.forms["registration"]["longitude"].value;
+    var lonNum = Number(lon);
+    var name = document.forms["registration"]["name"].value;
+    var desc = document.forms["registration"]["description"].value;
+
+
+
+    var validLat = (lat.match(/^[-+]?(?:\d+\.?\d*|\.\d+)$/));
+    var validLon = (lon.match(/^[-+]?(?:\d+\.?\d*|\.\d+)$/));
+
+    if (!validLat) {
+        alert("Please enter numeric characters only for Latitude. Integers or Decimals with +/- signs are accepted.");
+        return false;
+    }
+
+    if (!validLon) {
+        alert("Please enter numeric characters only for Longitude. Integers or Decimals with +/- signs are accepted.");
+        return false;
+    }
+
+    if ((latNum <= -90) || (latNum >= 90)) {
+        alert("Please enter a value for latitude between -90.0 and 90.0");
+        return false;
+    }
+    if ((lonNum <= -180) || (lonNum >= 180)) {
+        alert("Please enter a value for longitude between -180.0 and 180.0");
+        return false;
+    }
+    alert('Form Succesfully Submitted');
+    geocode(lonNum, latNum, name, desc);
+    return true;
+}
 
 
 </script>
