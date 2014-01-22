@@ -147,7 +147,7 @@ INSTALLED_APPS = (
     'django.contrib.admindocs',
     'lmdb',
     'customadmin',
-    'django_extensions',
+#    'django_extensions',
 
 )
 
