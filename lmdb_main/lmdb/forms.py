@@ -3,6 +3,7 @@ from models import Parameter, Permit, Event, Project, People, Location, Organism
 from django.forms.extras.widgets import Select
 from django.contrib.auth.models import User
 from validators import *
+from lmdb.models import PeopleProject
 
 
 
@@ -108,6 +109,14 @@ class MeasurementForm(forms.ModelForm):
     medium = forms.CharField(max_length=50, required=False)
     class Meta:
         model = Measurement
+    def __init__(self, *args, **kwargs):
+        userid = kwargs.pop('user')
+        super(MeasurementForm, self).__init__(*args, **kwargs)
+        peopleproject = PeopleProject.objects.filter(personid=userid)
+        projects = []
+        for pp in peopleproject:
+            projects.append(pp.projectid.objectid)
+        self.fields['projectid'].queryset = Project.objects.filter(objectid__in = projects)
         
 class SightingForm(forms.ModelForm):
     objectid = forms.IntegerField(widget=forms.HiddenInput())
@@ -121,6 +130,14 @@ class SightingForm(forms.ModelForm):
     notes = forms.CharField(max_length=255, required=False)
     class Meta:
         model = Sighting
+    def __init__(self, *args, **kwargs):
+        userid = kwargs.pop('user')
+        super(SightingForm, self).__init__(*args, **kwargs)
+        peopleproject = PeopleProject.objects.filter(personid=userid)
+        projects = []
+        for pp in peopleproject:
+            projects.append(pp.projectid.objectid)
+        self.fields['projectid'].queryset = Project.objects.filter(objectid__in = projects)
 
 class CollectionForm(forms.ModelForm):
     objectid = forms.IntegerField(widget=forms.HiddenInput())
@@ -134,6 +151,14 @@ class CollectionForm(forms.ModelForm):
     personid = forms.ModelChoiceField(queryset = People.objects.all(), required = False)
     class Meta:
         model = Collection
+    def __init__(self, *args, **kwargs):
+        userid = kwargs.pop('user')
+        super(CollectionForm, self).__init__(*args, **kwargs)
+        peopleproject = PeopleProject.objects.filter(personid=userid)
+        projects = []
+        for pp in peopleproject:
+            projects.append(pp.projectid.objectid)
+        self.fields['projectid'].queryset = Project.objects.filter(objectid__in = projects)
         
 class ChangeForm(forms.ModelForm):
     objectid = forms.IntegerField(widget=forms.HiddenInput())
@@ -152,6 +177,14 @@ class ChangeForm(forms.ModelForm):
     personid = forms.ModelChoiceField(queryset = People.objects.all(), required = False)
     class Meta:
         model = Change
+    def __init__(self, *args, **kwargs):
+        userid = kwargs.pop('user')
+        super(ChangeForm, self).__init__(*args, **kwargs)
+        peopleproject = PeopleProject.objects.filter(personid=userid)
+        projects = []
+        for pp in peopleproject:
+            projects.append(pp.projectid.objectid)
+        self.fields['projectid'].queryset = Project.objects.filter(objectid__in = projects)
         
 class PeopleForm(forms.ModelForm):
     objectid = forms.IntegerField(widget=forms.HiddenInput())

@@ -122,19 +122,24 @@ def dataUpdateForm(request):
                 split = dict[val].split(',')
                 if split[0] == 'Change':
                     c = Change.objects.get(objectid=int(split[1]))
-                    form = ChangeForm(instance=c)
+                    form = ChangeForm(instance=c, user=request.user.id)
+                    form.initial['projectid'] = c.projectid
+                    print form.initial['projectid'].projectname
                     changeforms.append(form)
                 elif split[0] == 'Sighting':
                     s = Sighting.objects.get(objectid=int(split[1]))
-                    form = SightingForm(instance=s)
+                    form = SightingForm(instance=s, user=request.user.id)
+                    form.initial['projectid'] = s.projectid
                     sightingforms.append(form)
                 elif split[0] == 'Measurement':
                     m = Measurement.objects.get(objectid=int(split[1]))
-                    form = MeasurementForm(instance=m)
+                    form = MeasurementForm(instance=m, user=request.user.id)
+                    form.initial['projectid'] = m.projectid
                     measurementforms.append(form)
                 elif split[0] == 'Collection':
                     c = Collection.objects.get(objectid=int(split[1]))
-                    form = CollectionForm(instance=c)
+                    form = CollectionForm(instance=c, user=request.user.id)
+                    form.initial['projectid'] = c.projectid
                     collectionforms.append(form)
         if len(collectionforms) == 0:
             collectionforms = None
@@ -825,12 +830,12 @@ def createSighting(request):
     if request.POST:
         postVals = request.POST.copy()
         postVals['objectid'] = Sighting.objects.all().order_by('-objectid')[0].objectid+1
-        form = SightingForm(postVals)
+        form = SightingForm(postVals, user=request.user.id)
         if form.is_valid():
             form.save()
             return HttpResponseRedirect('/data/sightings/')
     else:
-        form = SightingForm()
+        form = SightingForm(user=request.user.id)
         form.initial['objectid'] = 1
     points = []
     lines = []
@@ -851,7 +856,7 @@ def createSighting(request):
 def dataUpdateSighting(request, id):
     if request.POST:
         s = Sighting.objects.get(objectid=id)
-        form = SightingForm(request.POST, instance = s)
+        form = SightingForm(request.POST, instance = s, user=request.user.id)
         if form.is_valid():
             form.save()
             return HttpResponse('success')
@@ -909,13 +914,13 @@ def createChange(request):
     if request.POST:
         postVals = request.POST.copy()
         postVals['objectid'] = Change.objects.all().order_by('-objectid')[0].objectid+1
-        form = ChangeForm(postVals)
+        form = ChangeForm(postVals, user=request.user.id)
         form.initial['objectid'] = Change.objects.all().order_by('-objectid')[0].objectid+1
         if form.is_valid():
             form.save()
             return HttpResponseRedirect('/data/changes/')
     else:
-        form = ChangeForm()
+        form = ChangeForm(user=request.user.id)
         form.initial['objectid'] = 1
     points = []
     lines = []
@@ -936,7 +941,7 @@ def createChange(request):
 def dataUpdateChange(request, id):
     if request.POST:
         c = Change.objects.get(objectid=id)
-        form = ChangeForm(request.POST, instance = c)
+        form = ChangeForm(request.POST, instance = c, user=request.user.id)
         if form.is_valid():
             form.save()
             return HttpResponse('success')
@@ -993,12 +998,12 @@ def createMeasurement(request):
     if request.POST:
         postVals = request.POST.copy()
         postVals['objectid'] = Measurement.objects.all().order_by('-objectid')[0].objectid+1
-        form = MeasurementForm(postVals)
+        form = MeasurementForm(data=postVals, user=request.user.id)
         if form.is_valid():
             form.save()
             return HttpResponseRedirect('/data/measurements/')
     else:
-        form = MeasurementForm()
+        form = MeasurementForm(user=request.user.id)
         form.initial['objectid'] = 1
     points = []
     lines = []
@@ -1019,7 +1024,7 @@ def createMeasurement(request):
 def dataUpdateMeasurement(request, id):
     if request.POST:
         m = Measurement.objects.get(objectid=id)
-        form = MeasurementForm(request.POST, instance = m)
+        form = MeasurementForm(request.POST, instance = m, user=request.user.id)
         if form.is_valid():
             form.save()
             return HttpResponse('success')
@@ -1084,14 +1089,14 @@ def createCollection(request):
     if request.POST:
         postVals = request.POST.copy()
         postVals['objectid'] = Collection.objects.all().order_by('-objectid')[0].objectid+1
-        form = CollectionForm(postVals)
+        form = CollectionForm(postVals, user=request.user.id)
         #form.fields['objectid'].initial = Collection.objects.all().order_by('-objectid')[0].objectid+1
         if form.is_valid():
             form.cleaned_data['objectid']=Collection.objects.all().order_by('-objectid')[0].objectid+1
             form.save()
             return HttpResponseRedirect('/data/collections/')
     else:
-        form = CollectionForm()
+        form = CollectionForm(user=request.user.id)
         form.initial['objectid'] = 1
     points = []
     lines = []
@@ -1112,7 +1117,7 @@ def createCollection(request):
 def dataUpdateCollection(request, id):
     if request.POST:
         c = Collection.objects.get(objectid=id)
-        form = CollectionForm(request.POST, instance = c)
+        form = CollectionForm(request.POST, instance = c, user=request.user.id)
         if form.is_valid():
             form.save()
             return HttpResponse('success')
