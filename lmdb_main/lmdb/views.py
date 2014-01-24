@@ -124,7 +124,6 @@ def dataUpdateForm(request):
                     c = Change.objects.get(objectid=int(split[1]))
                     form = ChangeForm(instance=c, user=request.user.id)
                     form.initial['projectid'] = c.projectid
-                    print form.initial['projectid'].projectname
                     changeforms.append(form)
                 elif split[0] == 'Sighting':
                     s = Sighting.objects.get(objectid=int(split[1]))
@@ -393,8 +392,8 @@ def createProject(request):
         form = ProjectForm(postVals)
         if form.is_valid():
                 form.save()
-        if postVals['post'] is not None:
-            project = Project.objects.get(objectid=postVals['objectid'])
+        project = Project.objects.get(objectid=postVals['objectid'])
+        if postVals['post'] == 'yes':            
             people = postVals['people'].split(',')
             for person in people:
                 p = People.objects.get(objectid=int(person))
@@ -406,8 +405,23 @@ def createProject(request):
                 pp.projectid = project
                 print pp
                 pp.save()
+            if PeopleProject.objects.count() == 0:
+                pp = PeopleProject(objectid=1)
+            else:
+                pp = PeopleProject(objectid = PeopleProject.objects.all().order_by('-objectid')[0].objectid+1)
+            pp.personid = request.user.id
+            pp.projectid = project
+            print pp
+            pp.save()
             return HttpResponseRedirect('/reference/projects/')
         else:
+            if PeopleProject.objects.count() == 0:
+                pp = PeopleProject(objectid=1)
+            else:
+                pp = PeopleProject(objectid = PeopleProject.objects.all().order_by('-objectid')[0].objectid+1)
+            pp.personid = People.objects.get(objectid=request.user.id)
+            pp.projectid = project
+            pp.save()
             return HttpResponseRedirect('/reference/projects/')
     else:
         form = ProjectForm()

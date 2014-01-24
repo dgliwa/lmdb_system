@@ -43,6 +43,12 @@ $(document).ready(function(){
     		console.log(data);
   
     	}
+        else{
+            $('<input />').attr('type', 'hidden')
+            .attr('name', 'post')
+            .attr('value', 'no')
+            .appendTo('#createProject');
+        }
     	$('#createProject').submit();
     	
     })
