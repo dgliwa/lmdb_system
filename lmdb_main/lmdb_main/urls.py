@@ -1,6 +1,7 @@
 from django.conf.urls import patterns, include, url
 from django.views.generic import TemplateView
 from customadmin.views import addUsers
+from proxy.views import proxy_to
 
 # Uncomment the next two lines to enable the admin:
 from django.contrib import admin
@@ -19,5 +20,5 @@ urlpatterns = patterns('',
      url(r'^admin/', include(admin.site.urls)),
      url(r'^', include('lmdb.urls', namespace='lmdb')),
      url(r'^login/$', 'lmdb.views.login_user'),
-     
+     url(r'^proxy/(?P<path>.*)$', proxy_to),
 )
