@@ -46,7 +46,7 @@ require([
    // parser.parse();
 
     // refer to "Using the Proxy Page" for more information:  https://developers.arcgis.com/en/javascript/jshelp/ags_proxy.html
-    esriConfig.defaults.io.proxyUrl = "/proxy";
+    esriConfig.defaults.io.proxyUrl = "/proxy/";
     esriConfig.defaults.io.alwaysUseProxy = false
     esriConfig.defaults.io.postLength=100000
     // This service is for development and testing purposes only. We recommend that you create your own geometry service for use within your applications. 
@@ -386,7 +386,7 @@ function signIn() {
           // clientid may not be necessary; try commented out first, but this is the correct syntax.
           //clientid: "ref.https://lmdb.luc.edu/"  
         },
-        handleAs: "json",
+        handleAs: "text",
         load: tokenObtained,
         error: tokenRequestFailed
       });
@@ -407,8 +407,6 @@ function signIn() {
       infoTemplate:infoTemplate,
       outFields:["*"]
      });
-     console.log(lmdb_point)
-     console.log('hello world')
       map.addLayer(lmdb_point);
 }
 
