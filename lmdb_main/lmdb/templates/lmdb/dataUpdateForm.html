@@ -453,26 +453,65 @@ require([
     });
 
     map.on("layers-add-result", initEditing);
-    if({{points}}.length != 0){
-    pointLayer = new FeatureLayer("http://147.126.65.155/gis/rest/services/campus/lurec_lmdb/FeatureServer/0", {
-        mode: FeatureLayer.MODE_SNAPSHOT,
-        outFields: ["*"]
 
-    });
-    var queryString = ""
-    for( var i=0;  i<{{points}}.length; i++){
-        if (queryString == ""){
-            queryString += "objectid =" + {{points}}[i];
-        }
-        else{
-            queryString += "OR objectid =" + {{points}}[i];
-        }
+
+
+    dojo.connect(map, "onLoad",signIn);
+
+function signIn() {
+        console.log('signing in')
+      //dojo.byId("signInStatus").innerHTML = "Creating token...";
+
+      // Get token from the ArcGIS Server Token Service.
+      //
+      esri.request({
+        url: "https://147.126.65.155:6443/arcgis/tokens/",
+        content: {
+          request: "getToken",
+          username: "lmdb_user",
+          password: "lmdb",
+          // clientid may not be necessary; try commented out first, but this is the correct syntax.
+          //clientid: "ref.https://lmdb.luc.edu/"  
+        },
+        handleAs: "text",
+        load: tokenObtained,
+        error: tokenRequestFailed
+      });
+    }
+
+    function tokenObtained(response) {
+      //dojo.byId("signInStatus").innerHTML = "Token created. Accessing the service...";
+
+      // Add the secure feature service to the map
+      // Note that the token is appended to the URL
+      // when constructing the layer.
+      console.log('token acquired')
+     if({{points}}.length != 0){
+         var pointFeatureLayerURL = "https://147.126.65.155:6443/arcgis/rest/services/campus/lurec_lmdb/FeatureServer/0?token=" + response;
+
+     var queryString = ""
+     for( var i=0;  i<{{points}}.length; i++){
+         if (queryString == ""){
+             queryString += "objectid =" + {{points}}[i];
+         }
+         else{
+             queryString += "OR objectid =" + {{points}}[i];
+         }
     
-    }
-    pointLayer.setDefinitionExpression(queryString);
-    }
+     }
+
+
+    pointLayer = new FeatureLayer(pointFeatureLayerURL ,{
+        mode: FeatureLayer.MODE_SNAPSHOT,
+        outFields:["*"]
+     });
+         pointLayer.setDefinitionExpression(queryString);
+
+
     if ({{lines}}.length != 0){
-    lineLayer = new FeatureLayer("http://147.126.65.155/gis/rest/services/campus/lurec_lmdb/FeatureServer/1", {
+        var lineFeatureLayerURL = "https://147.126.65.155:6443/arcgis/rest/services/campus/lurec_lmdb/FeatureServer/1?token=" + response;
+
+    lineLayer = new FeatureLayer(lineFeatureLayerURL, {
         mode: FeatureLayer.MODE_SNAPSHOT,
         outFields: ["*"]
     });
@@ -488,7 +527,9 @@ require([
     }
     lineLayer.setDefinitionExpression(queryString);    }
     if({{polys}}.length!=0){
-    polyLayer = new FeatureLayer("http://147.126.65.155/gis/rest/services/campus/lurec_lmdb/FeatureServer/2", {
+        var polyFeatureLayerURL = "https://147.126.65.155:6443/arcgis/rest/services/campus/lurec_lmdb/FeatureServer/2?token=" + response;
+
+    polyLayer = new FeatureLayer(polyFeatureLayerURL, {
         mode: FeatureLayer.MODE_SNAPSHOT,
         outFields: ["*"]
     });
@@ -503,20 +544,63 @@ require([
     
     }
     polyLayer.setDefinitionExpression(queryString);}
-    infoTemplate = new esri.InfoTemplate("Object ID : ${objectid}",
-        "<input class=\"hidden\" id = \"locId\" value=\"${objectid}\"/>" +
-        "You have selected this location.  Click the button to verify." +
-        "<button class='btn btn-lg btn-primary' type='button' onclick='verify(${objectid})'>Verify</button>");
+
+
+       infoTemplate = new esri.InfoTemplate("Object ID : ${objectid}",
+         "<input class=\"hidden\" id = \"locId\" value=\"${objectid}\"/>" +
+         "You have selected to use this location.");
+
 
     if (pointLayer != null){
-       pointLayer.setInfoTemplate(infoTemplate);
+        pointLayer.setInfoTemplate(infoTemplate);
+     }
+     if (lineLayer != null){
+         lineLayer.setInfoTemplate(infoTemplate);
+     }
+     if (polyLayer != null){
+         polyLayer.setInfoTemplate(infoTemplate);
+     }
+
+
+           if( pointLayer == null || lineLayer == null || polyLayer == null){
+         if(pointLayer!=null && lineLayer !=null){
+             map.addLayers([pointLayer,lineLayer]);
+         }
+         else if(pointLayer!=null && polyLayer!=null){
+             map.addLayers([pointLayer,polyLayer]);
+         }
+         else if(lineLayer!=null && polyLayer!=null){
+             map.addLayers([lineLayer,polyLayer]);
+         }
+         else if(pointLayer==null && lineLayer == null){
+             map.addLayers([polyLayer]);
+         }
+         else if(lineLayer==null && polyLayer==null){
+             map.addLayers([pointLayer]);
+         }
+         else if(pointLayer==null && polyLayer==null){
+             map.addLayers([lineLayer]);
+         }
     }
-    if (lineLayer != null){
-        lineLayer.setInfoTemplate(infoTemplate);
+    else{
+        map.addLayers([pointLayer,lineLayer,polyLayer]);
     }
-    if (polyLayer != null){
-        polyLayer.setInfoTemplate(infoTemplate);
+      
+  }
+}
+
+// for testing only
+function tokenRequestFailed(error) {
+    console.log(error)
+      dojo.byId("signInStatus").innerHTML = "Unable to create token. Please check your username/password";
     }
+
+
+
+
+
+
+
 
     dojo.connect(map, "onLayersAddResult", initEditing);
 
@@ -631,32 +715,7 @@ try{
 
         });
 
-      if( pointLayer == null || lineLayer == null || polyLayer == null){
-         if(pointLayer!=null && lineLayer !=null){
-             map.addLayers([pointLayer,lineLayer]);
-         }
-         else if(pointLayer!=null && polyLayer!=null){
-             map.addLayers([pointLayer,polyLayer]);
-         }
-         else if(lineLayer!=null && polyLayer!=null){
-             map.addLayers([lineLayer,polyLayer]);
-         }
-         else if(pointLayer==null && lineLayer == null){
-             map.addLayers([polyLayer]);
-         }
-         else if(lineLayer==null && polyLayer==null){
-             map.addLayers([pointLayer]);
-         }
-         else if(pointLayer==null && polyLayer==null){
-             map.addLayers([lineLayer]);
-         }
-    }
-    else{
-        map.addLayers([pointLayer,lineLayer,polyLayer]);
-    }
-    map.addLayers([pointLayer,lineLayer,polyLayer]);
-
-
+      
 
     function initEditing(evt) {
         console.log("initEditing", evt);

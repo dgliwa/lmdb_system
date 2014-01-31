@@ -124,25 +124,89 @@ require([
 
     map.on("layers-add-result", initEditing);
 
-    lmdbPointLayer = new FeatureLayer("http://147.126.65.155/gis/rest/services/campus/lurec_lmdb/FeatureServer/0", {
+
+        dojo.connect(map, "onLoad",signIn);
+
+function signIn() {
+        console.log('signing in')
+      //dojo.byId("signInStatus").innerHTML = "Creating token...";
+
+      // Get token from the ArcGIS Server Token Service.
+      //
+      esri.request({
+        url: "https://147.126.65.155:6443/arcgis/tokens/",
+        content: {
+          request: "getToken",
+          username: "lmdb_user",
+          password: "lmdb",
+          // clientid may not be necessary; try commented out first, but this is the correct syntax.
+          //clientid: "ref.https://lmdb.luc.edu/"  
+        },
+        handleAs: "text",
+        load: tokenObtained,
+        error: tokenRequestFailed
+      });
+    }
+
+    function tokenObtained(response) {
+      //dojo.byId("signInStatus").innerHTML = "Token created. Accessing the service...";
+
+      // Add the secure feature service to the map
+      // Note that the token is appended to the URL
+      // when constructing the layer.
+    console.log('token acquired')
+    var pointFeatureLayerURL = "https://147.126.65.155:6443/arcgis/rest/services/campus/lurec_lmdb/FeatureServer/0?token=" + response;
+
+
+
+    pointLayer = new FeatureLayer(pointFeatureLayerURL ,{
         mode: FeatureLayer.MODE_SNAPSHOT,
-        outFields: ["*"]
-    });
-    lmdbLineLayer = new FeatureLayer("http://147.126.65.155/gis/rest/services/campus/lurec_lmdb/FeatureServer/1", {
-        mode: FeatureLayer.MODE_SNAPSHOT,
-        outFields: ["*"]
-    });
-    lmdbPolygonLayer = new FeatureLayer("http://147.126.65.155/gis/rest/services/campus/lurec_lmdb/FeatureServer/2", {
+        outFields:["*"]
+     });
+
+
+   
+    var lineFeatureLayerURL = "https://147.126.65.155:6443/arcgis/rest/services/campus/lurec_lmdb/FeatureServer/1?token=" + response;
+
+    lineLayer = new FeatureLayer(lineFeatureLayerURL, {
         mode: FeatureLayer.MODE_SNAPSHOT,
         outFields: ["*"]
     });
 
-    infoTemplate = new esri.InfoTemplate("ObjectID : ${objectid}",
+
+    var polyFeatureLayerURL = "https://147.126.65.155:6443/arcgis/rest/services/campus/lurec_lmdb/FeatureServer/2?token=" + response;
+
+    polyLayer = new FeatureLayer(polyFeatureLayerURL, {
+        mode: FeatureLayer.MODE_SNAPSHOT,
+        outFields: ["*"]
+    });
+
+
+        infoTemplate = new esri.InfoTemplate("ObjectID : ${objectid}",
         "Description : ${description}<br>");
 
-    lmdbPointLayer.setInfoTemplate(infoTemplate);
-    lmdbLineLayer.setInfoTemplate(infoTemplate);
-    lmdbPolygonLayer.setInfoTemplate(infoTemplate);
+
+    if (pointLayer != null){
+        pointLayer.setInfoTemplate(infoTemplate);
+     }
+     if (lineLayer != null){
+         lineLayer.setInfoTemplate(infoTemplate);
+     }
+     if (polyLayer != null){
+         polyLayer.setInfoTemplate(infoTemplate);
+     }
+
+    map.addLayers([pointLayer,lineLayer,polyLayer]);
+      
+  }
+
+
+// for testing only
+function tokenRequestFailed(error) {
+    console.log(error)
+      dojo.byId("signInStatus").innerHTML = "Unable to create token. Please check your username/password";
+    }
+
 
     dojo.connect(map, "onLayersAddResult", initEditing);
 
@@ -336,7 +400,6 @@ require([
 
 
 
-    map.addLayers([lmdbPointLayer, lmdbLineLayer, lmdbPolygonLayer]);
 
     function initEditing(evt) {
         console.log("initEditing", evt);

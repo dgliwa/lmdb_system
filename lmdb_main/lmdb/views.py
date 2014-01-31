@@ -1059,16 +1059,13 @@ def dataUpdateMeasurement(request, id):
 @user_uploaded
 def collections(request):    # !!!!!!   NEED TO APPLY FKEY RESTRAINTS
     collections = Collection.objects.values()
-    points = {}
+    points = []
     lines = []
     polys = []
     for c in collections:
         location = Location.objects.get(pk = c['locationid'])
         if location.pointid != None:
-            if points.has_key(location.pointid):
-                points[location.pointid] = points[location.pointid] + 1 
-            else:
-                points[location.pointid] = 1
+            points.append(location.pointid)
         elif location.lineid != None:
             lines.append(location.lineid)
         elif location.areaid != None:

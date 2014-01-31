@@ -63,51 +63,6 @@ require([
     map.on("layers-add-result", initEditing);
 
 
-   //  if ({{lines}}.length != 0){
-   //  lineLayer = new FeatureLayer("http://147.126.65.155/gis/rest/services/campus/lurec_lmdb/FeatureServer/1", {
-   //      mode: FeatureLayer.MODE_SNAPSHOT,
-   //      outFields: ["*"]
-   //  });
-   //  var queryString = ""
-   //  for( var i=0; i<{{lines}}.length;i++){
-   //      if (queryString == ""){
-   //          queryString += "objectid =" + {{lines}}[i];
-   //      }
-   //      else{
-   //          queryString += "OR objectid =" + {{lines}}[i];
-   //      }
-    
-   //  }
-   //  lineLayer.setDefinitionExpression(queryString);    }
-   //  if({{polys}}.length!=0){
-   //  polyLayer = new FeatureLayer("http://147.126.65.155/gis/rest/services/campus/lurec_lmdb/FeatureServer/2", {
-   //      mode: FeatureLayer.MODE_SNAPSHOT,
-   //      outFields: ["*"]
-   //  });
-   // var queryString = ""
-   //  for( var i=0; i<{{polys}}.length; i++){
-   //      if (queryString == ""){
-   //          queryString += "objectid =" + {{polys}}[i];
-   //      }
-   //      else{
-   //          queryString += "OR objectid =" + {{polys}}[i];
-   //      }
-    
-   //  }
-   //  polyLayer.setDefinitionExpression(queryString);}
-   //  infoTemplate = new esri.InfoTemplate("Object ID : ${objectid}",
-   //      "<input class=\"hidden\" id = \"locId\" value=\"${objectid}\"/>" +
-   //      "You have selected to use this location to record your sighting.");
-
-   //  if (pointLayer != null){
-   //     pointLayer.setInfoTemplate(infoTemplate);
-   //  }
-   //  if (lineLayer != null){
-   //      lineLayer.setInfoTemplate(infoTemplate);
-   //  }
-   //  if (polyLayer != null){
-   //      polyLayer.setInfoTemplate(infoTemplate);
-   //  }
 
     dojo.connect(map, "onLayersAddResult", initEditing);
 
