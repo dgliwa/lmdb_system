@@ -47,12 +47,12 @@ require([
 
     // refer to "Using the Proxy Page" for more information:  https://developers.arcgis.com/en/javascript/jshelp/ags_proxy.html
     esriConfig.defaults.io.proxyUrl = "/proxy/";
-    esriConfig.defaults.io.alwaysUseProxy = false
-    esriConfig.defaults.io.postLength=100000
+    //esriConfig.defaults.io.alwaysUseProxy = false
+    //esriConfig.defaults.io.postLength=100000
     // This service is for development and testing purposes only. We recommend that you create your own geometry service for use within your applications. 
     esri.config.defaults.geometryService = new esri.tasks.GeometryService("http://tasks.arcgisonline.com/ArcGIS/rest/services/Geometry/GeometryServer");
 
-
+    var pointLayer, lineLayer, polyLayer
     map = new Map("map", {
         basemap: "satellite",
         logo: true,
@@ -61,24 +61,8 @@ require([
     });
 
     map.on("layers-add-result", initEditing);
-   //  if({{points}}.length != 0){
-   //  pointLayer = new FeatureLayer("http://147.126.65.155/gis/rest/services/campus/lurec_lmdb/FeatureServer/0", {
-   //      mode: FeatureLayer.MODE_SNAPSHOT,
-   //      outFields: ["*"]
 
-   //  });
-   //  var queryString = ""
-   //  for( var i=0;  i<{{points}}.length; i++){
-   //      if (queryString == ""){
-   //          queryString += "objectid =" + {{points}}[i];
-   //      }
-   //      else{
-   //          queryString += "OR objectid =" + {{points}}[i];
-   //      }
-    
-   //  }
-   //  pointLayer.setDefinitionExpression(queryString);
-   //  }
+
    //  if ({{lines}}.length != 0){
    //  lineLayer = new FeatureLayer("http://147.126.65.155/gis/rest/services/campus/lurec_lmdb/FeatureServer/1", {
    //      mode: FeatureLayer.MODE_SNAPSHOT,
@@ -125,251 +109,232 @@ require([
    //      polyLayer.setInfoTemplate(infoTemplate);
    //  }
 
-    // dojo.connect(map, "onLayersAddResult", initEditing);
+    dojo.connect(map, "onLayersAddResult", initEditing);
 
-    // dojo.connect(pointLayer, "onEditsComplete",
-    //     function (addResults) {
-    //         if (addResults.length > 0) {
-    //             alert("objectid is: " + addResults[0].objectId);
-
-
-    //             method = "post"; // Set method to post by default, if not specified.
-
-    //             // The rest of this code assumes you are not using a library.
-    //             // It can be made less wordy if you use one.
-    //             var form = document.createElement("form");
-    //             form.setAttribute("method", method);
-    //             form.setAttribute("action", '/reference/locations/create/popup/');
-    //             form.setAttribute("target", '_blank');
-
-    //             var csrfToken = document.createElement("input");
-    //             csrfToken.setAttribute("type", "hidden");
-    //             csrfToken.setAttribute("name", "csrfmiddlewaretoken");
-    //             csrfToken.setAttribute("value", "{{ csrf_token }}");
-    //             form.appendChild(csrfToken);
+    dojo.connect(pointLayer, "onEditsComplete",
+        function (addResults) {
+            if (addResults.length > 0) {
+                alert("objectid is: " + addResults[0].objectId);
 
 
-    //             var indicator = document.createElement("input");
-    //             indicator.setAttribute("type", "hidden");
-    //             indicator.setAttribute("name", "indicator");
-    //             indicator.setAttribute("value", "yes");
-    //             form.appendChild(indicator);
+                method = "post"; // Set method to post by default, if not specified.
+
+                // The rest of this code assumes you are not using a library.
+                // It can be made less wordy if you use one.
+                var form = document.createElement("form");
+                form.setAttribute("method", method);
+                form.setAttribute("action", '/reference/locations/create/popup/');
+                form.setAttribute("target", '_blank');
+
+                var csrfToken = document.createElement("input");
+                csrfToken.setAttribute("type", "hidden");
+                csrfToken.setAttribute("name", "csrfmiddlewaretoken");
+                csrfToken.setAttribute("value", "{{ csrf_token }}");
+                form.appendChild(csrfToken);
 
 
-    //             var type = document.createElement("input");
-    //             type.setAttribute("type", "hidden");
-    //             type.setAttribute("name", "type");
-    //             type.setAttribute("value", "point");
-    //             form.appendChild(type);
-
-    //             var hiddenField = document.createElement("input");
-    //             hiddenField.setAttribute("type", "hidden");
-    //             hiddenField.setAttribute("name", 'objectid');
-    //             hiddenField.setAttribute("value", addResults[0].objectId);
-
-    //             form.appendChild(hiddenField);
+                var indicator = document.createElement("input");
+                indicator.setAttribute("type", "hidden");
+                indicator.setAttribute("name", "indicator");
+                indicator.setAttribute("value", "yes");
+                form.appendChild(indicator);
 
 
+                var type = document.createElement("input");
+                type.setAttribute("type", "hidden");
+                type.setAttribute("name", "type");
+                type.setAttribute("value", "point");
+                form.appendChild(type);
 
-    //             document.body.appendChild(form);
-    //             form.submit();
+                var hiddenField = document.createElement("input");
+                hiddenField.setAttribute("type", "hidden");
+                hiddenField.setAttribute("name", 'objectid');
+                hiddenField.setAttribute("value", addResults[0].objectId);
+
+                form.appendChild(hiddenField);
 
 
 
-    //             document.getElementById('id_locationid').value=addResults[0].objectId;
+                document.body.appendChild(form);
+                form.submit();
 
-    //             var graphic = pointLayer.graphics[pointLayer.graphics.length - 1];
-    //             graphic.attributes["additionalinformation"] = graphic.attributes["objectid"];
-    //             try{
-    //             x = graphic.geometry.x;
-    //             y = graphic.geometry.y;
-    //             sr = map.spatialReference;
-    //             p = new Point(x,y,sr)
-    //             map.infoWindow.show(p);
+
+
+                document.getElementById('id_locationid').value=addResults[0].objectId;
+
+                var graphic = pointLayer.graphics[pointLayer.graphics.length - 1];
+                graphic.attributes["additionalinformation"] = graphic.attributes["objectid"];
+                try{
+                x = graphic.geometry.x;
+                y = graphic.geometry.y;
+                sr = map.spatialReference;
+                p = new Point(x,y,sr)
+                map.infoWindow.show(p);
                 
-    //             map.infoWindow.setContent(graphic.getContent());
-    //             }
-    //             catch(err){
-    //             console.log(err);
-    //             }
+                map.infoWindow.setContent(graphic.getContent());
+                }
+                catch(err){
+                console.log(err);
+                }
 
-    //         }
-
-
-    //     });
+            }
 
 
-    // dojo.connect(lineLayer, "onEditsComplete",
-    //     function (addResults) {
-    //         if (addResults.length > 0) {
-    //             alert("objectid is: " + addResults[0].objectId);
+        });
 
 
-    //             method = "post"; // Set method to post by default, if not specified.
-
-    //             // The rest of this code assumes you are not using a library.
-    //             // It can be made less wordy if you use one.
-    //             var form = document.createElement("form");
-    //             form.setAttribute("method", method);
-    //             form.setAttribute("action", '/reference/locations/create/popup/');
-    //             form.setAttribute("target", '_blank');
+    dojo.connect(lineLayer, "onEditsComplete",
+        function (addResults) {
+            if (addResults.length > 0) {
+                alert("objectid is: " + addResults[0].objectId);
 
 
-    //             var csrfToken = document.createElement("input");
-    //             csrfToken.setAttribute("type", "hidden");
-    //             csrfToken.setAttribute("name", "csrfmiddlewaretoken");
-    //             csrfToken.setAttribute("value", "{{ csrf_token }}");
-    //             form.appendChild(csrfToken);
+                method = "post"; // Set method to post by default, if not specified.
+
+                // The rest of this code assumes you are not using a library.
+                // It can be made less wordy if you use one.
+                var form = document.createElement("form");
+                form.setAttribute("method", method);
+                form.setAttribute("action", '/reference/locations/create/popup/');
+                form.setAttribute("target", '_blank');
 
 
-    //             var indicator = document.createElement("input");
-    //             indicator.setAttribute("type", "hidden");
-    //             indicator.setAttribute("name", "indicator");
-    //             indicator.setAttribute("value", "yes");
-    //             form.appendChild(indicator);
+                var csrfToken = document.createElement("input");
+                csrfToken.setAttribute("type", "hidden");
+                csrfToken.setAttribute("name", "csrfmiddlewaretoken");
+                csrfToken.setAttribute("value", "{{ csrf_token }}");
+                form.appendChild(csrfToken);
 
 
-    //             var type = document.createElement("input");
-    //             type.setAttribute("type", "hidden");
-    //             type.setAttribute("name", "type");
-    //             type.setAttribute("value", "line");
-    //             form.appendChild(type);
+                var indicator = document.createElement("input");
+                indicator.setAttribute("type", "hidden");
+                indicator.setAttribute("name", "indicator");
+                indicator.setAttribute("value", "yes");
+                form.appendChild(indicator);
 
 
-    //             var hiddenField = document.createElement("input");
-    //             hiddenField.setAttribute("type", "hidden");
-    //             hiddenField.setAttribute("name", 'objectid');
-    //             hiddenField.setAttribute("value", addResults[0].objectId);
-
-    //             form.appendChild(hiddenField);
-
+                var type = document.createElement("input");
+                type.setAttribute("type", "hidden");
+                type.setAttribute("name", "type");
+                type.setAttribute("value", "line");
+                form.appendChild(type);
 
 
-    //             document.body.appendChild(form);
-    //             form.submit();
+                var hiddenField = document.createElement("input");
+                hiddenField.setAttribute("type", "hidden");
+                hiddenField.setAttribute("name", 'objectid');
+                hiddenField.setAttribute("value", addResults[0].objectId);
+
+                form.appendChild(hiddenField);
 
 
 
-    //             document.getElementById('id_locationid').value=addResults[0].objectId;
+                document.body.appendChild(form);
+                form.submit();
 
-    //          var graphic = lineLayer.graphics[lineLayer.graphics.length - 1];
-    //          graphic.attributes["additionalinformation"] = graphic.attributes["objectid"];
-    //             try{
-    //             x = graphic.geometry.paths[0][0][0];
-    //             y = graphic.geometry.paths[0][0][1];
-    //             sr = map.spatialReference;
-    //             p = new Point(x,y,sr)
-    //             map.infoWindow.show(p);
+
+
+                document.getElementById('id_locationid').value=addResults[0].objectId;
+
+             var graphic = lineLayer.graphics[lineLayer.graphics.length - 1];
+             graphic.attributes["additionalinformation"] = graphic.attributes["objectid"];
+                try{
+                x = graphic.geometry.paths[0][0][0];
+                y = graphic.geometry.paths[0][0][1];
+                sr = map.spatialReference;
+                p = new Point(x,y,sr)
+                map.infoWindow.show(p);
                 
-    //             map.infoWindow.setContent(graphic.getContent());
-    //             }
-    //             catch(err){
-    //             console.log(err);
-    //             }
+                map.infoWindow.setContent(graphic.getContent());
+                }
+                catch(err){
+                console.log(err);
+                }
             
             
             
-    //         }
+            }
 
 
-    //     });
-
-
-
-
-    // dojo.connect(polyLayer, "onEditsComplete",
-    //     function (addResults) {
-    //         if (addResults.length > 0) {
-    //             alert("objectid is: " + addResults[0].objectId);
-
-
-    //             method = "post"; // Set method to post by default, if not specified.
-
-    //             // The rest of this code assumes you are not using a library.
-    //             // It can be made less wordy if you use one.
-    //             var form = document.createElement("form");
-    //             form.setAttribute("method", method);
-    //             form.setAttribute("action", '/reference/locations/create/popup/');
-    //             form.setAttribute("target", '_blank');
-
-    //             var csrfToken = document.createElement("input");
-    //             csrfToken.setAttribute("type", "hidden");
-    //             csrfToken.setAttribute("name", "csrfmiddlewaretoken");
-    //             csrfToken.setAttribute("value", "{{ csrf_token }}");
-    //             form.appendChild(csrfToken);
-
-
-    //             var indicator = document.createElement("input");
-    //             indicator.setAttribute("type", "hidden");
-    //             indicator.setAttribute("name", "indicator");
-    //             indicator.setAttribute("value", "yes");
-    //             form.appendChild(indicator);
-
-
-    //             var type = document.createElement("input");
-    //             type.setAttribute("type", "hidden");
-    //             type.setAttribute("name", "type");
-    //             type.setAttribute("value", "poly");
-    //             form.appendChild(type);
-
-
-    //             var hiddenField = document.createElement("input");
-    //             hiddenField.setAttribute("type", "hidden");
-    //             hiddenField.setAttribute("name", 'objectid');
-    //             hiddenField.setAttribute("value", addResults[0].objectId);
-
-    //             form.appendChild(hiddenField);
+        });
 
 
 
-    //             document.body.appendChild(form);
-    //             form.submit();
+
+    dojo.connect(polyLayer, "onEditsComplete",
+        function (addResults) {
+            if (addResults.length > 0) {
+                alert("objectid is: " + addResults[0].objectId);
+
+
+                method = "post"; // Set method to post by default, if not specified.
+
+                // The rest of this code assumes you are not using a library.
+                // It can be made less wordy if you use one.
+                var form = document.createElement("form");
+                form.setAttribute("method", method);
+                form.setAttribute("action", '/reference/locations/create/popup/');
+                form.setAttribute("target", '_blank');
+
+                var csrfToken = document.createElement("input");
+                csrfToken.setAttribute("type", "hidden");
+                csrfToken.setAttribute("name", "csrfmiddlewaretoken");
+                csrfToken.setAttribute("value", "{{ csrf_token }}");
+                form.appendChild(csrfToken);
+
+
+                var indicator = document.createElement("input");
+                indicator.setAttribute("type", "hidden");
+                indicator.setAttribute("name", "indicator");
+                indicator.setAttribute("value", "yes");
+                form.appendChild(indicator);
+
+
+                var type = document.createElement("input");
+                type.setAttribute("type", "hidden");
+                type.setAttribute("name", "type");
+                type.setAttribute("value", "poly");
+                form.appendChild(type);
+
+
+                var hiddenField = document.createElement("input");
+                hiddenField.setAttribute("type", "hidden");
+                hiddenField.setAttribute("name", 'objectid');
+                hiddenField.setAttribute("value", addResults[0].objectId);
+
+                form.appendChild(hiddenField);
 
 
 
-    //             document.getElementById('id_locationid').value=addResults[0].objectId;
+                document.body.appendChild(form);
+                form.submit();
 
-    //              var graphic = polyLayer.graphics[polyLayer.graphics.length - 1];
-    //          graphic.attributes["additionalinformation"] = graphic.attributes["objectid"];
-    //             try{
-    //             x = graphic.geometry.rings[0][0][0];
-    //             y = graphic.geometry.rings[0][0][1];
-    //             sr = map.spatialReference;
-    //             p = new Point(x,y,sr)
-    //             map.infoWindow.show(p);
+
+
+                document.getElementById('id_locationid').value=addResults[0].objectId;
+
+                 var graphic = polyLayer.graphics[polyLayer.graphics.length - 1];
+             graphic.attributes["additionalinformation"] = graphic.attributes["objectid"];
+                try{
+                x = graphic.geometry.rings[0][0][0];
+                y = graphic.geometry.rings[0][0][1];
+                sr = map.spatialReference;
+                p = new Point(x,y,sr)
+                map.infoWindow.show(p);
                 
-    //             map.infoWindow.setContent(graphic.getContent());
-    //             }
-    //             catch(err){
-    //             console.log(err);
-    //             }
+                map.infoWindow.setContent(graphic.getContent());
+                }
+                catch(err){
+                console.log(err);
+                }
            
 
-    //         }
+            }
 
 
-    //     });
+        });
 
     dojo.connect(map, "onLoad",signIn);
-
-
-// esri.request({
-//   url: "http://sampleserver1.arcgisonline.com/ArcGIS/rest/services/Specialty/ESRI_StatesCitiesRivers_USA/MapServer/0",
-//   content: { f:"json" },
-//   handleAs: "json",
-//   callbackParamName: "callback",
-//   load: function(response, io) {
-//     var fields = response.fields;
-//     var out = ["NAME: ALIAS (TYPE)"];
-//     dojo.forEach(fields, function(field) {
-//       out.push(field.name + ": " + field.alias + " (" + field.type + ")");
-//     });
-//     alert(out.join("\n"));
-//   },
-//   error: function(error) {
-//     alert(error.message);
-//   }
-
 
 function signIn() {
         console.log('signing in')
@@ -398,51 +363,122 @@ function signIn() {
       // Add the secure feature service to the map
       // Note that the token is appended to the URL
       // when constructing the layer.
+      console.log('token acquired')
+     if({{points}}.length != 0){
+         var pointFeatureLayerURL = "https://147.126.65.155:6443/arcgis/rest/services/campus/lurec_lmdb/FeatureServer/0?token=" + response;
 
-     var pointFeatureLayerURL = "https://147.126.65.155:6443/arcgis/rest/services/campus/lurec_lmdb/FeatureServer/0?token=" + response;
+     var queryString = ""
+     for( var i=0;  i<{{points}}.length; i++){
+         if (queryString == ""){
+             queryString += "objectid =" + {{points}}[i];
+         }
+         else{
+             queryString += "OR objectid =" + {{points}}[i];
+         }
+    
+     }
 
-     var infoTemplate = new esri.InfoTemplate("hello","hi there");
 
-     var lmdb_point = new esri.layers.FeatureLayer(pointFeatureLayerURL ,{
-      infoTemplate:infoTemplate,
-      outFields:["*"]
+    pointLayer = new FeatureLayer(pointFeatureLayerURL ,{
+        mode: FeatureLayer.MODE_SNAPSHOT,
+        outFields:["*"]
      });
-      map.addLayer(lmdb_point);
+         pointLayer.setDefinitionExpression(queryString);
+
+
+    if ({{lines}}.length != 0){
+        var lineFeatureLayerURL = "https://147.126.65.155:6443/arcgis/rest/services/campus/lurec_lmdb/FeatureServer/1?token=" + response;
+
+    lineLayer = new FeatureLayer(lineFeatureLayerURL, {
+        mode: FeatureLayer.MODE_SNAPSHOT,
+        outFields: ["*"]
+    });
+    var queryString = ""
+    for( var i=0; i<{{lines}}.length;i++){
+        if (queryString == ""){
+            queryString += "objectid =" + {{lines}}[i];
+        }
+        else{
+            queryString += "OR objectid =" + {{lines}}[i];
+        }
+    
+    }
+    lineLayer.setDefinitionExpression(queryString);    }
+    if({{polys}}.length!=0){
+        var polyFeatureLayerURL = "https://147.126.65.155:6443/arcgis/rest/services/campus/lurec_lmdb/FeatureServer/2?token=" + response;
+
+    polyLayer = new FeatureLayer(polyFeatureLayerURL, {
+        mode: FeatureLayer.MODE_SNAPSHOT,
+        outFields: ["*"]
+    });
+   var queryString = ""
+    for( var i=0; i<{{polys}}.length; i++){
+        if (queryString == ""){
+            queryString += "objectid =" + {{polys}}[i];
+        }
+        else{
+            queryString += "OR objectid =" + {{polys}}[i];
+        }
+    
+    }
+    polyLayer.setDefinitionExpression(queryString);}
+
+
+       infoTemplate = new esri.InfoTemplate("Object ID : ${objectid}",
+         "<input class=\"hidden\" id = \"locId\" value=\"${objectid}\"/>" +
+         "You have selected to use this location.");
+
+
+    if (pointLayer != null){
+        pointLayer.setInfoTemplate(infoTemplate);
+     }
+     if (lineLayer != null){
+         lineLayer.setInfoTemplate(infoTemplate);
+     }
+     if (polyLayer != null){
+         polyLayer.setInfoTemplate(infoTemplate);
+     }
+
+
+           if( pointLayer == null || lineLayer == null || polyLayer == null){
+         if(pointLayer!=null && lineLayer !=null){
+             map.addLayers([pointLayer,lineLayer]);
+         }
+         else if(pointLayer!=null && polyLayer!=null){
+             map.addLayers([pointLayer,polyLayer]);
+         }
+         else if(lineLayer!=null && polyLayer!=null){
+             map.addLayers([lineLayer,polyLayer]);
+         }
+         else if(pointLayer==null && lineLayer == null){
+             map.addLayers([polyLayer]);
+         }
+         else if(lineLayer==null && polyLayer==null){
+             map.addLayers([pointLayer]);
+         }
+         else if(pointLayer==null && polyLayer==null){
+             map.addLayers([lineLayer]);
+         }
+    }
+    else{
+        map.addLayers([pointLayer,lineLayer,polyLayer]);
+    }
+      
+  }
 }
 
 // for testing only
 function tokenRequestFailed(error) {
-    console.log('error')
+    console.log(error)
       dojo.byId("signInStatus").innerHTML = "Unable to create token. Please check your username/password";
     }
 
 
 
 
-    //   if( pointLayer == null || lineLayer == null || polyLayer == null){
-    //      if(pointLayer!=null && lineLayer !=null){
-    //          map.addLayers([pointLayer,lineLayer]);
-    //      }
-    //      else if(pointLayer!=null && polyLayer!=null){
-    //          map.addLayers([pointLayer,polyLayer]);
-    //      }
-    //      else if(lineLayer!=null && polyLayer!=null){
-    //          map.addLayers([lineLayer,polyLayer]);
-    //      }
-    //      else if(pointLayer==null && lineLayer == null){
-    //          map.addLayers([polyLayer]);
-    //      }
-    //      else if(lineLayer==null && polyLayer==null){
-    //          map.addLayers([pointLayer]);
-    //      }
-    //      else if(pointLayer==null && polyLayer==null){
-    //          map.addLayers([lineLayer]);
-    //      }
-    // }
-    // else{
-    //     map.addLayers([pointLayer,lineLayer,polyLayer]);
-    // }
+
     // map.addLayers([pointLayer,lineLayer,polyLayer]);
+
 
 
 
