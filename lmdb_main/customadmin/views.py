@@ -23,16 +23,17 @@ def addUsers(request):
 		for i in range(0,size):
 			vals = json.loads(json.dumps(request.POST))
 			print vals
+			form = UserCreationForm()
 			if vals['size'] == '1':
-				form = UserCreationForm(username=request.POST['username'], password1 = request.POST['password1'], password2 = request.POST['password2'])
-			    #form.initial['username'] = request.POST['username']
-			    #form.initial['password1'] = request.POST['password1']
-			    #form.initial['password2'] = request.POST['password2']
+				#form = UserCreationForm(username=request.POST['username'], password1 = request.POST['password1'], password2 = request.POST['password2'])
+			    form.initial['username'] = request.POST['username']
+			    form.initial['password1'] = request.POST['password1']
+			    form.initial['password2'] = request.POST['password2']
 			else:
 				form.initial['username'] = request.POST['username'][i]
 				form.initial['password1'] = request.POST['password1'][i]
 				form.initial['password2'] = request.POST['password2'][i]
-			print form.password1
+			print form['password1']
 			if form.is_valid():
 				form.save()
 				return HttpRequestRedirect('/admin/auth/user/')
