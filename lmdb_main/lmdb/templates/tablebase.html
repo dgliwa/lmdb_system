@@ -82,7 +82,8 @@ require([
     "esri/symbols/SimpleMarkerSymbol",
     "esri/symbols/SimpleLineSymbol",
     "esri/symbols/SimpleFillSymbol",
-
+    "esri/layers/ArcGISDynamicMapServiceLayer",
+    "esri/layers/ImageParameters",
     "esri/dijit/editing/TemplatePicker",
 
     "dojo/_base/array",
@@ -97,6 +98,8 @@ require([
     Map, Draw, Edit, Graphic, esriConfig,
     FeatureLayer,
     SimpleMarkerSymbol, SimpleLineSymbol, SimpleFillSymbol,
+    ArcGISDynamicMapServiceLayer,
+    ImageParameters,
     TemplatePicker,
     arrayUtils, event, lang, parser, registry
 ) {
@@ -225,30 +228,36 @@ function signIn() {
      if (polyLayer != null){
          polyLayer.setInfoTemplate(infoTemplate);
      }
+    var imageParameters = new ImageParameters();
+        imageParameters.format = "jpeg";
 
+     var dynamicMapServiceLayer = new ArcGISDynamicMapServiceLayer("http://147.126.65.155/gis/rest/services/campus/lurec_lmdb_base/MapServer/", {
+          "opacity" : 0.5,
+          "imageParameters" : imageParameters
+        });
 
            if( pointLayer == null || lineLayer == null || polyLayer == null){
          if(pointLayer!=null && lineLayer !=null){
-             map.addLayers([pointLayer,lineLayer]);
+             map.addLayers([pointLayer,lineLayer,dynamicMapServiceLayer]);
          }
          else if(pointLayer!=null && polyLayer!=null){
-             map.addLayers([pointLayer,polyLayer]);
+             map.addLayers([pointLayer,polyLayer,dynamicMapServiceLayer]);
          }
          else if(lineLayer!=null && polyLayer!=null){
-             map.addLayers([lineLayer,polyLayer]);
+             map.addLayers([lineLayer,polyLayer,dynamicMapServiceLayer]);
          }
          else if(pointLayer==null && lineLayer == null){
-             map.addLayers([polyLayer]);
+             map.addLayers([polyLayer,dynamicMapServiceLayer]);
          }
          else if(lineLayer==null && polyLayer==null){
-             map.addLayers([pointLayer]);
+             map.addLayers([pointLayer,dynamicMapServiceLayer]);
          }
          else if(pointLayer==null && polyLayer==null){
-             map.addLayers([lineLayer]);
+             map.addLayers([lineLayer,dynamicMapServiceLayer]);
          }
     }
     else{
-        map.addLayers([pointLayer,lineLayer,polyLayer]);
+        map.addLayers([pointLayer,lineLayer,polyLayer,dynamicMapServiceLayer]);
     }
       
   }

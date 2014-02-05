@@ -24,7 +24,8 @@ require([
     "esri/symbols/SimpleMarkerSymbol",
     "esri/symbols/SimpleLineSymbol",
     "esri/symbols/SimpleFillSymbol",
-
+    "esri/layers/ArcGISDynamicMapServiceLayer",
+    "esri/layers/ImageParameters",
     "esri/dijit/editing/TemplatePicker",
 
     "dojo/_base/array",
@@ -40,6 +41,8 @@ require([
     Map, Draw, Edit, Graphic, esriConfig,
     FeatureLayer, Point,
     SimpleMarkerSymbol, SimpleLineSymbol, SimpleFillSymbol,
+    ArcGISDynamicMapServiceLayer,
+    ImageParameters,
     TemplatePicker,
     arrayUtils, event, lang, parser, registry
 ) {
@@ -64,7 +67,151 @@ require([
 
 
 
-    dojo.connect(map, "onLayersAddResult", initEditing);
+    //dojo.connect(map, "onLayersAddResult", initEditing);
+
+    
+
+
+
+
+    dojo.connect(map, "onLoad",signIn);
+
+function signIn() {
+        console.log('signing in')
+      //dojo.byId("signInStatus").innerHTML = "Creating token...";
+
+      // Get token from the ArcGIS Server Token Service.
+      //
+      esri.request({
+        url: "https://147.126.65.155:6443/arcgis/tokens/",
+        content: {
+          request: "getToken",
+          username: "lmdb_user",
+          password: "lmdb",
+          // clientid may not be necessary; try commented out first, but this is the correct syntax.
+          //clientid: "ref.https://lmdb.luc.edu/"  
+        },
+        handleAs: "text",
+        load: tokenObtained,
+        error: tokenRequestFailed
+      });
+    }
+
+    function tokenObtained(response) {
+      //dojo.byId("signInStatus").innerHTML = "Token created. Accessing the service...";
+
+      // Add the secure feature service to the map
+      // Note that the token is appended to the URL
+      // when constructing the layer.
+      console.log('token acquired')
+     if({{points}}.length != 0){
+         var pointFeatureLayerURL = "https://147.126.65.155:6443/arcgis/rest/services/campus/lurec_lmdb/FeatureServer/0?token=" + response;
+
+     var queryString = ""
+     for( var i=0;  i<{{points}}.length; i++){
+         if (queryString == ""){
+             queryString += "objectid =" + {{points}}[i];
+         }
+         else{
+             queryString += "OR objectid =" + {{points}}[i];
+         }
+    
+     }
+
+
+    pointLayer = new FeatureLayer(pointFeatureLayerURL ,{
+        mode: FeatureLayer.MODE_SNAPSHOT,
+        outFields:["*"]
+     });
+         pointLayer.setDefinitionExpression(queryString);
+
+}
+    if ({{lines}}.length != 0){
+        var lineFeatureLayerURL = "https://147.126.65.155:6443/arcgis/rest/services/campus/lurec_lmdb/FeatureServer/1?token=" + response;
+
+    lineLayer = new FeatureLayer(lineFeatureLayerURL, {
+        mode: FeatureLayer.MODE_SNAPSHOT,
+        outFields: ["*"]
+    });
+    var queryString = ""
+    for( var i=0; i<{{lines}}.length;i++){
+        if (queryString == ""){
+            queryString += "objectid =" + {{lines}}[i];
+        }
+        else{
+            queryString += "OR objectid =" + {{lines}}[i];
+        }
+    
+    }
+    lineLayer.setDefinitionExpression(queryString);    }
+    if({{polys}}.length!=0){
+        var polyFeatureLayerURL = "https://147.126.65.155:6443/arcgis/rest/services/campus/lurec_lmdb/FeatureServer/2?token=" + response;
+
+    polyLayer = new FeatureLayer(polyFeatureLayerURL, {
+        mode: FeatureLayer.MODE_SNAPSHOT,
+        outFields: ["*"]
+    });
+   var queryString = ""
+    for( var i=0; i<{{polys}}.length; i++){
+        if (queryString == ""){
+            queryString += "objectid =" + {{polys}}[i];
+        }
+        else{
+            queryString += "OR objectid =" + {{polys}}[i];
+        }
+    
+    }
+    polyLayer.setDefinitionExpression(queryString);}
+
+
+       infoTemplate = new esri.InfoTemplate("Object ID : ${objectid}",
+         "<input class=\"hidden\" id = \"locId\" value=\"${objectid}\"/>" +
+         "You have selected to use this location.");
+
+
+    if (pointLayer != null){
+        pointLayer.setInfoTemplate(infoTemplate);
+     }
+     if (lineLayer != null){
+         lineLayer.setInfoTemplate(infoTemplate);
+     }
+     if (polyLayer != null){
+         polyLayer.setInfoTemplate(infoTemplate);
+     }
+    var imageParameters = new ImageParameters();
+        imageParameters.format = "jpeg";
+
+     var dynamicMapServiceLayer = new ArcGISDynamicMapServiceLayer("http://147.126.65.155/gis/rest/services/campus/lurec_lmdb_base/MapServer/", {
+          "opacity" : 0.5,
+          "imageParameters" : imageParameters
+        });
+
+
+           if( pointLayer == null || lineLayer == null || polyLayer == null){
+         if(pointLayer!=null && lineLayer !=null){
+             map.addLayers([pointLayer,lineLayer,dynamicMapServiceLayer]);
+         }
+         else if(pointLayer!=null && polyLayer!=null){
+             map.addLayers([pointLayer,polyLayer,dynamicMapServiceLayer]);
+         }
+         else if(lineLayer!=null && polyLayer!=null){
+             map.addLayers([lineLayer,polyLayer,dynamicMapServiceLayer]);
+         }
+         else if(pointLayer==null && lineLayer == null){
+             map.addLayers([polyLayer,dynamicMapServiceLayer]);
+         }
+         else if(lineLayer==null && polyLayer==null){
+             map.addLayers([pointLayer,dynamicMapServiceLayer]);
+         }
+         else if(pointLayer==null && polyLayer==null){
+             map.addLayers([lineLayer,dynamicMapServiceLayer]);
+         }
+    }
+    else{
+        map.addLayers([pointLayer,lineLayer,polyLayer,dynamicMapServiceLayer]);
+    }
+
+
 
     dojo.connect(pointLayer, "onEditsComplete",
         function (addResults) {
@@ -137,8 +284,7 @@ require([
 
         });
 
-
-    dojo.connect(lineLayer, "onEditsComplete",
+        dojo.connect(lineLayer, "onEditsComplete",
         function (addResults) {
             if (addResults.length > 0) {
                 alert("objectid is: " + addResults[0].objectId);
@@ -288,136 +434,6 @@ require([
 
 
         });
-
-    dojo.connect(map, "onLoad",signIn);
-
-function signIn() {
-        console.log('signing in')
-      //dojo.byId("signInStatus").innerHTML = "Creating token...";
-
-      // Get token from the ArcGIS Server Token Service.
-      //
-      esri.request({
-        url: "https://147.126.65.155:6443/arcgis/tokens/",
-        content: {
-          request: "getToken",
-          username: "lmdb_user",
-          password: "lmdb",
-          // clientid may not be necessary; try commented out first, but this is the correct syntax.
-          //clientid: "ref.https://lmdb.luc.edu/"  
-        },
-        handleAs: "text",
-        load: tokenObtained,
-        error: tokenRequestFailed
-      });
-    }
-
-    function tokenObtained(response) {
-      //dojo.byId("signInStatus").innerHTML = "Token created. Accessing the service...";
-
-      // Add the secure feature service to the map
-      // Note that the token is appended to the URL
-      // when constructing the layer.
-      console.log('token acquired')
-     if({{points}}.length != 0){
-         var pointFeatureLayerURL = "https://147.126.65.155:6443/arcgis/rest/services/campus/lurec_lmdb/FeatureServer/0?token=" + response;
-
-     var queryString = ""
-     for( var i=0;  i<{{points}}.length; i++){
-         if (queryString == ""){
-             queryString += "objectid =" + {{points}}[i];
-         }
-         else{
-             queryString += "OR objectid =" + {{points}}[i];
-         }
-    
-     }
-
-
-    pointLayer = new FeatureLayer(pointFeatureLayerURL ,{
-        mode: FeatureLayer.MODE_SNAPSHOT,
-        outFields:["*"]
-     });
-         pointLayer.setDefinitionExpression(queryString);
-
-}
-    if ({{lines}}.length != 0){
-        var lineFeatureLayerURL = "https://147.126.65.155:6443/arcgis/rest/services/campus/lurec_lmdb/FeatureServer/1?token=" + response;
-
-    lineLayer = new FeatureLayer(lineFeatureLayerURL, {
-        mode: FeatureLayer.MODE_SNAPSHOT,
-        outFields: ["*"]
-    });
-    var queryString = ""
-    for( var i=0; i<{{lines}}.length;i++){
-        if (queryString == ""){
-            queryString += "objectid =" + {{lines}}[i];
-        }
-        else{
-            queryString += "OR objectid =" + {{lines}}[i];
-        }
-    
-    }
-    lineLayer.setDefinitionExpression(queryString);    }
-    if({{polys}}.length!=0){
-        var polyFeatureLayerURL = "https://147.126.65.155:6443/arcgis/rest/services/campus/lurec_lmdb/FeatureServer/2?token=" + response;
-
-    polyLayer = new FeatureLayer(polyFeatureLayerURL, {
-        mode: FeatureLayer.MODE_SNAPSHOT,
-        outFields: ["*"]
-    });
-   var queryString = ""
-    for( var i=0; i<{{polys}}.length; i++){
-        if (queryString == ""){
-            queryString += "objectid =" + {{polys}}[i];
-        }
-        else{
-            queryString += "OR objectid =" + {{polys}}[i];
-        }
-    
-    }
-    polyLayer.setDefinitionExpression(queryString);}
-
-
-       infoTemplate = new esri.InfoTemplate("Object ID : ${objectid}",
-         "<input class=\"hidden\" id = \"locId\" value=\"${objectid}\"/>" +
-         "You have selected to use this location.");
-
-
-    if (pointLayer != null){
-        pointLayer.setInfoTemplate(infoTemplate);
-     }
-     if (lineLayer != null){
-         lineLayer.setInfoTemplate(infoTemplate);
-     }
-     if (polyLayer != null){
-         polyLayer.setInfoTemplate(infoTemplate);
-     }
-
-
-           if( pointLayer == null || lineLayer == null || polyLayer == null){
-         if(pointLayer!=null && lineLayer !=null){
-             map.addLayers([pointLayer,lineLayer]);
-         }
-         else if(pointLayer!=null && polyLayer!=null){
-             map.addLayers([pointLayer,polyLayer]);
-         }
-         else if(lineLayer!=null && polyLayer!=null){
-             map.addLayers([lineLayer,polyLayer]);
-         }
-         else if(pointLayer==null && lineLayer == null){
-             map.addLayers([polyLayer]);
-         }
-         else if(lineLayer==null && polyLayer==null){
-             map.addLayers([pointLayer]);
-         }
-         else if(pointLayer==null && polyLayer==null){
-             map.addLayers([lineLayer]);
-         }
-    }
-    else{
-        map.addLayers([pointLayer,lineLayer,polyLayer]);
-    }
       
   }
 
@@ -427,8 +443,6 @@ function tokenRequestFailed(error) {
     console.log(error)
       dojo.byId("signInStatus").innerHTML = "Unable to create token. Please check your username/password";
     }
-
-
 
 
 

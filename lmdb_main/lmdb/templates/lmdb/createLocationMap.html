@@ -54,8 +54,7 @@
        
         $(document).ready(function() { 
             // bind 'latlonform' and provide a simple callback function 
-            $('#latlonform').ajaxForm(function() { 
-            }); 
+            
         }); 
         
         
@@ -63,9 +62,9 @@
     
     
     <script>
-var lmdbPointLayer;
-var lmdbLineLayer;
-var lmdbPolygonLayer;
+var pointLayer;
+var lineLayer;
+var polyLayer;
 dojo.require("esri.map");
 dojo.require("esri.layers.FeatureLayer");
 dojo.require("esri.layers.FeatureEditResult");
@@ -89,7 +88,8 @@ require([
     "esri/symbols/SimpleMarkerSymbol",
     "esri/symbols/SimpleLineSymbol",
     "esri/symbols/SimpleFillSymbol",
-
+    "esri/layers/ArcGISDynamicMapServiceLayer",
+    "esri/layers/ImageParameters",
     "esri/dijit/editing/TemplatePicker",
 
     "dojo/_base/array",
@@ -104,6 +104,8 @@ require([
     Map, Draw, Edit, Graphic, esriConfig,
     FeatureLayer,
     SimpleMarkerSymbol, SimpleLineSymbol, SimpleFillSymbol,
+    ArcGISDynamicMapServiceLayer,
+    ImageParameters,
     TemplatePicker,
     arrayUtils, event, lang, parser, registry
 ) {
@@ -196,21 +198,7 @@ function signIn() {
          polyLayer.setInfoTemplate(infoTemplate);
      }
 
-    map.addLayers([pointLayer,lineLayer,polyLayer]);
-      
-  }
-
-
-// for testing only
-function tokenRequestFailed(error) {
-    console.log(error)
-      dojo.byId("signInStatus").innerHTML = "Unable to create token. Please check your username/password";
-    }
-
-
-    dojo.connect(map, "onLayersAddResult", initEditing);
-
-    dojo.connect(lmdbPointLayer, "onEditsComplete",
+     dojo.connect(pointLayer, "onEditsComplete",
         function (addResults) {
             if (addResults.length > 0) {
                 alert("objectid is: " + addResults[0].objectId);
@@ -270,7 +258,7 @@ function tokenRequestFailed(error) {
         });
 
 
-    dojo.connect(lmdbLineLayer, "onEditsComplete",
+    dojo.connect(lineLayer, "onEditsComplete",
         function (addResults) {
             if (addResults.length > 0) {
                 alert("objectid is: " + addResults[0].objectId);
@@ -333,7 +321,7 @@ function tokenRequestFailed(error) {
 
 
 
-    dojo.connect(lmdbPolygonLayer, "onEditsComplete",
+    dojo.connect(polyLayer, "onEditsComplete",
         function (addResults) {
             if (addResults.length > 0) {
                 alert("objectid is: " + addResults[0].objectId);
@@ -392,6 +380,31 @@ function tokenRequestFailed(error) {
 
 
         });
+
+    var imageParameters = new ImageParameters();
+        imageParameters.format = "jpeg";
+
+
+     var dynamicMapServiceLayer = new ArcGISDynamicMapServiceLayer("http://147.126.65.155/gis/rest/services/campus/lurec_lmdb_base/MapServer/", {
+          "opacity" : 0.5,
+          "imageParameters" : imageParameters
+        });
+
+    map.addLayers([pointLayer,lineLayer,polyLayer, dynamicMapServiceLayer]);
+      
+  }
+
+
+// for testing only
+function tokenRequestFailed(error) {
+    console.log(error)
+      dojo.byId("signInStatus").innerHTML = "Unable to create token. Please check your username/password";
+    }
+
+
+    dojo.connect(map, "onLayersAddResult", initEditing);
+
+    
 
 
 
@@ -488,7 +501,7 @@ function geocode(lonNum, latNum, name, desc) {
         'description': desc
     })
     try {
-        lmdbPointLayer.applyEdits([myGraphic], null, null);
+        pointLayer.applyEdits([myGraphic], null, null);
     } catch (err) {
         console.log(err);
     }
