@@ -32,18 +32,18 @@ function anotheruser(){
 			$('#add_users').append('<fieldset class="module aligned">' +
 				'<h2>New User Data</h2>' + 
 				'<div>' + 
-				'Username: <input id="id_username" type="text" name="username" maxlength="30"></input><br>' +
-				'Password: <input id="id_password1" type="password" name="password1"></input><br>' +
-				'Password Verification: <input id="id_password2" type="password" name="password2"></input><br>' +
+				'Username: <input  type="text" name="username" maxlength="30"></input><br>' +
+				'Password: <input  type="password" name="password1"></input><br>' +
+				'Password Verification: <input  type="password" name="password2"></input><br>' +
 				'</div>' +
 				'<div>' +
-				'	First Name: <input id="id_first_name" class="vTextField" type="text" name="first_name" maxlength="30"></input><br>' +
-				'	Last Name: <input id="id_last_name" class="vTextField" type="text" name="last_name" maxlength="30"></input><br>' +
-				'	Email: <input id="id_email" class="vTextField" type="text" name="email" maxlength="75"></input><br>' +
+				'	First Name: <input class="vTextField" type="text" name="first_name" maxlength="30"></input><br>' +
+				'	Last Name: <input  class="vTextField" type="text" name="last_name" maxlength="30"></input><br>' +
+				'	Email: <input class="vTextField" type="text" name="email" maxlength="75"></input><br>' +
 				'</div>' + 
 				'</fieldset>')
 
-			$('#size').val($('#size').val()+1)
+			$('#size').val(parseInt($('#size').val())+1)
 	}
 
 		
@@ -96,14 +96,14 @@ function anotheruser(){
 	<fieldset class="module aligned">
 		<h2>New User Data</h2>
 	<div>
-	Username: <input id="id_username" type="text" name="username" maxlength="30"></input><br>
-	Password: <input id="id_password1" type="password" name="password1"></input><br>
+	Username: <input  type="text" name="username" maxlength="30"></input><br>
+	Password: <input  type="password" name="password1"></input><br>
 	Password Verification: <input id="id_password2" type="password" name="password2"></input><br>
 	</div>
 	<div>
-		First Name: <input id="id_first_name" class="vTextField" type="text" name="first_name" maxlength="30"></input><br>
-		Last Name: <input id="id_last_name" class="vTextField" type="text" name="last_name" maxlength="30"></input><br>
-		Email: <input id="id_email" class="vTextField" type="text" name="email" maxlength="75"></input><br>
+		First Name: <input class="vTextField" type="text" name="first_name" maxlength="30"></input><br>
+		Last Name: <input  class="vTextField" type="text" name="last_name" maxlength="30"></input><br>
+		Email: <input  class="vTextField" type="text" name="email" maxlength="75"></input><br>
 	</div>
 	</fieldset>
 </form>

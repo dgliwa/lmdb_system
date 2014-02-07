@@ -11,6 +11,8 @@ def proxy_to(request, path):
 		status_code = proxied_request.code
 		mimetype = proxied_request.headers.typeheader or mimetypes.guess_type(url)
 		content = proxied_request.read()
+		print content
+		print mimetype
 	except urllib2.HTTPError as e:
 		return HttpResponse(e.msg, status=e.code, mimetype='text/plain')
 	else:

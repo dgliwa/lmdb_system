@@ -160,7 +160,7 @@ function signIn() {
              queryString += "objectid =" + {{points}}[i];
          }
          else{
-             queryString += "OR objectid =" + {{points}}[i];
+             queryString += " OR objectid =" + {{points}}[i];
          }
     
      }
@@ -186,7 +186,7 @@ function signIn() {
             queryString += "objectid =" + {{lines}}[i];
         }
         else{
-            queryString += "OR objectid =" + {{lines}}[i];
+            queryString += " OR objectid =" + {{lines}}[i];
         }
     
     }
@@ -204,7 +204,7 @@ function signIn() {
             queryString += "objectid =" + {{polys}}[i];
         }
         else{
-            queryString += "OR objectid =" + {{polys}}[i];
+            queryString += " OR objectid =" + {{polys}}[i];
         }
     
     }
@@ -237,7 +237,7 @@ function signIn() {
         var imageParameters = new ImageParameters();
         imageParameters.format = "jpeg";
 
-     var dynamicMapServiceLayer = new ArcGISDynamicMapServiceLayer("http://147.126.65.155/gis/rest/services/campus/lurec_lmdb_base/MapServer/", {
+     var dynamicMapServiceLayer = new ArcGISDynamicMapServiceLayer("https://147.126.65.155:6443/arcgis/rest/services/campus/lurec_lmdb_base/MapServer/?token=" + response, {
           "opacity" : 0.5,
           "imageParameters" : imageParameters
         });

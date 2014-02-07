@@ -20,9 +20,12 @@ def addUsers(request):
 	groups = Group.objects.all()
 	if request.POST:
 		failed = []
-		size = int(request.POST['size'])
+		vals = request.POST.copy()
+		size = int(vals['size'])
+		print request.POST['username']
+		print vals['username']
+		print vals
 		for i in range(0,size):
-			vals = json.loads(json.dumps(request.POST))
 			print vals
 			form = UserCreateForm()
 			x = int(vals['size'])
@@ -31,14 +34,15 @@ def addUsers(request):
 				form = UserCreateForm(vals)
 				print '1'
 				#form = UserCreationForm(username=request.POST['username'], password1 = request.POST['password1'], password2 = request.POST['password2'])
-			    # form.initial['username'] = vals['username']
-			    # form.initial['password1'] = vals['password1']
-			    # form.initial['password2'] = vals['password2']
+			    # form.initial['username'] = request.POST['username']
+			    # form.initial['password1'] = request.POST['password1']
+			    # form.initial['password2'] = request.POST['password2']
 			else:
-				for i in range(x):
-				    userform = {'username' : vals['username'][i], 'password1' : vals['password1'][i], 'password2' : vals['password2'][i], 'first_name':vals['first_name'][i], 'last_name' : vals['last_name'][i], 'email' : vals['email'][i]}
-				    form = UserCreateForm(userform)
-				    print 'not 1'
+				for j in range(x):
+					print j
+					userform = {'username' : vals.getlist('username')[j], 'password1' : vals.getlist('password1')[j], 'password2' : vals.getlist('password2')[j], 'first_name':vals.getlist('first_name')[j], 'last_name' : vals.getlist('last_name')[j], 'email' : vals.getlist('email')[j]}
+					form = UserCreateForm(userform)
+					print 'not 1'
 			#print form.initial['password1']
 			if form.is_valid():
 				form.save()
