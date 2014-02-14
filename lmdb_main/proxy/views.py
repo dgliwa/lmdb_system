@@ -1,8 +1,9 @@
 from django.http import HttpResponse
 import mimetypes
 import urllib2
+from django.views.decorators.csrf import csrf_exempt
 
-
+@csrf_exempt
 def proxy_to(request, path):
 	if request.META.has_key('QUERY_STRING'):
 		url = request.META['QUERY_STRING']
