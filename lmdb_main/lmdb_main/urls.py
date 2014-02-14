@@ -21,4 +21,6 @@ urlpatterns = patterns('',
      url(r'^', include('lmdb.urls', namespace='lmdb')),
      url(r'^login/$', 'lmdb.views.login_user'),
      url(r'^proxy/(?P<path>.*)$', proxy_to),
+     url(r'^reporting/', include('reporting.urls', namespace='reporting')),
+
 )

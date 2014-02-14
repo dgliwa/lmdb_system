@@ -66,6 +66,6 @@ urlpatterns = patterns('',
     url(r'^data/collections/$', views.collections, name='collections'),
     url(r'^data/collections/(?P<coll_id>\d+)/$', views.collectionDetail, name='collectionDetail'),
     url(r'^data/collections/create/$', views.createCollection, name='createCollection'),
-    url(r'^reporting/$', views.reporting, name='reporting'),
+    #url(r'^reporting/$', views.reporting, name='reporting'),
 
 )

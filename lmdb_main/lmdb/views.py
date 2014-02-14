@@ -1142,21 +1142,6 @@ def dataUpdateCollection(request, id):
 #   END OF FUNCTIONS FOR COLLECTIONS #
 #
 #########################################################################################
-#   BEGINNING OF FUNCTIONS FOR REPORTING INFORMATION
-#########################################################################################
-
-
-@login_required(login_url='/login/')
-@user_uploaded
-def reporting(request):
-    
-    return render(request,'lmdb/reporting.html',{})
-
-
-#########################################################################################
-#   END OF FUNCTIONS FOR REPORTING #
-#
-#########################################################################################
 #   BEGINNING OF FUNCTIONS FOR LOGIN INFORMATION #
 #########################################################################################
 
