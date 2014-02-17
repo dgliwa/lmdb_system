@@ -1,0 +1,71 @@
+{% extends "base.html" %}
+{% block title %}Reporting Test{% endblock %}
+{% block customjs %}
+{% load static %}
+<script type="text/javascript" src="{% static "Chart.js/Chart.min.js" %}"></script>
+<script>
+window.onload = function(){
+	var canvas = document.getElementById("myChart");
+var ctx = canvas.getContext("2d");
+var	data = {
+	labels : {{xaxis}},
+	datasets : [
+		{
+			fillColor : "rgba(255,255,0,0.5)",
+			strokeColor : "rgba(255,255,0,1)",
+			pointColor : "rgba(255,255,0,1)",
+			label : "Collections",
+			pointStrokeColor : "#fff",
+			data : {{collections}}
+		},
+		{
+			fillColor : "rgba(128,0,0,0.5)",
+			strokeColor : "rgba(128,0,0,1)",
+			pointColor : "rgba(128,0,0,1)",
+			label : "Changes",
+			pointStrokeColor : "#fff",
+			data : {{changes}}
+		},
+		{
+			fillColor : "rgba(0,0,255,0.5)",
+			strokeColor : "rgba(0,0,255,1)",
+			pointColor : "rgba(0,0,255,1)",
+			label : "Sightings",
+			pointStrokeColor : "#fff",
+			data : {{sightings}}
+		},
+		{
+			fillColor : "rgba(0,100,0,0.5)",
+			strokeColor : "rgba(0,100,0,1)",
+			pointColor : "rgba(0,100,0,1)",
+			label : "Measurements",
+			pointStrokeColor : "#fff",
+			data : {{measurements}}
+		},
+		
+	]
+}
+//console.log({{data}})
+var newchart = new Chart(ctx).Line(data);
+}
+</script>
+{% endblock %}
+{% block sideBar %}
+ <div class="span3">
+          <div class="well sidebar-nav">
+            <ul class="nav nav-list">
+              <li class="nav-header">Sidebar</li>
+<li><a href="{% url 'lmdb:reference' %}">Reference Data</a></li>
+<li><a href="{% url 'lmdb:data' %}">Data Input</a></li>
+<li><a href="{% url 'reporting:reportingHome' %}">Reporting</a></li>
+</ul>
+</div>
+</div>
+{% endblock %}
+{% block content %}
+ <canvas id="myChart" width="400" height="400"></canvas>   
+
+
+
+
+{% endblock %}
