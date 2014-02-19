@@ -4,17 +4,35 @@
           <div class="well sidebar-nav">
             <ul class="nav nav-list">
               <li class="nav-header">Sidebar</li>
-<li><a href="{% url 'lmdb:reference' %}">Reference Data</a></li>
-<li><a href="{% url 'lmdb:data' %}">Data Input</a></li>
+<li><a href="{% url 'lmdb:reference' %}">Reference Data</a>
+	<ul>
+		<a href="{% url 'lmdb:events' %}">Events</a><br>
+		<a href="{% url 'lmdb:parameters' %}">Parameters</a><br>
+		<a href="{% url 'lmdb:projects' %}">Projects</a><br>
+		<a href="{% url 'lmdb:permits' %}">Permits</a><br>
+		<a href="{% url 'lmdb:locations' %}">Locations</a><br>
+		<a href="{% url 'lmdb:organisms' %}">Organisms</a><br>
+	</ul>
+</li>
+<li><a href="{% url 'lmdb:data' %}">Data Input</a>
+	<ul>
+		<li><a href="{% url 'lmdb:sightings' %}">Sightings</a></li>
+		<li><a href="{% url 'lmdb:changes' %}">Changes</a></li>
+		<li><a href="{% url 'lmdb:measurements' %}">Measurements</a></li>
+		<li><a href="{% url 'lmdb:collections' %}">Collections</a></li>
+	</ul>
+</li>
 <li><a href="{% url 'reporting:reportingHome' %}">Reporting</a></li>
 </ul>
 </div>
 </div>
 {% endblock %}
 {% block content %}
-    
+    <h2>Introduction</h2>
+    <p>Loyola University Chicago presents the LUREC LMDB, or Loyola University Chicago Retreat and Ecology Campus (LUREC) Land Management Database (LMDB).</p><p>This is an application designed to be a single source for all data and information regarding research and operations at LUREC.</p><p>LMDB enables entry of ecological data related to research, operations, restoration, farming and maintenance of the LUREC property.</p>
+    <br>
 {% if projects %}
-<h1>Projects Managed by User</h1>
+<h3>Projects Managed by User</h3>
 <ul>
 {% for p in projects %}
 <li><a href="{% url 'lmdb:projectDetail' p.objectid %}">{{p.projectname}}</a></li>
