@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-{% block pageName %}Data Update{% endblock %}
+{% block pageName %}Reporting{% endblock %}
 {% block customjs %}
 {% load static %}
     <link rel="stylesheet" href="{% static "DataTables-1.9.4/media/css/jquery.dataTables.css" %}" />
@@ -123,127 +123,84 @@ $(document).ready( function() {
 
 } );
 
+function fnGetFiltered(oTableLocal)
+{
+    return oTableLocal._( 'tr', { 'filter': 'applied' } );
+}
+
 function fnGetSelected( oTableLocal )
 {
     return oTableLocal.$('tr.row_selected');
 }
 
-
-function deleteRows(){
-    var rows = fnGetSelected(oTable);
-    console.log(rows);
+function printFiltered(){
+    console.log(fnGetFiltered(oTable));
+    var rows = fnGetFiltered(oTable);
     if(rows.length===0){
-    alert("You haven't selected any rows!");
+    alert("There are no items left!");
     }
     else{
-        if(window.confirm("Are you sure you want to delete this (these) row(s)?")){
-   
-   
-                            method = "post"; // Set method to post by default, if not specified.
+        method = "post"; // Set method to post by default, if not specified.
 
-                        // The rest of this code assumes you are not using a library.
-                        // It can be made less wordy if you use one.
-                        var form = document.createElement("form");
-                        form.setAttribute("method", method);
-                        form.setAttribute("id", "deleteForm");
-                        form.setAttribute("action", '/data/delete/');
+                // The rest of this code assumes you are not using a library.
+                // It can be made less wordy if you use one.
+                var form = document.createElement("form");
+                form.setAttribute("method", method);
+                form.setAttribute("action", '/reporting/general/csv/');
 
-                        var csrfToken = document.createElement("input");
-                        csrfToken.setAttribute("type", "hidden");
-                        csrfToken.setAttribute("name", "csrfmiddlewaretoken");
-                        csrfToken.setAttribute("value", "{{ csrf_token }}");
-                        form.appendChild(csrfToken);   
-   
-            for (var i = 0; i< rows.length; i++){
+                var csrfToken = document.createElement("input");
+                csrfToken.setAttribute("type", "hidden");
+                csrfToken.setAttribute("name", "csrfmiddlewaretoken");
+                csrfToken.setAttribute("value", "{{ csrf_token }}");
+                form.setAttribute("target", '_blank');
+
+                form.appendChild(csrfToken);
+                for (var i = 0; i< rows.length; i++){
                 var row = rows[i];
-            if(document.all){
-             var trim = row.innerText.trim();
-        } else{
-            var trim = row.textContent.trim();
-        }        
-                trim = trim.replace(/(\r\n|\n|\r)/gm,"");
-                trim = trim.replace(/        /gm,"	");
-                trim = trim.replace(/ +/gm,"	");
-                var arr = trim.split("	");
+                var text = $(row[0]).text();
+        //     if(document.all){
+        //      var type = row[0].innerText.trim();
+        // } else{
+        //     var type = row[0].textContent.trim();
+        // }        
+                // type = type.replace(/(\r\n|\n|\r)/gm,"");
+                // type = type.replace(/        /gm,"  ");
+                // type = type.replace(/ +/gm,"    ");
        
                 var val = document.createElement("input");
                         val.setAttribute("type", "hidden");
                         val.setAttribute("name", i);
-                        val.setAttribute("value", [arr[0],arr[1]]);
+                        val.setAttribute("value", [text,row[1]]);
                         form.appendChild(val);
-                console.log(arr);
+                //console.log(arr);
             }
             console.log(form);
  
             document.body.appendChild(form);
             form.submit();
 
-  
-            return false;}
-        }
-}
-
-
-function editRows(){
-    var rows = fnGetSelected(oTable);
-    console.log(rows);
-    var vals = {'csrfmiddlewaretoken' : '{{ csrf_token }}'}
-    
-    
-                    method = "post"; // Set method to post by default, if not specified.
-
-                // The rest of this code assumes you are not using a library.
-                // It can be made less wordy if you use one.
-                var form = document.createElement("form");
-                form.setAttribute("method", method);
-                form.setAttribute("action", '/data/update/form/');
-
-                var csrfToken = document.createElement("input");
-                csrfToken.setAttribute("type", "hidden");
-                csrfToken.setAttribute("name", "csrfmiddlewaretoken");
-                csrfToken.setAttribute("value", "{{ csrf_token }}");
-                form.appendChild(csrfToken);
-
-
-                
-
-
-    
-    
-    
-    
-    for (var i = 0; i< rows.length; i++){
-        var row = rows[i];
-    if(document.all){
-     var trim = row.innerText.trim();
-} else{
-    var trim = row.textContent.trim();
-}        
-        trim = trim.replace(/(\r\n|\n|\r)/gm,"");
-        trim = trim.replace(/        /gm,"	");
-        trim = trim.replace(/ +/gm,"	");
-        var arr = trim.split("	");
-        
-        var val = document.createElement("input");
-                val.setAttribute("type", "hidden");
-                val.setAttribute("name", i);
-                val.setAttribute("value", [arr[0],arr[1]]);
-                form.appendChild(val);
-        console.log(arr);
     }
-    console.log(form);
-  
-    document.body.appendChild(form);
-    form.submit();
-   
-    return false;
 }
+
+
 </script>
 
 {% endblock %}
+{% block sideBar %}
+ <div class="span3">
+          <div class="well sidebar-nav">
+            <ul class="nav nav-list">
+              <li class="nav-header">Sidebar</li>
+<li><a href="{% url 'reporting:reportingTest' %}">Test Chart</a></li>
+
+</ul>
+</div>
+</div>
+{% endblock %}
 {% block content %}
+
 {% if sightings or measurements or collections or changes %}
-    <button class="btn btn-lg btn-primary" type="button" onClick="editRows()">Edit Selected Rows</button> <button class="btn btn-lg btn-primary" type="button" onClick="deleteRows()">Delete Selected Rows</button><br><br>
+    <button class="btn btn-lg btn-primary" type="button" onClick="printFiltered()">Use Filtered Rows</button> <!--<button class="btn btn-lg btn-primary" type="button" onClick="deleteRows()">Delete Selected Rows</button>--><br><br>
     Date Min:<input type = "text" id="datepicker_min"/>
     Date Max:<input type = "text" id="datepicker_max"/>
 
@@ -251,15 +208,15 @@ function editRows(){
     <thead>
     
     <tr>
-			<th><input style="width:100%" type="text" name="type" value="Search Type" class="search_init" /></th>
-			<th><input style="width:100%" type="text" name="id" value="Search Ids" class="search_init" /></th>
-			<th><input style="width:100%" type="text" name="project" value="Search Projects" class="search_init" /></th>
-			<th><input style="width:100%" type="text" name="organism" value="Search Organisms" class="search_init" /></th>
-			<th><input style="width:100%" type="text" name="location" value="Search Locations" class="search_init" /></th>
-			<th><input style="width:100%" type="text" name="person" value="Search People" class="search_init" /></th>
-			<th><input style="width:100%" type="text" name="date" value="Search Dates" class="search_init" /></th>
+            <th><input style="width:100%" type="text" name="type" value="Search Type" class="search_init" /></th>
+            <th><input style="width:100%" type="text" name="id" value="Search Ids" class="search_init" /></th>
+            <th><input style="width:100%" type="text" name="project" value="Search Projects" class="search_init" /></th>
+            <th><input style="width:100%" type="text" name="organism" value="Search Organisms" class="search_init" /></th>
+            <th><input style="width:100%" type="text" name="location" value="Search Locations" class="search_init" /></th>
+            <th><input style="width:100%" type="text" name="person" value="Search People" class="search_init" /></th>
+            <th><input style="width:100%" type="text" name="date" value="Search Dates" class="search_init" /></th>
 
-		</tr>
+        </tr>
     <tr>
         <th>Type</th>
         <th>ID</th>
@@ -327,10 +284,15 @@ function editRows(){
     </tbody>
     <tfoot>
    
-	</tfoot>
+    </tfoot>
     </table>
        
 {% else %}
 No data available.
 {% endif %}
+
 {% endblock %}
+
+
+
+
