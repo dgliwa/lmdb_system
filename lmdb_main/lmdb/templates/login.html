@@ -68,6 +68,9 @@
   <body>
 
     <div class="container">
+      <p>Loyola University Chicago presents the LUREC LMDB, or Loyola University Chicago Retreat and Ecology Campus (LUREC) Land Management Database (LMDB).</p>
+      <p>This is an application designed to be a single source for all data and information regarding research and operations at LUREC.</p>
+      <p>Please login to continue to the application or send a request for your credentials to the faculty member who asked you to participate. Contact David Treering at <a href="mailto:dgoldb2@luc.edu">dgoldb2@luc.edu</a> for permission to use LMDB as a guest.</p>
 
       <form class="form-signin" action='/login/' method='post'>
       {% csrf_token %}
@@ -77,7 +80,8 @@
         <input name='password' type="password" class="form-control" placeholder="Password">
         <button class="btn btn-lg btn-primary btn-block" type="submit">Sign in</button>
       </form>
-
+      <img src="{% static "images/lurecMap.jpg" %}" alt="LUREC Map" width="600">
+      <p>Map of Loyola University Chicago Retreat and Ecology Campus, 2014</p>
     </div> <!-- /container -->
 
 
