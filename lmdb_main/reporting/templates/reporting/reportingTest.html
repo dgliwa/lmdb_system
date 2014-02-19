@@ -3,8 +3,10 @@
 {% block customjs %}
 {% load static %}
 <script type="text/javascript" src="{% static "Chart.js/Chart.min.js" %}"></script>
+<script type="text/javascript" src="{% static "Highcharts-3.0.9/js/highcharts.js" %}"></script>
+<script type="text/javascript" src="{% static "Highcharts-3.0.9/js/modules/exporting.js" %}"></script>
 <script>
-window.onload = function(){
+/*window.onload = function(){
 	var canvas = document.getElementById("myChart");
 var ctx = canvas.getContext("2d");
 var	data = {
@@ -47,7 +49,54 @@ var	data = {
 }
 //console.log({{data}})
 var newchart = new Chart(ctx).Line(data);
-}
+}*/
+
+
+$(function () {
+        $('#container').highcharts({
+            title: {
+                text: 'Monthly Data Entries',
+                x: -20 //center
+            },
+            subtitle: {
+                text: 'Sightings, Collections, Measurements, and Changes',
+                x: -20
+            },
+            xAxis: {
+                categories: {{xaxis}}
+            },
+            yAxis: {
+                title: {
+                    text: 'Number of Inputs'
+                },
+                plotLines: [{
+                    value: 0,
+                    width: 1,
+                    color: '#808080'
+                }]
+            },
+            legend: {
+                layout: 'vertical',
+                align: 'right',
+                verticalAlign: 'middle',
+                borderWidth: 0
+            },
+            series: [{
+                name: 'Sightings',
+                data: {{sightings}}
+            }, {
+                name: 'Collections',
+                data: {{collections}}
+            }, {
+                name: 'Changes',
+                data: {{changes}}
+            }, {
+                name: 'Measurements',
+                data: {{measurements}}
+            }]
+        });
+    });
+
 </script>
 {% endblock %}
 {% block sideBar %}
@@ -63,7 +112,8 @@ var newchart = new Chart(ctx).Line(data);
 </div>
 {% endblock %}
 {% block content %}
- <canvas id="myChart" width="400" height="400"></canvas>   
+ <!--<canvas id="myChart" width="400" height="400"></canvas> -->
+ <div id="container" style="min-width: 310px; height: 400px; margin: 0 auto"></div>  
 
 
 

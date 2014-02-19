@@ -1,5 +1,17 @@
 {% extends "base.html" %}
 {% block pageName %}Reporting{% endblock %}
+{% block sideBar %}
+ <div class="span3">
+          <div class="well sidebar-nav">
+            <ul class="nav nav-list">
+              <li class="nav-header">Sidebar</li>
+<li><a href="{% url 'lmdb:reference' %}">Reference Data</a></li>
+<li><a href="{% url 'lmdb:data' %}">Data Input</a></li>
+<li><a href="{% url 'reporting:reportingHome' %}">Reporting</a></li>
+</ul>
+</div>
+</div>
+{% endblock %}
 {% block content %}
 
 <h3> Reporting </h3>
