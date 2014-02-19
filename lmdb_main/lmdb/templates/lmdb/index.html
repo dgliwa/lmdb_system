@@ -4,17 +4,17 @@
           <div class="well sidebar-nav">
             <ul class="nav nav-list">
               <li class="nav-header">Sidebar</li>
-<li><a href="{% url 'lmdb:reference' %}">Reference Data</a>
+<li><h4><a href="{% url 'lmdb:reference' %}">Reference Data</a></h4>
 	<ul>
-		<a href="{% url 'lmdb:events' %}">Events</a><br>
-		<a href="{% url 'lmdb:parameters' %}">Parameters</a><br>
-		<a href="{% url 'lmdb:projects' %}">Projects</a><br>
-		<a href="{% url 'lmdb:permits' %}">Permits</a><br>
-		<a href="{% url 'lmdb:locations' %}">Locations</a><br>
-		<a href="{% url 'lmdb:organisms' %}">Organisms</a><br>
+		<li><a href="{% url 'lmdb:events' %}">Events</a></li>
+		<li><a href="{% url 'lmdb:parameters' %}">Parameters</a></li>
+		<li><a href="{% url 'lmdb:projects' %}">Projects</a></li>
+		<li><a href="{% url 'lmdb:permits' %}">Permits</a></li>
+		<li><a href="{% url 'lmdb:locations' %}">Locations</a></li>
+		<li><a href="{% url 'lmdb:organisms' %}">Organisms</a></li>
 	</ul>
 </li>
-<li><a href="{% url 'lmdb:data' %}">Data Input</a>
+<li><h4><a href="{% url 'lmdb:data' %}">Data Input</a></h4>
 	<ul>
 		<li><a href="{% url 'lmdb:sightings' %}">Sightings</a></li>
 		<li><a href="{% url 'lmdb:changes' %}">Changes</a></li>
@@ -22,7 +22,7 @@
 		<li><a href="{% url 'lmdb:collections' %}">Collections</a></li>
 	</ul>
 </li>
-<li><a href="{% url 'reporting:reportingHome' %}">Reporting</a></li>
+<li><h4><a href="{% url 'reporting:reportingHome' %}">Reporting</a></h4></li>
 </ul>
 </div>
 </div>
@@ -40,7 +40,22 @@
 </ul>
 {% endif %}
 
-
-
-
 {% endblock %}
+{% block content %}
+    <h2>About the LUREC Land Management Database (LMDB)</h2>
+    <p>Proposed activities at LUREC are subject to review and approval, so a history of landscape changes, research projects and restoration activities is needed to advise the administration on land and ecosystem management practices and policies.</p>
+	<p>The goal of LMDB is to gather data from students, staff, faculty, researchers and visitors at LUREC to:</p>
+
+		<ul>
+			<li>Record observations, activities and changes to the property over time.</li>
+			<li>Coordinate all activity that will have any impact on the property, specifically the wetland, woodland, and grasslands.</li>
+			<li>Store long-term ecological data that can be used by students, staff, faculty, researchers and guests.</li>
+		</ul>
+	<p>LUREC has a large number of users and stakeholders.  The main groups of activities at LUREC include:</p>
+<ul>
+Ecology: The 98 acre property has a degraded wetland, a series of spring-fed ponds, remnant oak hickory woodland, and countless plant and animal species that find food and habitat on the site.  Conservation and restoration are significant priorities for the property.<br>
+Retreats: Loyola uses the property for retreats, serving student groups, staff and faculty groups, and external organizations’ getaways. This location offers spaces and opportunities for interpersonal, intellectual and spiritual growth. An extensive high and low ropes course is located in the forested area.<br>
+Recreation: The campus houses resident students and faculty, as well as retreat guests. A number of recreation opportunities exist, including hiking LUREC’s trail system and playing on the tennis court.<br>
+Energy: LUREC was purchased with a vision of an ecologically friendly campus, and current plans are for a “Net Zero” energy campus operations. Water is drawn from deep wells and wastewater is treated onsite via septic fields. With retrofits and upgrades, combined with the planned installation of geothermal, solar PV, solar thermal and wind power, power consumed from the grid will be reduced to almost nothing.<br>
+Farming: A sustainable, organic farm of over 2 acres was started on the property in 2010 by students. A large hoop house, green house, small orchard, wheat field, chicken coop and apiary are included. Food grown at LUREC is used in the kitchen at LUREC.
+</ul>
