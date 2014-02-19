@@ -130,7 +130,7 @@ def csvReport(request):
 			writer.writerow(['Sightings'])
 			writer.writerow(['Sighting ID','Project Name','Project Start Date','Project End Date','Project Description', 'Project Location ID', 'Project Owner','Organism Name','Number Sighted','Sighting Date','Sighting Notes','Person','Sighting Location ID'])
 			for s1 in sightings:
-				s = Measurement.objects.get(objectid=int(s1))
+				s = Sighting.objects.get(objectid=int(s1))
 				writer.writerow([s.objectid, s.projectid.projectname, s.projectid.projectstartdate, s.projectid.projectenddate, s.projectid.projectdescription, s.projectid.locationid, s.projectid.personid.displayname, s.organismid.organismname, s.number, s.date, s.notes, s.personid.displayname, s.locationid, ])
 				writer.writerow([])
 
