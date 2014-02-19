@@ -124,7 +124,7 @@ def csvReport(request):
 			writer.writerow(['Measurement ID','Project Name','Project Start Date','Project End Date','Project Description', 'Project Location ID', 'Project Owner','Measurement Name','Measurement Method','Measurement Quantity','Measurement Units','Measurement Notes','Measurement Medium','Parameter Name','Measurement Date','Person','Measurement Location ID'])
 			for m1 in measurements:
 				m = Measurement.objects.get(objectid=int(m1))
-				writer.writerow([m.objectid, m.projectid.projectname, m.projectid.projectstartdate, m.projectid.projectenddate, m.projectid.projectdescription, m.projectid.locationid, m.projectid.personid.displayname, m.mname, m.mmethod, m.mquant, m.units, m.notes, m.medium, m.parameterid.commonname, m.date, m.personid.displayname, m.locationid, ])
+				writer.writerow([m.objectid, m.projectid.projectname, m.projectid.projectstartdate, m.projectid.projectenddate, m.projectid.projectdescription, m.projectid.locationid, m.projectid.personid.displayname, m.mname, m.mmethod, m.mquant, m.munits, m.notes, m.medium, m.parameterid.commonname, m.date, m.personid.displayname, m.locationid, ])
 				writer.writerow([])
 		if len(sightings) != 0:
 			writer.writerow(['Sightings'])
