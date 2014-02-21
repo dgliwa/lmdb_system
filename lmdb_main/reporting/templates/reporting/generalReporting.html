@@ -15,9 +15,29 @@ table tr.even.row_selected td {
 	background-color: #B0BED9;
 }
 
+SECTION {
+    padding: 8px;
+    background-color: #f0f0f0;
+    overflow: auto;
+}
+SECTION > DIV {
+    float: left;
+    padding: 4px;
+}
+SECTION > DIV + DIV {
+    width: 40px;
+    text-align: center;
+}
+
 </style>
 
+
+
 <script>
+
+
+
+
 var minDateFilter;
 var maxDateFilter;
 var asInitVals = new Array();
@@ -46,6 +66,49 @@ $.fn.dataTableExt.afnFiltering.push(
 );
 
 $(document).ready( function() {
+$("#btnLeftData").click(function () {
+    var selectedItem = $("#rightValuesData option:selected");
+    $("#leftValuesData").append(selectedItem);
+});
+
+$("#leftAllData").click(function () {
+    var selectedItem = $("#rightValuesData option");
+    $("#leftValuesData").append(selectedItem);
+});
+
+$("#rightAllData").click(function () {
+    var selectedItem = $("#leftValuesData option");
+    $("#rightValuesData").append(selectedItem);
+});
+
+$("#btnRightData").click(function () {
+    var selectedItem = $("#leftValuesData option:selected");
+    $("#rightValuesData").append(selectedItem);
+});
+
+
+$("#btnLeftProj").click(function () {
+    var selectedItem = $("#rightValuesProj option:selected");
+    $("#leftValuesProj").append(selectedItem);
+});
+
+$("#leftAllProj").click(function () {
+    var selectedItem = $("#rightValuesProj option");
+    $("#leftValuesProj").append(selectedItem);
+});
+
+$("#rightAllProj").click(function () {
+    var selectedItem = $("#leftValuesProj option");
+    $("#rightValuesProj").append(selectedItem);
+});
+
+$("#btnRightProj").click(function () {
+    var selectedItem = $("#leftValuesProj option:selected");
+    $("#rightValuesProj").append(selectedItem);
+});
+
+
+
  $('#example tr').click( function() {
         $(this).toggleClass('row_selected');
     } );
@@ -133,6 +196,73 @@ function fnGetSelected( oTableLocal )
     return oTableLocal.$('tr.row_selected');
 }
 
+function reportShuttled(){
+    var data = $('#rightValuesData option');
+    var projects = $('#rightValuesProj option');
+    console.log(data);
+    console.log(projects);
+    if(data.length===0 && projects.length===0){
+        alert("You haven't selected any criteria!");
+    }
+    else{
+        method = "post"; // Set method to post by default, if not specified.
+
+                // The rest of this code assumes you are not using a library.
+                // It can be made less wordy if you use one.
+                var form = document.createElement("form");
+                form.setAttribute("method", method);
+                form.setAttribute("action", '/reporting/general/csv/criteria/');
+
+                var csrfToken = document.createElement("input");
+                csrfToken.setAttribute("type", "hidden");
+                csrfToken.setAttribute("name", "csrfmiddlewaretoken");
+                csrfToken.setAttribute("value", "{{ csrf_token }}");
+                form.setAttribute("target", '_blank');
+
+                form.appendChild(csrfToken);
+
+                if(data.length !== 0){
+                var dataForm=[]
+                for(var i = 0; i<data.length; i++){
+                    //console.log(data[i]);
+                    dataForm.push(data[i].value)
+                }
+                dataForm = dataForm.join(',');
+                var dataInput = document.createElement("input");
+                dataInput.setAttribute("type", "hidden");
+                dataInput.setAttribute("name", "dataInput");
+                dataInput.setAttribute("value", dataForm);
+                form.appendChild(dataInput);
+                console.log(dataForm);
+
+            }
+                if(projects.length !== 0){
+                var projectsForm = []
+                for(var i = 0; i<projects.length; i++){
+                    //console.log(projects[i]);
+                    projectsForm.push(projects[i].value)
+                }
+                projectsForm = projectsForm.join(',');
+                var projectsInput = document.createElement("input");
+                projectsInput.setAttribute("type", "hidden");
+                projectsInput.setAttribute("name", "projectsInput");
+                projectsInput.setAttribute("value", projectsForm);
+                form.appendChild(projectsInput);
+                console.log(projectsForm);
+
+            }
+                
+
+                
+                
+                console.log(form);
+ 
+                document.body.appendChild(form);
+                form.submit();
+
+    }
+}
+
 function printFiltered(){
     console.log(fnGetFiltered(oTable));
     var rows = fnGetFiltered(oTable);
@@ -146,7 +276,7 @@ function printFiltered(){
                 // It can be made less wordy if you use one.
                 var form = document.createElement("form");
                 form.setAttribute("method", method);
-                form.setAttribute("action", '/reporting/general/csv/');
+                form.setAttribute("action", '/reporting/general/csv/filter/');
 
                 var csrfToken = document.createElement("input");
                 csrfToken.setAttribute("type", "hidden");
@@ -199,8 +329,62 @@ function printFiltered(){
 {% endblock %}
 {% block content %}
 
+
+
+
 {% if sightings or measurements or collections or changes %}
-    <button class="btn btn-lg btn-primary" type="button" onClick="printFiltered()">Use Filtered Rows</button> <!--<button class="btn btn-lg btn-primary" type="button" onClick="deleteRows()">Delete Selected Rows</button>--><br><br>
+
+<section class="container">
+    <div>
+        <select id="leftValuesData" size="4" multiple>
+            <option>Changes</option>
+            <option>Collections</option>
+            <option>Measurements</option>
+            <option>Sightings</option>
+        </select>
+        <br>
+        <input type="button" id="rightAllData" value="Move All"/>
+    </div>
+    <div>
+        
+        <input type="button" id="btnRightData" value="&gt;&gt;" />
+        <input type="button" id="btnLeftData" value="&lt;&lt;" />
+    </div>
+    <div>
+        <select id="rightValuesData" size="4" multiple>
+
+        </select>
+        <br>
+        <input type="button" id="leftAllData" value="Move All"/>
+    </div>
+</section>
+{% if projects %}
+<section>
+    <div>
+            <select id="leftValuesProj" multiple>
+            {% for p in projects %}
+            <option value={{p.objectid}}>{{p.projectname}}</option>
+            {% endfor %}
+        </select>
+        <br>
+        <input type="button" id="rightAllProj" value="Move All"/>
+    </div>
+    <div>
+        
+        <input type="button" id="btnRightProj" value="&gt;&gt;" />
+        <input type="button" id="btnLeftProj" value="&lt;&lt;" />
+    </div>
+    <div>
+        <select id="rightValuesProj"  multiple>
+
+        </select>
+        <br>
+        <input type="button" id="leftAllProj" value="Move All"/>
+    </div>
+</section>
+{% endif %}
+
+    <button class="btn btn-lg btn-primary" type="button" onClick="reportShuttled()">Use Selected Criteria</button> <!--<button class="btn btn-lg btn-primary" type="button" onClick="deleteRows()">Delete Selected Rows</button>--><br><br>
     Date Min:<input type = "text" id="datepicker_min"/>
     Date Max:<input type = "text" id="datepicker_max"/>
 
@@ -286,7 +470,7 @@ function printFiltered(){
    
     </tfoot>
     </table>
-       
+    <button class="btn btn-lg btn-primary" type="button" onClick="printFiltered()">Use Filtered Rows</button>
 {% else %}
 No data available.
 {% endif %}
