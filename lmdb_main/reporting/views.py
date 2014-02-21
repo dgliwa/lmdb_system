@@ -70,31 +70,47 @@ def reporting_test(request):
 
 @login_required(login_url='/login/')
 @user_uploaded
-def generalReporting(request):
+def simpleReporting(request):
 	sightings = Sighting.objects.all()
 	measurements = Measurement.objects.all()
 	collections = Collection.objects.all()
 	changes = Change.objects.all()
 	projects = Project.objects.all()
-	return render(request,'reporting/generalReporting.html',{'projects':projects,'sightings':sightings,'measurements':measurements,'collections':collections,'changes':changes})
+	return render(request,'reporting/simpleReporting.html',{'projects':projects,'sightings':sightings,'measurements':measurements,'collections':collections,'changes':changes})
+
+
+@login_required(login_url='/login/')
+@user_uploaded
+def advancedReporting(request):
+	projects = Project.objects.all()
+	parameters = Parameter.objects.all()
+	organisms = Organism.objects.all()
+	return render(request,'reporting/advancedReporting.html',{'projects':projects, 'parameters':parameters, 'organisms':organisms})
 
 
 @login_required(login_url='/login/')
 @user_uploaded
 def csvCriteriaReport(request):
 	response = HttpResponse(content_type='text/csv')
-	response['Content-Disposition'] = 'attachment; filename="general_report.csv"'
+	response['Content-Disposition'] = 'attachment; filename="advanced_report.csv"'
 	writer = csv.writer(response)
 	#print request
 	if request.POST:
 		dict = request.POST
+
 		changes = []
 		collections = []
 		measurements = []
 		sightings = []
-		projectIds = []
 		projects = []
-		data = []
+		parameters = []
+		organisms = []
+		if 'paramsInput' in dict:
+			paramIds = dict['paramsInput'].split(",")
+			parameters = Parameter.objects.filter(objectid__in=paramIds)
+		if 'organismsInput' in dict:
+			organismIds = dict['organismsInput'].split(",")
+			organisms = Organism.objects.filter(objectid__in=organismIds)
 		if 'projectsInput' in dict:
 			projectIds = dict['projectsInput'].split(",")
 			projects = Project.objects.filter(objectid__in=projectIds)
@@ -108,6 +124,8 @@ def csvCriteriaReport(request):
 				changes = Change.objects.all()
 			else:
 				changes = Change.objects.filter(projectid__in=projects)
+			if len(parameters) != 0:
+				changes = changes.filter(parameterid__in=parameters)
 			if len(changes)==0:
 				writer.writerow(['','NO CHANGES'])
 			else:
@@ -121,6 +139,8 @@ def csvCriteriaReport(request):
 				collections = Collection.objects.all()
 			else:
 				collections = Collection.objects.filter(projectid__in=projects)
+			if len(organisms) != 0:
+				collections = collections.filter(organismid__in=organisms)
 			if len(collections)==0:
 				writer.writerow(['','NO COLLECTIONS'])
 			else:
@@ -134,6 +154,8 @@ def csvCriteriaReport(request):
 				measurements = Measurement.objects.all()
 			else:
 				measurements = Measurement.objects.filter(projectid__in=projects)
+			if len(parameters) != 0:
+				measurements = measurements.filter(parameterid__in=parameters)
 			if len(measurements) == 0:
 				writer.writerow(['','NO MEASUREMENTS'])
 			else:
@@ -147,6 +169,8 @@ def csvCriteriaReport(request):
 				sightings = Sighting.objects.all()
 			else:
 				sightings = Sighting.objects.filter(projectid__in=projects)
+			if len(organisms) != 0:
+				sightings = sightings.filter(organismid__in=organisms)
 			if len(sightings)==0:
 				writer.writerow(['','NO MEASUREMENTS'])
 			else:
@@ -162,7 +186,7 @@ def csvCriteriaReport(request):
 @user_uploaded
 def csvFilterReport(request):
 	response = HttpResponse(content_type='text/csv')
-	response['Content-Disposition'] = 'attachment; filename="general_report.csv"'
+	response['Content-Disposition'] = 'attachment; filename="simple_report.csv"'
 	writer = csv.writer(response)
 	print request
 	if request.POST:
