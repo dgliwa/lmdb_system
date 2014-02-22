@@ -334,55 +334,7 @@ function printFiltered(){
 
 {% if sightings or measurements or collections or changes %}
 
-<section class="container">
-    <div>
-        <select id="leftValuesData" size="4" multiple>
-            <option>Changes</option>
-            <option>Collections</option>
-            <option>Measurements</option>
-            <option>Sightings</option>
-        </select>
-        <br>
-        <input type="button" id="rightAllData" value="Move All"/>
-    </div>
-    <div>
-        
-        <input type="button" id="btnRightData" value="&gt;&gt;" />
-        <input type="button" id="btnLeftData" value="&lt;&lt;" />
-    </div>
-    <div>
-        <select id="rightValuesData" size="4" multiple>
 
-        </select>
-        <br>
-        <input type="button" id="leftAllData" value="Move All"/>
-    </div>
-</section>
-{% if projects %}
-<section>
-    <div>
-            <select id="leftValuesProj" multiple>
-            {% for p in projects %}
-            <option value={{p.objectid}}>{{p.projectname}}</option>
-            {% endfor %}
-        </select>
-        <br>
-        <input type="button" id="rightAllProj" value="Move All"/>
-    </div>
-    <div>
-        
-        <input type="button" id="btnRightProj" value="&gt;&gt;" />
-        <input type="button" id="btnLeftProj" value="&lt;&lt;" />
-    </div>
-    <div>
-        <select id="rightValuesProj"  multiple>
-
-        </select>
-        <br>
-        <input type="button" id="leftAllProj" value="Move All"/>
-    </div>
-</section>
-{% endif %}
 
     <button class="btn btn-lg btn-primary" type="button" onClick="reportShuttled()">Use Selected Criteria</button> <!--<button class="btn btn-lg btn-primary" type="button" onClick="deleteRows()">Delete Selected Rows</button>--><br><br>
     Date Min:<input type = "text" id="datepicker_min"/>

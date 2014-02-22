@@ -82,9 +82,9 @@ def simpleReporting(request):
 @login_required(login_url='/login/')
 @user_uploaded
 def advancedReporting(request):
-	projects = Project.objects.all()
-	parameters = Parameter.objects.all()
-	organisms = Organism.objects.all()
+	projects = Project.objects.all().order_by('projectname')
+	parameters = Parameter.objects.all().order_by('commonname')
+	organisms = Organism.objects.all().order_by('organismname')
 	return render(request,'reporting/advancedReporting.html',{'projects':projects, 'parameters':parameters, 'organisms':organisms})
 
 
