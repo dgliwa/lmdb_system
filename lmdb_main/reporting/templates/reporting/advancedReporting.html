@@ -1,0 +1,344 @@
+{% extends "base.html" %}
+{% block pageName %}Reporting{% endblock %}
+{% block customjs %}
+{% load static %}
+    <script src="//ajax.googleapis.com/ajax/libs/jqueryui/1.8.16/jquery-ui.min.js" type="text/javascript"></script>
+    <link rel="stylesheet" href="//ajax.googleapis.com/ajax/libs/jqueryui/1.8.16/themes/base/jquery-ui.css" type="text/css" media="all" />
+
+<style>
+
+SECTION {
+    padding: 8px;
+    background-color: #f0f0f0;
+    overflow: auto;
+}
+SECTION > DIV {
+    float: left;
+    padding: 4px;
+}
+SECTION > DIV + DIV {
+    width: 40px;
+    text-align: center;
+}
+
+</style>
+
+
+
+<script>
+
+
+
+$(document).ready( function() {
+$("#btnLeftData").click(function () {
+    var selectedItem = $("#rightValuesData option:selected");
+    $("#leftValuesData").append(selectedItem);
+});
+
+$("#leftAllData").click(function () {
+    var selectedItem = $("#rightValuesData option");
+    $("#leftValuesData").append(selectedItem);
+});
+
+$("#rightAllData").click(function () {
+    var selectedItem = $("#leftValuesData option");
+    $("#rightValuesData").append(selectedItem);
+});
+
+$("#btnRightData").click(function () {
+    var selectedItem = $("#leftValuesData option:selected");
+    $("#rightValuesData").append(selectedItem);
+});
+
+
+$("#btnLeftProj").click(function () {
+    var selectedItem = $("#rightValuesProj option:selected");
+    $("#leftValuesProj").append(selectedItem);
+});
+
+$("#leftAllProj").click(function () {
+    var selectedItem = $("#rightValuesProj option");
+    $("#leftValuesProj").append(selectedItem);
+});
+
+$("#rightAllProj").click(function () {
+    var selectedItem = $("#leftValuesProj option");
+    $("#rightValuesProj").append(selectedItem);
+});
+
+$("#btnRightProj").click(function () {
+    var selectedItem = $("#leftValuesProj option:selected");
+    $("#rightValuesProj").append(selectedItem);
+});
+
+$("#btnLeftOrganism").click(function () {
+    var selectedItem = $("#rightValuesOrganism option:selected");
+    $("#leftValuesOrganism").append(selectedItem);
+});
+
+$("#leftAllOrganism").click(function () {
+    var selectedItem = $("#rightValuesOrganism option");
+    $("#leftValuesOrganism").append(selectedItem);
+});
+
+$("#rightAllOrganism").click(function () {
+    var selectedItem = $("#leftValuesOrganism option");
+    $("#rightValuesOrganism").append(selectedItem);
+});
+
+$("#btnRightOrganism").click(function () {
+    var selectedItem = $("#leftValuesOrganism option:selected");
+    $("#rightValuesOrganism").append(selectedItem);
+});
+
+$("#btnLeftParam").click(function () {
+    var selectedItem = $("#rightValuesParam option:selected");
+    $("#leftValuesParam").append(selectedItem);
+});
+
+$("#leftAllParam").click(function () {
+    var selectedItem = $("#rightValuesParam option");
+    $("#leftValuesParam").append(selectedItem);
+});
+
+$("#rightAllParam").click(function () {
+    var selectedItem = $("#leftValuesParam option");
+    $("#rightValuesParam").append(selectedItem);
+});
+
+$("#btnRightParam").click(function () {
+    var selectedItem = $("#leftValuesParam option:selected");
+    $("#rightValuesParam").append(selectedItem);
+});
+
+
+ 
+  
+
+} );
+
+
+
+function reportShuttled(){
+    var data = $('#rightValuesData option');
+    var projects = $('#rightValuesProj option');
+    var params = $('#rightValuesParam option');
+    var organisms = $('#rightValuesOrganism option');
+    console.log(data);
+    console.log(projects);
+    if(data.length===0 && projects.length===0 && params.length===0 && organisms.length===0){
+        alert("You haven't selected any criteria!");
+    }
+    else{
+        method = "post"; // Set method to post by default, if not specified.
+
+                // The rest of this code assumes you are not using a library.
+                // It can be made less wordy if you use one.
+                var form = document.createElement("form");
+                form.setAttribute("method", method);
+                form.setAttribute("action", '/reporting/general/csv/advanced/');
+
+                var csrfToken = document.createElement("input");
+                csrfToken.setAttribute("type", "hidden");
+                csrfToken.setAttribute("name", "csrfmiddlewaretoken");
+                csrfToken.setAttribute("value", "{{ csrf_token }}");
+                form.setAttribute("target", '_blank');
+
+                form.appendChild(csrfToken);
+
+                if(data.length !== 0){
+                var dataForm=[]
+                for(var i = 0; i<data.length; i++){
+                    //console.log(data[i]);
+                    dataForm.push(data[i].value)
+                }
+                dataForm = dataForm.join(',');
+                var dataInput = document.createElement("input");
+                dataInput.setAttribute("type", "hidden");
+                dataInput.setAttribute("name", "dataInput");
+                dataInput.setAttribute("value", dataForm);
+                form.appendChild(dataInput);
+                console.log(dataForm);
+
+            }
+                if(projects.length !== 0){
+                var projectsForm = []
+                for(var i = 0; i<projects.length; i++){
+                    //console.log(projects[i]);
+                    projectsForm.push(projects[i].value)
+                }
+                projectsForm = projectsForm.join(',');
+                var projectsInput = document.createElement("input");
+                projectsInput.setAttribute("type", "hidden");
+                projectsInput.setAttribute("name", "projectsInput");
+                projectsInput.setAttribute("value", projectsForm);
+                form.appendChild(projectsInput);
+                console.log(projectsForm);
+
+            }
+
+            if(params.length !== 0){
+                var paramsForm = []
+                for(var i = 0; i<params.length; i++){
+                    //console.log(params[i]);
+                    paramsForm.push(params[i].value)
+                }
+                paramsForm = paramsForm.join(',');
+                var paramsInput = document.createElement("input");
+                paramsInput.setAttribute("type", "hidden");
+                paramsInput.setAttribute("name", "paramsInput");
+                paramsInput.setAttribute("value", paramsForm);
+                form.appendChild(paramsInput);
+                console.log(paramsForm);
+
+            }
+
+            if(organisms.length !== 0){
+                var organismsForm = []
+                for(var i = 0; i<organisms.length; i++){
+                    //console.log(organisms[i]);
+                    organismsForm.push(organisms[i].value)
+                }
+                organismsForm = organismsForm.join(',');
+                var organismsInput = document.createElement("input");
+                organismsInput.setAttribute("type", "hidden");
+                organismsInput.setAttribute("name", "organismsInput");
+                organismsInput.setAttribute("value", organismsForm);
+                form.appendChild(organismsInput);
+                console.log(organismsForm);
+
+            }
+                
+
+                
+                
+                console.log(form);
+ 
+                document.body.appendChild(form);
+                form.submit();
+
+    }
+}
+
+
+
+
+
+</script>
+
+{% endblock %}
+{% block sideBar %}
+ <div class="span3">
+          <div class="well sidebar-nav">
+            <ul class="nav nav-list">
+              <li class="nav-header">Sidebar</li>
+<li><a href="{% url 'reporting:reportingTest' %}">Test Chart</a></li>
+
+</ul>
+</div>
+</div>
+{% endblock %}
+{% block content %}
+
+
+<h3>Advanced Reporting</h3>
+
+
+<section>
+    <div>
+        <select id="leftValuesData" size="7" multiple>
+            <option>Changes</option>
+            <option>Collections</option>
+            <option>Measurements</option>
+            <option>Sightings</option>
+        </select>
+    </div>
+    <div>
+        <input type="button" id="rightAllData" value="&gt;&gt;"/>
+        <input type="button" id="btnRightData" value="&gt;" />
+        <input type="button" id="btnLeftData" value="&lt;" />
+        <input type="button" id="leftAllData" value="&lt;&lt;"/>
+    </div>
+    <div>
+        <select id="rightValuesData" size="7" multiple>
+
+        </select>
+    </div>
+</section>
+{% if parameters %}
+<section>
+    <div>
+            <select id="leftValuesParam" size="7" multiple>
+            {% for p in parameters %}
+            <option value={{p.objectid}}>{{p.commonname}}</option>
+            {% endfor %}
+        </select>
+    </div>
+    <div>
+        
+        <input type="button" id="rightAllParam" value="&gt;&gt;"/>
+        <input type="button" id="btnRightParam" value="&gt;" />
+        <input type="button" id="btnLeftParam" value="&lt;" />
+        <input type="button" id="leftAllParam" value="&lt;&lt;"/>
+    </div>
+    <div>
+        <select id="rightValuesParam"  size="7" multiple>
+
+        </select>
+    </div>
+</section>
+{% endif %}
+{% if organisms %}
+<section>
+    <div>
+            <select id="leftValuesOrganism" size="7" multiple>
+            {% for o in organisms %}
+            <option value={{o.objectid}}>{{o.organismname}}</option>
+            {% endfor %}
+        </select>
+    </div>
+    <div>
+        
+        <input type="button" id="rightAllOrganism" value="&gt;&gt;"/>
+        <input type="button" id="btnRightOrganism" value="&gt;" />
+        <input type="button" id="btnLeftOrganism" value="&lt;" />
+        <input type="button" id="leftAllOrganism" value="&lt;&lt;"/>
+    </div>
+    <div>
+        <select id="rightValuesOrganism"  size="7" multiple>
+
+        </select>
+    </div>
+</section>
+{% endif %}
+{% if projects %}
+<section>
+    <div>
+            <select id="leftValuesProj" size="7" multiple>
+            {% for p in projects %}
+            <option value={{p.objectid}}>{{p.projectname}}</option>
+            {% endfor %}
+        </select>
+    </div>
+    <div>
+        
+        <input type="button" id="rightAllProj" value="&gt;&gt;"/>
+        <input type="button" id="btnRightProj" value="&gt;" />
+        <input type="button" id="btnLeftProj" value="&lt;" />
+        <input type="button" id="leftAllProj" value="&lt;&lt;"/>
+    </div>
+    <div>
+        <select id="rightValuesProj"  size="7" multiple>
+
+        </select>
+    </div>
+</section>
+{% endif %}
+
+    <button class="btn btn-lg btn-primary" type="button" onClick="reportShuttled()">Use Selected Criteria</button> 
+
+{% endblock %}
+
+
+
+

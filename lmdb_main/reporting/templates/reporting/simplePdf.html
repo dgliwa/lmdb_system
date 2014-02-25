@@ -1,0 +1,196 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+    <head>
+        <title>Simple Report</title>
+        <style type="text/css">
+            @page {
+                size: {{ pagesize }};
+                margin: 1cm;
+                @frame footer {
+                    -pdf-frame-content: footerContent;
+                    bottom: 0cm;
+                    margin-left: 9cm;
+                    margin-right: 9cm;
+                    height: 1cm;
+                }
+            }
+              table{
+    border-collapse: collapse;
+    border: 1px solid black;
+  }
+  table td{
+    border: 1px solid black;
+    text-align: center;
+    vertical-align: middle;
+    padding: 2px;
+    position: relative;
+  }
+  table th
+{
+    text-align: center;
+    vertical-align: middle;
+    padding: 5px;
+    position: relative;
+}
+        </style>
+    </head>
+    <body>
+
+
+
+{% if sightings or measurements or collections or changes %}
+
+    <h3>Simple Report</h3>
+
+    {% if sightings %}
+
+<table class="table table-bordered">
+    <thead>
+    
+    <tr>
+        <th colspan="6">Sightings</th>
+        </tr>
+    <tr>
+        <th>ID</th>
+        <th>Project</th>
+        <th>Organism</th>
+        <th>Location</th>
+        <th>Collector</th>
+        <th>Date</th>
+    </tr>    
+    
+    </thead>
+    <tbody>
+        {% for s in sightings %}
+        <tr>
+        <td>{{ s.objectid }}</td>
+        <td>{{ s.projectid.projectname }}</td>
+        <td>{{ s.organismid.organismname }}</td>
+        <td>{{ s.locationid }}</td>
+        <td>{{ s.personid.displayname }}</td>
+        <td>{{ s.date|date:"m/d/Y" }}</td>
+        </tr>
+    {% endfor %}
+</tbody>
+</table>
+<br>
+    {% endif %}
+
+    {% if measurements %}
+
+<table class="table table-bordered">
+    <thead>
+    
+    <tr>
+        <th colspan="6">Measurements</th>
+
+
+        </tr>
+    <tr>
+        <th>ID</th>
+        <th>Project</th>
+        <th>Parameter</th>
+        <th>Location</th>
+        <th>Collector</th>
+        <th>Date</th>
+    </tr>    
+    
+    </thead>
+    <tbody>
+           {% for m in measurements %}
+        <tr>
+        <td>{{ m.objectid }}</td>
+        <td>{{ m.projectid.projectname }}</td>
+        <td>{{ m.parameterid.commonname }}</td>
+        <td>{{ m.locationid }}</td>
+        <td>{{ m.personid.displayname }}</td>
+        <td>{{ m.date|date:"m/d/Y" }}</td>
+        </tr>
+    {% endfor %}
+</tbody>
+</table>
+<br>
+    {% endif %}
+
+    {% if collections %}
+
+<table class="table table-bordered">
+    <thead>
+    
+    <tr>
+        <th colspan="6">Collections</th>
+
+
+        </tr>
+    <tr>
+        <th>ID</th>
+        <th>Project</th>
+        <th>Organism</th>
+        <th>Location</th>
+        <th>Collector</th>
+        <th>Date</th>
+    </tr>    
+    
+    </thead>
+    <tbody>
+           {% for c in collections %}
+        <tr>
+        <td>{{ c.objectid }}</td>
+        <td>{{ c.projectid.projectname }}</td>
+        <td>{{ c.organismid.organismname }}</td>
+        <td>{{ c.locationid }}</td>
+        <td>{{ c.personid.displayname }}</td>
+        <td>{{ c.datecollect|date:"m/d/Y" }}</td>
+        </tr>
+    {% endfor %}
+</tbody>
+</table>
+<br>
+    {% endif %}
+
+    {% if changes %}
+
+
+<table class="table table-bordered">
+    <thead>
+    
+    <tr>
+
+        <th colspan="6">Changes</th>
+
+        </tr>
+    <tr>
+        <th>ID</th>
+        <th>Project</th>
+        <th>Parameter</th>
+        <th>Location</th>
+        <th>Collector</th>
+        <th>Date</th>
+    </tr>    
+    
+    </thead>
+    <tbody>
+       {% for c in changes %}
+        <tr>
+        <td>{{ c.objectid }}</td>
+        <td>{{ c.projectid.projectname }}</td>
+        <td>{{ c.parameterid.commonname }}</td>
+        <td>{{ c.locationid }}</td>
+        <td>{{ c.personid.displayname }}</td>
+        <td>{{ c.date|date:"m/d/Y" }}</td>
+        </tr>
+    {% endfor %}
+</tbody>
+</table>
+<br>
+    {% endif %}
+       
+{% else %}
+No data available.
+{% endif %}
+
+</body>
+</html>
+
+
+
