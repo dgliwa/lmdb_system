@@ -19,7 +19,8 @@ from django.contrib.auth.decorators import permission_required
 from django.utils.safestring import mark_safe
 
 
-from lmdb.decorators import user_uploaded 
+from lmdb.decorators import user_uploaded
+from reporting.pdf import render_to_pdf
 import json
 import datetime
 import calendar
@@ -90,7 +91,7 @@ def advancedReporting(request):
 
 @login_required(login_url='/login/')
 @user_uploaded
-def csvCriteriaReport(request):
+def csvAdvancedReport(request):
 	response = HttpResponse(content_type='text/csv')
 	response['Content-Disposition'] = 'attachment; filename="advanced_report.csv"'
 	writer = csv.writer(response)
@@ -184,7 +185,7 @@ def csvCriteriaReport(request):
 
 @login_required(login_url='/login/')
 @user_uploaded
-def csvFilterReport(request):
+def csvSimpleReport(request):
 	response = HttpResponse(content_type='text/csv')
 	response['Content-Disposition'] = 'attachment; filename="simple_report.csv"'
 	writer = csv.writer(response)
@@ -237,6 +238,77 @@ def csvFilterReport(request):
 				writer.writerow([])
 
 	return response
-	#return HttpResponse('ok')
 
+
+@login_required(login_url='/login/')
+@user_uploaded
+def htmlSimpleReport(request):
+	if request.POST:
+		dict = request.POST
+		vals = dict.keys()
+		changes = []
+		collections = []
+		measurements = []
+		sightings = []
+		for val in vals:
+			if val != 'csrfmiddlewaretoken':
+				split = dict[val].split(',')
+				if split[0] == 'Change':
+					changes.append(split[1])
+				elif split[0] == 'Sighting':
+					sightings.append(split[1])
+				elif split[0] == 'Measurement':
+					measurements.append(split[1])
+				elif split[0] == 'Collection':
+					collections.append(split[1])
+		if len(changes) != 0:
+			changes1 = Change.objects.filter(objectid__in=changes).order_by('objectid')	
+		if len(collections) != 0:
+			collections1 = Collection.objects.filter(objectid__in=collections).order_by('objectid')
+		if len(measurements) != 0:
+			measurements1 = Measurement.objects.filter(objectid__in=measurements).order_by('objectid')
+		if len(sightings) != 0:
+			sightings1 = Sighting.objects.filter(objectid__in=sightings).order_by('objectid')
+	return render(request,'reporting/simpleReport.html',{'changes':changes1, 'collections':collections1, 'measurements':measurements1,'sightings':sightings1})
+
+@login_required(login_url='/login/')
+@user_uploaded
+def pdfSimpleReport(request):
+	if request.POST:
+		dict = request.POST
+		vals = dict.keys()
+		changes = []
+		collections = []
+		measurements = []
+		sightings = []
+		for val in vals:
+			if val != 'csrfmiddlewaretoken':
+				split = dict[val].split(',')
+				if split[0] == 'Change':
+					changes.append(split[1])
+				elif split[0] == 'Sighting':
+					sightings.append(split[1])
+				elif split[0] == 'Measurement':
+					measurements.append(split[1])
+				elif split[0] == 'Collection':
+					collections.append(split[1])
+		if len(changes) != 0:
+			changes1 = Change.objects.filter(objectid__in=changes).order_by('objectid')	
+		if len(collections) != 0:
+			collections1 = Collection.objects.filter(objectid__in=collections).order_by('objectid')
+		if len(measurements) != 0:
+			measurements1 = Measurement.objects.filter(objectid__in=measurements).order_by('objectid')
+		if len(sightings) != 0:
+			sightings1 = Sighting.objects.filter(objectid__in=sightings).order_by('objectid')
+		return render_to_pdf(
+        	    'reporting/simplePdf.html',
+            	{
+                	'pagesize':'A4',
+                	'changes':changes1, 'collections':collections1, 
+                	'measurements':measurements1,
+                	'sightings':sightings1
+            	}
+        	)
+	else:
+		return HttpResponseRedirect('/reporting/simple/')
 
