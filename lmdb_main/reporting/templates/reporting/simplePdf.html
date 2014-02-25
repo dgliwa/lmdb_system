@@ -43,14 +43,12 @@
     <h3>Simple Report</h3>
 
     {% if sightings %}
-    <h4>Sightings</h4>
 
 <table class="table table-bordered">
     <thead>
     
     <tr>
-
-
+        <th colspan="6">Sightings</th>
         </tr>
     <tr>
         <th>ID</th>
@@ -75,15 +73,16 @@
     {% endfor %}
 </tbody>
 </table>
+<br>
     {% endif %}
 
     {% if measurements %}
-    <h4>Measurements</h4>
 
 <table class="table table-bordered">
     <thead>
     
     <tr>
+        <th colspan="6">Measurements</th>
 
 
         </tr>
@@ -110,15 +109,16 @@
     {% endfor %}
 </tbody>
 </table>
+<br>
     {% endif %}
 
     {% if collections %}
-    <h4>Collections</h4>
 
 <table class="table table-bordered">
     <thead>
     
     <tr>
+        <th colspan="6">Collections</th>
 
 
         </tr>
@@ -145,10 +145,10 @@
     {% endfor %}
 </tbody>
 </table>
+<br>
     {% endif %}
 
     {% if changes %}
-    <h4>Changes</h4>
 
 
 <table class="table table-bordered">
@@ -156,6 +156,7 @@
     
     <tr>
 
+        <th colspan="6">Changes</th>
 
         </tr>
     <tr>
@@ -181,7 +182,7 @@
     {% endfor %}
 </tbody>
 </table>
-    
+<br>
     {% endif %}
        
 {% else %}
