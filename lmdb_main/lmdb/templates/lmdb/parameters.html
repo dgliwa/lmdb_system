@@ -1,10 +1,12 @@
 {% extends "base.html" %}
 {% block pageName %}Parameters{% endblock %}
 {% block content %}
-<h1>Parameters</h1>
+<h2>Parameters</h2>
 
+<p>Parameters in LMDB are those measured at LUREC.  Beyond just chemical and physical parameters, measurements can be taken for acreage, volume or even counts of volunteers.  The chemical parameters use a standard of the USEPA.</p>
+
+<p>To add a Parameter, click the link below:</p>
 <h3> <a href="{% url 'lmdb:createParam' %}">Create Parameter</a></h3>
-
 
 {% if parameters %}
     <ul>

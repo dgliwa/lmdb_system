@@ -1,6 +1,11 @@
 {% extends "base.html" %}
 {% block pageName %}Events{% endblock %}
 {% block content %}
+<h2>Events</h2>
+
+<p>Events in LMDB are the broadest category, larger than the individual project or research activity.  An Event can be a class or a planned event, for example.  Events have a coordinator, number of participants, a type and description, as well as starting and ending dates.</p>
+
+<p>To add an Event to LMDB, click the link below:</p>
 <h3> <a href="{% url 'lmdb:createEvent' %}">Create Event</a></h3>
 
 {% if events %}

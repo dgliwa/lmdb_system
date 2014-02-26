@@ -1,10 +1,12 @@
 {% extends "base.html" %}
 {% block pageName %}Organisms{% endblock %}
 {% block content %}
-<h1>Organisms</h1>
+<h2>Organisms</h2>
 
+<p>Organisms in LMDB are those found at LUREC.  This serves as an inventory of species on the property, and enables users to select from existing, known species or enter new species, previously not observed at LUREC.  Organisms are referenced by Sightings and Collections.</p>
+
+<p>To add an Organism to LMDB, click the link below:</p>
 <h3> <a href="{% url 'lmdb:createOrganism' %}">Create Organism</a></h3>
-
 
 {% if organisms %}
     <ul>

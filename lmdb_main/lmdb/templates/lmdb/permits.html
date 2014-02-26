@@ -1,10 +1,12 @@
 {% extends "base.html" %}
 {% block pageName %}Permits{% endblock %}
 {% block content %}
-<h1>Permits</h1>
+<h2>Permits</h2>
 
-<h3> <a href="{% url 'lmdb:createPermit' %}">Create Permits</a></h3>
+<p>Permits in LMDB are entered for particular activities that modify the landscape in some way.  General permits for LUREC and specific permits for individual research activities should be entered and then referenced in Projects.</p>
 
+<p>To add a Permit, click the link below:</p>
+<h3> <a href="{% url 'lmdb:createPermit' %}">Create Permit</a></h3>
 
 {% if permits %}
     <ul>

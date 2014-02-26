@@ -1,10 +1,13 @@
 {% extends "base.html" %}
 {% block pageName %}Projects{% endblock %}
 {% block content %}
-<h1>Projects</h1>
+<h2>Projects</h2>
+
+<p>Projects in LMDB are the core category that hold information on activities taking place at LUREC.  A Project can be a restoration project, a farm expansion, or a research initiative, for example.  Projects have a listed objective and description, information on permits and funding, a coordinator and participants, as well as starting and ending dates.</p>
+
+<p>To add a Project, click the link below:</p>
 
 <h3> <a href="{% url 'lmdb:createProject' %}">Create Project</a></h3>
-
 
 {% if projects %}
     <ul>
