@@ -14,5 +14,7 @@ def render_to_pdf(template_src, context_dict):
 
     pdf = pisa.pisaDocument(StringIO.StringIO(html.encode("ISO-8859-1")), result)
     if not pdf.err:
-        return HttpResponse(result.getvalue(), mimetype='application/pdf')
+    	response = HttpResponse(result.getvalue(), mimetype='application/pdf')
+    	response['Content-Disposition'] = 'attachment; filename=somefilename.pdf'
+        return response
     return HttpResponse('We had some errors<pre>%s</pre>' % escape(html))

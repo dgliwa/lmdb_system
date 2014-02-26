@@ -217,7 +217,7 @@ function printFiltered(report_type_url){
                 csrfToken.setAttribute("type", "hidden");
                 csrfToken.setAttribute("name", "csrfmiddlewaretoken");
                 csrfToken.setAttribute("value", "{{ csrf_token }}");
-                if(report_type_url.indexOf('csv')>0)
+                if(report_type_url.indexOf('csv')>0 || report_type_url.indexOf('pdf')>0)
                 form.setAttribute("target", '_blank');
 
                 form.appendChild(csrfToken);
