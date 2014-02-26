@@ -3,18 +3,30 @@
 {% block pageName %}Data Entry{% endblock %}
 {% block sideBar %}
  <div class="span3">
-          <div class="well sidebar-nav">
-            <ul class="nav nav-list">
-              <li class="nav-header">Sidebar</li>
-<li><a href="{% url 'lmdb:dataUpdate' %}">Update or Delete Records</a></li>
-<li><a href="{% url 'lmdb:sightings' %}">Sightings</a></li>
-<li><a href="{% url 'lmdb:changes' %}">Changes</a></li>
-<li><a href="{% url 'lmdb:measurements' %}">Measurements</a></li>
-<li><a href="{% url 'lmdb:collections' %}">Collections</a></li>
-</ul>
-</div>
+      <div class="well sidebar-nav">
+        <ul class="nav nav-list">
+          <li class="nav-header">Sidebar</li>
+			<li><h4><a href="{% url 'lmdb:data' %}">Data Input</a></h4>
+				<ul>
+					<li><a href="{% url 'lmdb:sightings' %}">Sightings</a></li>
+					<li><a href="{% url 'lmdb:changes' %}">Changes</a></li>
+					<li><a href="{% url 'lmdb:measurements' %}">Measurements</a></li>
+					<li><a href="{% url 'lmdb:collections' %}">Collections</a></li>
+				</ul>
+			</li>
+			<br>
+			<li><a href="{% url 'lmdb:dataUpdate' %}">Update or Delete Records</a></li>
+		</ul>
+	</div>
 </div>
 {% endblock %}
 {% block content %}
+<h2>LMDB Data Input</h2>
+<p>The Data Input section includes dynamic data that refer to the Reference Data.  These items are attributed to particular locations at LUREC and must be mapped as they are recorded here.  The built-in mapping tools make it easy to record where an action or activity took place.</p>
+<h3>Data Input Categories</h3>
+<p>Sightings in LMDB are actual Organism observations made at LUREC.  The species can be recorded from the existing library of Organisms, or a new Organism can be entered if it has not been sighted before at LUREC.  Information recorded included the person who made the Sighting, the associated Project, the date of the sighting, and a count of the Organisms observed.</p>
+<p>Collections in LMDB are biological specimens that are collected for educational and research purposes.  These specimens are stored in various official locations, like the LUREC Herbarium. Information recorded on Collections include the Organism species, the method used and location of storage, the person responsible and the location from which the collection was taken.</p>
+<p>Measurements in LMDB are chemical, physical and other Parameter observations. The level of a Parameter, its identity and units will be recorded, along with the date, location and method of sampling.  These Measurements are associated with particular Projects and the person responsible for the Measurement.</p>
+<p>Changes in LMDB are the physical alterations to the landscape that take place.  These Changes can involve chemical applications and the reason for doing so, or physical alterations like cutting vegetation or moving soil.  Changes can be permanent or temporary and are associated with particular Projects and a responsible person.</p>
 
 {% endblock %}
