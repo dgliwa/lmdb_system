@@ -1,7 +1,13 @@
 {% extends "tablebase.html" %}
 {% block pageName %}Collections{% endblock %}
 {% block content %}
+<h2>Collections</h2>
+<p>Collections in LMDB are biological specimens that are collected for educational and research purposes.  These specimens are stored in various official locations, like the LUREC Herbarium. Information recorded on Collections include the Organism species, the method used and location of storage, the person responsible and the location from which the collection was taken.</p>
+
+<p>To add a Collection, click here:</p>
 <h3> <a href="{% url 'lmdb:createCollection' %}">Create Collection</a></h3>
+
+<p>The interactive map below shows all existing Collections.  It can be filtered by typing in the Search boxes below the map.  This will also filter the data shown in the table below the Search boxes.</p>
 
 {% if collections %}
 
