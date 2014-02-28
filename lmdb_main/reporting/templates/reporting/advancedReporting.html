@@ -119,7 +119,7 @@ $("#btnRightParam").click(function () {
 
 
 
-function reportShuttled(){
+function reportShuttled(report_type_url){
     var data = $('#rightValuesData option');
     var projects = $('#rightValuesProj option');
     var params = $('#rightValuesParam option');
@@ -136,12 +136,13 @@ function reportShuttled(){
                 // It can be made less wordy if you use one.
                 var form = document.createElement("form");
                 form.setAttribute("method", method);
-                form.setAttribute("action", '/reporting/general/csv/advanced/');
+                form.setAttribute("action", report_type_url);
 
                 var csrfToken = document.createElement("input");
                 csrfToken.setAttribute("type", "hidden");
                 csrfToken.setAttribute("name", "csrfmiddlewaretoken");
                 csrfToken.setAttribute("value", "{{ csrf_token }}");
+                if(report_type_url.indexOf('csv')>0 || report_type_url.indexOf('pdf')>0)
                 form.setAttribute("target", '_blank');
 
                 form.appendChild(csrfToken);
@@ -335,7 +336,9 @@ function reportShuttled(){
 </section>
 {% endif %}
 
-    <button class="btn btn-lg btn-primary" type="button" onClick="reportShuttled()">Use Selected Criteria</button> 
+    <button class="btn btn-lg btn-primary" type="button" onClick="reportShuttled('{% url "reporting:htmlAdvancedReport" %}')">Use Selected Criteria (html)</button> 
+    <button class="btn btn-lg btn-primary" type="button" onClick="reportShuttled('{% url "reporting:pdfAdvancedReport" %}')">Use Selected Criteria (pdf)</button> 
+    <button class="btn btn-lg btn-primary" type="button" onClick="reportShuttled('{% url "reporting:csvAdvancedReport" %}')">Use Selected Criteria (csv)</button> 
 
 {% endblock %}
 
