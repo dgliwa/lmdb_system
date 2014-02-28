@@ -250,6 +250,10 @@ def htmlSimpleReport(request):
 		collections = []
 		measurements = []
 		sightings = []
+		changes1=[]
+		measurements1=[]
+		collections1=[]
+		sightings1=[]
 		for val in vals:
 			if val != 'csrfmiddlewaretoken':
 				split = dict[val].split(',')
@@ -269,7 +273,72 @@ def htmlSimpleReport(request):
 			measurements1 = Measurement.objects.filter(objectid__in=measurements).order_by('objectid')
 		if len(sightings) != 0:
 			sightings1 = Sighting.objects.filter(objectid__in=sightings).order_by('objectid')
-	return render(request,'reporting/simpleReport.html',{'changes':changes1, 'collections':collections1, 'measurements':measurements1,'sightings':sightings1})
+	return render(request,'reporting/htmlReport.html',{'changes':changes1, 'collections':collections1, 'measurements':measurements1,'sightings':sightings1})
+
+
+@login_required(login_url='/login/')
+@user_uploaded
+def htmlAdvancedReport(request):
+	#print request
+	if request.POST:
+		dict = request.POST
+
+		changes = []
+		collections = []
+		measurements = []
+		sightings = []
+		projects = []
+		parameters = []
+		organisms = []
+		if 'paramsInput' in dict:
+			paramIds = dict['paramsInput'].split(",")
+			parameters = Parameter.objects.filter(objectid__in=paramIds)
+		if 'organismsInput' in dict:
+			organismIds = dict['organismsInput'].split(",")
+			organisms = Organism.objects.filter(objectid__in=organismIds)
+		if 'projectsInput' in dict:
+			projectIds = dict['projectsInput'].split(",")
+			projects = Project.objects.filter(objectid__in=projectIds)
+		if 'dataInput' in dict:
+			data = dict['dataInput'].split(",")
+		else:
+			data = ['Changes', 'Collections', 'Measurements', 'Sightings']
+		if 'Changes' in data:
+			if len(projects) == 0:
+				changes = Change.objects.all()
+			else:
+				changes = Change.objects.filter(projectid__in=projects)
+			if len(parameters) != 0:
+				changes = changes.filter(parameterid__in=parameters)
+		if 'Collections' in data:
+			if len(projects) == 0:
+				collections = Collection.objects.all()
+			else:
+				collections = Collection.objects.filter(projectid__in=projects)
+			if len(organisms) != 0:
+				collections = collections.filter(organismid__in=organisms)
+		if 'Measurements' in data:
+			if len(projects) == 0:
+				measurements = Measurement.objects.all()
+			else:
+				measurements = Measurement.objects.filter(projectid__in=projects)
+			if len(parameters) != 0:
+				measurements = measurements.filter(parameterid__in=parameters)
+		if 'Sightings' in data:
+			if len(projects) == 0:
+				sightings = Sighting.objects.all()
+			else:
+				sightings = Sighting.objects.filter(projectid__in=projects)
+			if len(organisms) != 0:
+				sightings = sightings.filter(organismid__in=organisms)
+	return render(request,'reporting/htmlReport.html',{'changes':changes, 'collections':collections, 'measurements':measurements,'sightings':sightings})
+
+
+
+
+
+
+
 
 @login_required(login_url='/login/')
 @user_uploaded
@@ -281,6 +350,10 @@ def pdfSimpleReport(request):
 		collections = []
 		measurements = []
 		sightings = []
+		changes1=[]
+		measurements1=[]
+		collections1=[]
+		sightings1=[]
 		for val in vals:
 			if val != 'csrfmiddlewaretoken':
 				split = dict[val].split(',')
@@ -301,7 +374,7 @@ def pdfSimpleReport(request):
 		if len(sightings) != 0:
 			sightings1 = Sighting.objects.filter(objectid__in=sightings).order_by('objectid')
 		return render_to_pdf(
-        	    'reporting/simplePdf.html',
+        	    'reporting/pdfReport.html',
             	{
                 	'pagesize':'A4',
                 	'changes':changes1, 'collections':collections1, 
@@ -311,4 +384,74 @@ def pdfSimpleReport(request):
         	)
 	else:
 		return HttpResponseRedirect('/reporting/simple/')
+
+
+@login_required(login_url='/login/')
+@user_uploaded
+def pdfAdvancedReport(request):
+	#print request
+	if request.POST:
+		dict = request.POST
+
+		changes = []
+		collections = []
+		measurements = []
+		sightings = []
+		projects = []
+		parameters = []
+		organisms = []
+		if 'paramsInput' in dict:
+			paramIds = dict['paramsInput'].split(",")
+			parameters = Parameter.objects.filter(objectid__in=paramIds)
+		if 'organismsInput' in dict:
+			organismIds = dict['organismsInput'].split(",")
+			organisms = Organism.objects.filter(objectid__in=organismIds)
+		if 'projectsInput' in dict:
+			projectIds = dict['projectsInput'].split(",")
+			projects = Project.objects.filter(objectid__in=projectIds)
+		if 'dataInput' in dict:
+			data = dict['dataInput'].split(",")
+		else:
+			data = ['Changes', 'Collections', 'Measurements', 'Sightings']
+		if 'Changes' in data:
+			if len(projects) == 0:
+				changes = Change.objects.all()
+			else:
+				changes = Change.objects.filter(projectid__in=projects)
+			if len(parameters) != 0:
+				changes = changes.filter(parameterid__in=parameters)
+		if 'Collections' in data:
+			if len(projects) == 0:
+				collections = Collection.objects.all()
+			else:
+				collections = Collection.objects.filter(projectid__in=projects)
+			if len(organisms) != 0:
+				collections = collections.filter(organismid__in=organisms)
+		if 'Measurements' in data:
+			if len(projects) == 0:
+				measurements = Measurement.objects.all()
+			else:
+				measurements = Measurement.objects.filter(projectid__in=projects)
+			if len(parameters) != 0:
+				measurements = measurements.filter(parameterid__in=parameters)
+		if 'Sightings' in data:
+			if len(projects) == 0:
+				sightings = Sighting.objects.all()
+			else:
+				sightings = Sighting.objects.filter(projectid__in=projects)
+			if len(organisms) != 0:
+				sightings = sightings.filter(organismid__in=organisms)
+		return render_to_pdf(
+        	    'reporting/pdfReport.html',
+            	{
+                	'pagesize':'A4',
+                	'changes':changes, 'collections':collections, 
+                	'measurements':measurements,
+                	'sightings':sightings
+            	}
+        	)
+	else:
+		return HttpResponseRedirect('/reporting/advanced/')
+
+
 

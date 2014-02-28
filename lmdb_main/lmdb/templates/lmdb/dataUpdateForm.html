@@ -764,10 +764,10 @@ function tokenRequestFailed(error) {
 
         var templatePicker = new TemplatePicker({
             featureLayers: layers,
-            rows: "auto",
-            columns: 2,
-            grouping: true,
-            style: "height: auto; overflow: auto;"
+            rows: 1,
+            columns: 3,
+            grouping: false,
+            style: "height: auto; width: 500px; overflow: auto;"
         }, "templatePickerDiv");
 
         templatePicker.startup();
@@ -826,17 +826,39 @@ class ="claro"
 
 <div class="dialog">
 <button class="btn btn-lg btn-primary" type="button" onclick="closeWindow()">Close</button>
-<div class="dialog" data-dojo-type="dijit/layout/BorderContainer" data-dojo-props="gutters:true, design:'headline'" style="width:100%;height:100%;">
-      <div data-dojo-type="dijit/layout/ContentPane"  id="header" data-dojo-props="region:'top'">
-      To add a location, click on the desired type of location (point, line, polygon) and then click where it is located on the map.
+<div data-dojo-type="dijit/layout/BorderContainer" data-dojo-props="gutters:true, design:'headline'" style="width:100%;height:100%;">
+      <div data-dojo-type="dijit/layout/ContentPane"  id="header" data-dojo-props="region:'top'" style="overflow:auto">
+            To add a location, click on the desired type of location (point, line, polygon) and then click where it is located on the map.
       A popup will appear stating that it has been successfully added.
-           </div>
-      <div id="map" data-dojo-type="dijit/layout/ContentPane" data-dojo-props="region:'center'"></div>
-      <div id="bottomPane" data-dojo-type="dijit/layout/ContentPane" data-dojo-props="region:'bottom'">
+
+      <p>Add your new site in one of two ways.</p>
+        <ol>
+          <li>Enter geographic coordinates in the form below, or</li>
+          <li>Click on the Sample Site point to the right then click on the map to add a point. </li>
+        </ol>
+      </p>
+    <div style="float:left">
+        <form id="latlonform" name='registration'  onSubmit="return latlonValidation();">
+            <label for="name">Name:</label>  
+            <input type="text" name="name" size="12" /> <br>             
+            <label for="description">Description:</label>  
+            <input type="text" name="description" size="12" /> <br> 
+            <label for="latitude">Latitude (y):</label>  
+            <input type="double" name="latitude" size="12" /> <br> 
+            <label for="longitude">Longitude (x):</label> 
+            <input type="double" name="longitude" size="12" /> 
+            <input type="submit" name="submit" value="Add Site"/>
+        </form>
+      </div>
         <div id="templatePickerDiv"></div>
 
+           </div>
+      <div id="map" data-dojo-type="dijit/layout/ContentPane" data-dojo-props="region:'center'" style="height:600px"></div>
+      <div id="rightPane" data-dojo-type="dijit/layout/ContentPane" data-dojo-props="region:'right'">
+
           </div>
-          </div></div>
+          </div>
+      </div>
 </div>
     {% if measurementforms %}
     <h3>Measurements</h3>
