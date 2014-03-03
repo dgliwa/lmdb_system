@@ -1,10 +1,11 @@
 {% extends "base.html" %}
 {% block pageName %}Organism Detail{% endblock %}
 {% block content %}
-<h1>{{organism.organismname}}</h1>
+<h4><a href="{% url 'lmdb:organisms' %}">Go Back</a> to all Organisms</h4>
+<br>
+<h3>Details of Organism # {{organism.objectid}}: {{organism.organismname}}:</h3>
 <h3><a href="{% url 'lmdb:editOrganism' organism.objectid %}">Edit Organism</a></h3>
 <ul>
-    <li>ID:  {{organism.objectid}}</li>
     <li>Kingdom:  {{organism.kingdom}}</li>
     <li>Phylum:  {{organism.phylum}}</li>
     <li>Class:  {{organism.class_field}}</li>
@@ -13,4 +14,5 @@
     <li>Genus:  {{organism.genus}}</li>
     <li>Species: {{organism.species}}</li>
 </ul>
+<h4><a href="{% url 'lmdb:organisms' %}">Go Back</a> to all Organisms</h4>
 {% endblock %}

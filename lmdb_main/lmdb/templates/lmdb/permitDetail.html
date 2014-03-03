@@ -1,7 +1,9 @@
 {% extends "base.html" %}
 {% block pageName %}Permit Detail{% endblock %}
 {% block content %}
-<h1>{{permit.objectid}}</h1>
+<h4><a href="{% url 'lmdb:permits' %}">Go Back</a> to all Permits</h4>
+<br>
+<h3>Details of Event # {{permit.objectid}}: from {{permit.permitagency}}:</h3>
 <h3><a href="{% url 'lmdb:editPermit' permit.objectid %}">Edit Permit</a></h3>
 <ul>
     <li>Permit Start Date:  {{permit.permitstartdate}}</li>
@@ -15,4 +17,5 @@
         <li>Description:  {{permit.description}}</li>
     {% endif %}    
 </ul>
+<h4><a href="{% url 'lmdb:permits' %}">Go Back</a> to all Permits</h4>
 {% endblock %}

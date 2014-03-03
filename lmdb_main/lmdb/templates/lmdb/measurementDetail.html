@@ -62,17 +62,19 @@
 class ="claro"
 {% endblock %}
 {% block content %}
-<h1>{{measurement.mname}}</h1>
+<h4><a href="{% url 'lmdb:measurements' %}">Go Back</a> to all Measurements</h4>
+<br>
+<h3>Details of Measurement # {{measurement.objectid}} on {{measurement.date}}:</h3>
 <ul>
-    <li>ID:  {{measurement.objectid}}</li>
-    <li>Project:  <a href="{% url 'lmdb:projectDetail' project.objectid %}">{{project.projectname}}</a></li>
-    <li>Parameter Name:  <a href="{% url 'lmdb:paramDetail' parameter.objectid %}">{{parameter.commonname}}</a></li>
+    
+    <li>Parameter Measured:  <a href="{% url 'lmdb:paramDetail' parameter.objectid %}">{{parameter.commonname}}</a></li>
     <li>Measurement Date:  {{measurement.date}}</li>
     <li>Measurement Method:  {{measurement.mmethod}}</li>
     <li>Measurement Quantity:  {{measurement.mquant}} {{measurement.munits}}</li>
     <li>Measurement Medium:  {{measurement.medium}}</li>
-    <li>Location:  <a href="{% url 'lmdb:locationDetail' location.objectid %}">{{location.name}}</a></li>
-    <li>Collector:  {{person.firstname}}  {{person.lastname}}</li>
+    <li>Part of Project:  <a href="{% url 'lmdb:projectDetail' project.objectid %}">{{project.projectname}}</a></li>
+    <li>Measurement Location:  <a href="{% url 'lmdb:locationDetail' location.objectid %}">{{location.name}}</a></li>
+    <li>Measured by:  {{person.firstname}}  {{person.lastname}}</li>
     <li>Notes:  {{measurement.notes}}
 </ul>
 <div data-dojo-type="dijit/layout/BorderContainer" data-dojo-props="gutters:true, design:'headline'" style="width:100%;height:100%;">
@@ -80,5 +82,6 @@ class ="claro"
            </div>
       <div id="map" data-dojo-type="dijit/layout/ContentPane" data-dojo-props="region:'center'"></div>
           </div>
+<h4><a href="{% url 'lmdb:measurements' %}">Go Back</a> to all Measurements</h4>
 {% endblock %}
 

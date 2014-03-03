@@ -1,23 +1,28 @@
 {% extends "base.html" %}
 {% block pageName %}Project Detail{% endblock %}
 {% block content %}
-<h1>{{project.projectname}}</h1>
+<h4><a href="{% url 'lmdb:projects' %}">Go Back</a> to all Projects</h4>
+<br>
+<h3>Details of Project # {{project.objectid}}: {{project.projectname}}:</h3>
 <h3><a href="{% url 'lmdb:editProject' project.objectid %}">Edit Project</a></h3>
 <ul>
-    <li>ID:  {{project.objectid}}</li>
     <li>Project Description:  {{project.projectdescription}}</li>
     <li>Project Objective:  {{project.projectobjective}}</li>
-    <li>Associated Event:  <a href="{% url 'lmdb:eventDetail' event.objectid %}">{{event.eventname}}</a></li>
-    <li>Permit ID:  {{project.permitid.objectid}}</li>
     <li>Project Start Date:  {{project.projectstartdate}}</li>
     <li>Project End Date:  {{project.projectenddate}}</li>
+    <li>Associated Event:  <a href="{% url 'lmdb:eventDetail' event.objectid %}">{{event.eventname}}</a></li>
+    <li>Permit ID:  {{project.permitid.objectid}}</li>
+    <li>Permit from: {{project.permit.permitagency}}</li>
     <li>Funded:  {% if project.funded == 1 %}
                      Yes
                  {% else %}
                      No
                  {% endif %}
     </li>
+    {% if project.funded == 1 %}
     <li>Funder:  {{project.funder}}</li>
+    {% endif %}
+
     <li>Project Coordinator:  {{person.firstname}} {{person.lastname}}</li>
 
             {% if people %}
@@ -70,4 +75,5 @@
 {% else %}
     <p>No sightings associated with project.</p>
 {% endif %}
+<h4><a href="{% url 'lmdb:projects' %}">Go Back</a> to all Projects</h4>
 {% endblock %}

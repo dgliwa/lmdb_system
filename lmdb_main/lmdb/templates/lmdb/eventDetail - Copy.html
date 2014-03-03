@@ -1,15 +1,14 @@
 {% extends "base.html" %}
 {% block pageName %}Event Detail{% endblock %}
 {% block content %}
-<h4><a href="{% url 'lmdb:events' %}">Go Back</a> to all Events</h4>
-<br>
-<h3>Details of Event # {{event.objectid}}: {{event.eventname}}:</h3>
+<h1>{{event.eventname}}</h1>
 <h3><a href="{% url 'lmdb:editEvent' event.objectid %}">Edit Event</a></h3>
 <ul>
+    <li>ID:  {{event.objectid}}</li>
     <li>Event Type:  {{event.eventtype}}</li>
     <li>Start Date and Time:  {{event.eventstartdate}}</li>
     <li>End Date and Time:  {{event.eventenddate}}</li>
-    <li>Number of Participants:  {{event.eventparticipants}}</li>
+    <li>Participants:  {{event.eventparticipants}}</li>
     <li>Event Coordinator:  {{person.firstname}}  {{person.lastname}}</li>
 </ul>
 {% if projects %}
@@ -21,5 +20,4 @@
     </ul>
 {% else %}
 {% endif %}
-<h4><a href="{% url 'lmdb:events' %}">Go Back</a> to all Events</h4>
 {% endblock %}

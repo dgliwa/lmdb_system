@@ -61,25 +61,29 @@
 class ="claro"
 {% endblock %}
 {% block content %}
+<h4><a href="{% url 'lmdb:changes' %}">Go Back</a> to all Changes</h4>
+<br>
+<h3>Details of Change # {{change.objectid}} on {{change.date}}:</h3>
 <ul>
-    <li>ID:  {{change.objectid}}</li>
-    <li>Project: <a href="{% url 'lmdb:projectDetail' project.objectid %}">{{project.projectname}}</a></li>
+    <li>Description of Change:  {{change.descripion}}</li>
+    <li>Justification for Change:  {{change.justification}}</li>
+    <li>Date Change Completed:  {{change.date}}
+    <li>Part of Project: <a href="{% url 'lmdb:projectDetail' project.objectid %}">{{project.projectname}}</a></li>
     <li>Parameter Name:  <a href="{% url 'lmdb:paramDetail' parameter.objectid %}">{{parameter.commonname}}</a></li>
-    <li>Change Description:  {{change.descripion}}</li>
-    <li>Change Justification:  {{change.justification}}</li>
-    <li>Permanent:  {{change.permanent}}
-    <li>Chemical Application:  {{change.chemicalapplication}}</li>
+    <li>Was this Change Permanent?:  {{change.permanent}}
+    <li>Chemical Application?:  {{change.chemicalapplication}}</li>
     <li>Chemical Used:  {{change.chemicalused}}</li>
     <li>Chemical Quantity:  {{change.chemicalquantity}} {{change.chemicalunits}}</li>
     <li>Area Change:  {{change.areachange}}
-    <li>Date:  {{change.date}}
-    <li>Location:  <a href="{% url 'lmdb:locationDetail' location.objectid %}">{{location.name}}</a></li>
-    <li>Changer:  {{person.firstname}}  {{person.lastname}}</li>
+    
+    <li>Location of Change(see map below):  <a href="{% url 'lmdb:locationDetail' location.objectid %}">{{location.name}}</a></li>
+    <li>Person who made the change:  {{person.firstname}}  {{person.lastname}}</li>
 </ul>
 <div data-dojo-type="dijit/layout/BorderContainer" data-dojo-props="gutters:true, design:'headline'" style="width:100%;height:100%;">
       <div data-dojo-type="dijit/layout/ContentPane"  id="header" data-dojo-props="region:'top'">
            </div>
       <div id="map" data-dojo-type="dijit/layout/ContentPane" data-dojo-props="region:'center'"></div>
           </div>
+<h4><a href="{% url 'lmdb:changes' %}">Go Back</a> to all Changes</h4>
 {% endblock %}
  
