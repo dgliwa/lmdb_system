@@ -61,7 +61,7 @@ require([
         basemap: "satellite",
         logo: true,
         center: [-88.366193, 42.289993],
-        zoom: 14
+        zoom: 15
     });
 
     map.on("layers-add-result", initEditing);
@@ -544,6 +544,7 @@ function geocode(lonNum, latNum, name, desc) {
         console.log(err);
     }
     addGraphic(point);
+    alert('New point location successfully created!');
 }
 
 function addGraphic(geometry) {
@@ -584,7 +585,6 @@ function latlonValidation() {
         alert("Please enter a value for longitude between -180.0 and 180.0");
         return false;
     }
-    alert('Form Succesfully Submitted');
     geocode(lonNum, latNum, name, desc);
     return true;
 }

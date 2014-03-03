@@ -15,7 +15,7 @@
 {% if people %}
 <form action="{% url 'lmdb:addProjectPeople' pid %}" method="post">
 {% csrf_token %}
-    Add People to the Project:
+    Add People to the Project: {{project.projectname}}
 
 	{% for p in people %}
 	<br><input type='checkbox' value='{{p.objectid}}' class='people' name='{{p.objectid}}'/> {{p.firstname}} {{p.lastname}}

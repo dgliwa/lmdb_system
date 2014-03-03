@@ -7,6 +7,8 @@
 
 {% endblock %}
 {% block content %}
+<h3>Create a new Event</h3>
+<p>Events in LMDB are the broadest category, larger than the individual project or research activity.  An Event can be a class or a planned event, for example.</p>
 <form action="{% url 'lmdb:createEvent' %}" method="post">
 
 {% csrf_token %}

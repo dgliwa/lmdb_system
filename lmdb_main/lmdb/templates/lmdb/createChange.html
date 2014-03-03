@@ -161,12 +161,7 @@ function addParameter(){
 class ="claro"
 {% endblock %}
 {% block content %}
-
-
-
-
-
-
+<p>Changes in LMDB are the physical alterations to the landscape that take place.  These Changes can involve chemical applications and the reason for doing so, or physical alterations like cutting vegetation or moving soil.  Changes can be permanent or temporary and are associated with particular Projects and a responsible person.</p>
 
 <table>
 <tbody>
@@ -216,17 +211,25 @@ Location:  {{form.locationid}} <br>
 <td>
 <form id = "paramSubmit" style = "visibility:hidden;" id="paramForm" name="paramForm" >
 {% csrf_token %}
-<p>If you do not know the CAS or EPA Number(s), you can search for them <a href="http://ofmpub.epa.gov/sor_internet/registry/substreg/searchandretrieve/substancesearch/search.do" target="_blank">here</a></p>
+<p>To assist in standardizing our chemical Parameters, we ask that you use the <a href="http://ofmpub.epa.gov/sor_internet/registry/substreg/searchandretrieve/substancesearch/search.do" target="_blank">USEPA's Substance Registry Services</a> to find the CAS or EPA Number(s) for your parameter.  On that page, you can enter what you know about your Parameter and select from a list of search results.</p>
+
+<p>The following attributes are found on the search results and Substance Details pages, to be entered below:</p>
+<ul>
+  <li>The Systematic Name can be copied to our Scientific Name field below.</li> 
+  <li>The EPA Registry Name can be copied to our Common Name field below.</li>  
+  <li>The CAS Number must be entered below.</li>  
+  <li>The EPA Identification Number or EPA Identifier corresponds to our EPA Number below.</li>
+</ul>
 
 Scientific Name:
 <input id="sciname" type = "text" name="sciname"/>
-Common Name:
+<br>Common Name:
 <input id="comname" type = "text" name ="commonname"/>
-CAS Number:
+<br>CAS Number:
 <input id="casnum" type = "text" name ="casnumber"/>
-EPA Number:
+<br>EPA Number:
 <input id="epanum" type = "text" name="epanumber"/>
-
+<br>
 <input type="submit" value="Submit"/>
 </form>
 </td>
@@ -235,15 +238,13 @@ EPA Number:
 </table>
 <div data-dojo-type="dijit/layout/BorderContainer" data-dojo-props="gutters:true, design:'headline'" style="width:100%;height:100%;">
       <div data-dojo-type="dijit/layout/ContentPane"  id="header" data-dojo-props="region:'top'" style="overflow:auto">
-            To add a location, click on the desired type of location (point, line, polygon) and then click where it is located on the map.
-      A popup will appear stating that it has been successfully added.
-
-      <p>Add your new site in one of two ways.</p>
+      <p>Add the location of your Measurement in one of three ways.</p>
+      <ul><li>For new locations, enter a name and description for the location.</li><ul>
         <ol>
           <li>Enter geographic coordinates in the form below, or</li>
-          <li>Click on the Sample Site point to the right then click on the map to add a point. </li>
+          <li>Click on the desired type of location (point, line or polygon) and then click where it is located on the map. Double click to finsh lines and polygons with multiple vertices.</li>
+          <li>To choose from existing locations, simply click the location on the map and confirm that you wish to use that location.</li>
         </ol>
-      </p>
     <div style="float:left">
         <form id="latlonform" name='registration'  onSubmit="return latlonValidation();">
             <label for="name">Name:</label>  

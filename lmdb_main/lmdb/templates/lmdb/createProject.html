@@ -57,6 +57,7 @@ $(document).ready(function(){
 </script>
 {% endblock %}
 {% block content %}
+<p>Projects in LMDB are the core category that hold information on activities taking place at LUREC.  A Project can be a restoration project, a farm expansion, or a research initiative, for example.</p>
 
 <form action="{% url 'lmdb:createProject' %}" id='createProject' method="post">
 {% csrf_token %}
@@ -94,7 +95,8 @@ Project Coordinator:  {{form.personid}}<br>
 
 {% if people %}
 
-	Add People to the Project:
+	If you choose to add people to this project, they will be able to enter other data under as belonging to this project:
+    <br>Add People to the Project?  
 	<input type='checkbox' name='add' id='add' value='Yes'/>Yes 
 	<div id='content'>
 

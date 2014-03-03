@@ -254,7 +254,9 @@ try{
 {% endblock %}
 
 {% block content %}
-
+<h3>Create a new Organism</h3>
+<p>Organisms in LMDB are those found at LUREC.  This serves as an inventory of species on the property, and enables users to select from existing, known species or enter new species, previously not observed at LUREC.</p>
+<p>Begin by entering the common name, then choose from the dropdowns for each of the levels of taxonomic hierarchy.  If you cannot find the item you are looking for, enter it in the box to the right and click "Add ..."  Then enter the lower taxonomies through Species manually. The items you enter manually once will be available in the dropdowns for all future entries.</p>
 <table>
 <tbody>
 <tr>
@@ -265,7 +267,7 @@ try{
 {{form.objectid.errors}}
 {{form.objectid}}
 {{form.organismname.errors}}
-Organism Name:  {{form.organismname}}<br>
+Common Name:  {{form.organismname}}<br>
 {{form.kingdom.errors}}
 Organism Kingdom:  {{form.kingdom}}<br>
 {{form.phylum.errors}}

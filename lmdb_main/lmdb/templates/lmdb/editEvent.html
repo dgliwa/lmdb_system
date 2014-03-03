@@ -7,8 +7,9 @@
 
 {% endblock %}
 {% block content %}
-<form action="{% url 'lmdb:editEvent' event.objectid %}" method="post">
+<p>Events in LMDB are the broadest category, larger than the individual project or research activity.  An Event can be a class or a planned event, for example.</p>
 
+<form action="{% url 'lmdb:editEvent' event.objectid %}" method="post">
 {% csrf_token %}
 {{form.non_field_errors}}
 {{form.objectid.errors}}

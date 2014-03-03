@@ -287,6 +287,7 @@ function addOrganism(){
 class ="claro"
 {% endblock %}
 {% block content %}
+<p>Sightings in LMDB are actual Organism observations made at LUREC.  The species can be recorded from the existing library of Organisms, or a new Organism can be entered if it has not been sighted before at LUREC.  Information recorded included the person who made the Sighting, the associated Project, the date of the sighting, and a count of the Organisms observed.</p>
 <table>
 <tbody>
 <tr>
@@ -384,15 +385,13 @@ Organism Name:  <input type="text" id = "organismname" name="organismname"/>
 </table>
 <div data-dojo-type="dijit/layout/BorderContainer" data-dojo-props="gutters:true, design:'headline'" style="width:100%;height:100%;">
       <div data-dojo-type="dijit/layout/ContentPane"  id="header" data-dojo-props="region:'top'" style="overflow:auto">
-            To add a location, click on the desired type of location (point, line, polygon) and then click where it is located on the map.
-      A popup will appear stating that it has been successfully added.
-
-      <p>Add your new site in one of two ways.</p>
+      <p>Add the location of your Measurement in one of three ways.</p>
+      <ul><li>For new locations, enter a name and description for the location.</li><ul>
         <ol>
           <li>Enter geographic coordinates in the form below, or</li>
-          <li>Click on the Sample Site point to the right then click on the map to add a point. </li>
+          <li>Click on the desired type of location (point, line or polygon) and then click where it is located on the map. Double click to finsh lines and polygons with multiple vertices.</li>
+          <li>To choose from existing locations, simply click the location on the map and confirm that you wish to use that location.</li>
         </ol>
-      </p>
     <div style="float:left">
         <form id="latlonform" name='registration'  onSubmit="return latlonValidation();">
             <label for="name">Name:</label>  

@@ -1,14 +1,14 @@
 {% extends "base.html" %}
 {% block pageName %}Parameter Detail{% endblock %}
 {% block content %}
-<h1>{{param.commonname}}</h1>
+<h4><a href="{% url 'lmdb:parameters' %}">Go Back</a> to all Parameters</h4>
+<br>
+<h3>Details of Parameter # {{param.objectid}}: {{param.commonname}}:</h3>
 <h3><a href="{% url 'lmdb:editParam' param.objectid %}">Edit Parameter</a></h3>
 <ul>
-    <li>ID:  {{param.objectid}}</li>
     {% if param.sciname %}
         <li>Scientific Name:  {{param.sciname}}</li>
     {% endif %}
-    <li>Common Name:  {{param.commonname}}</li>
     {% if param.casnumber %}
         <li>CAS Number:  {{param.casnumber}}</li>
     {% endif %}
@@ -16,4 +16,5 @@
         <li>EPA Number:  {{param.epanumber}}</li>
     {% endif %}    
 </ul>
+<h4><a href="{% url 'lmdb:parameters' %}">Go Back</a> to all Parameters</h4>
 {% endblock %}

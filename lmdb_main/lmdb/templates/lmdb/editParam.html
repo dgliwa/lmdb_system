@@ -1,7 +1,15 @@
 {% extends "base.html" %}
 {% block pageName %}Edit Parameter{% endblock %}
 {% block content %}
+<p>To assist in standardizing our chemical Parameters, we ask that you use the <a href="http://ofmpub.epa.gov/sor_internet/registry/substreg/searchandretrieve/substancesearch/search.do" target="_blank">USEPA's Substance Registry Services</a> to find the CAS or EPA Number(s) for your parameter.  On that page, you can enter what you know about your Parameter and select from a list of search results.</p>
 
+<p>The following attributes are found on the search results and Substance Details pages, to be entered below:</p>
+<ul>
+	<li>The Systematic Name can be copied to our Scientific Name field below.</li> 
+	<li>The EPA Registry Name can be copied to our Common Name field below.</li>  
+	<li>The CAS Number must be entered below.</li>  
+	<li>The EPA Identification Number or EPA Identifier corresponds to our EPA Number below.</li>
+</ul>
 
 <form action="{% url 'lmdb:editParam' param.objectid %}" method="post" id="parameter_form">
 {% csrf_token %}

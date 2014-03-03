@@ -7,7 +7,7 @@
 
 {% endblock %}
 {% block content %}
-
+<p>Permits in LMDB are entered for particular activities that modify the landscape in some way.</p>
 
 <form action="{% url 'lmdb:createPermit' %}" method="post" id="parameter_form">
 {% csrf_token %}
