@@ -8,3 +8,4 @@ sqlparse==0.1.10
 web2py==2.1.1
 wsgiref==0.1.2
 Django==1.5.2
+psycopg2
