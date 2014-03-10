@@ -515,7 +515,9 @@ def permits(request):
 @user_uploaded
 def permitDetail(request, permit_id):
     permit = get_object_or_404(Permit, pk=permit_id)
-    return render(request, 'lmdb/permitDetail.html', {'permit' : permit})
+    print permit
+    projects = Project.objects.filter(permitid=permit)
+    return render(request, 'lmdb/permitDetail.html', {'permit' : permit, 'projects' : projects})
 
 @login_required(login_url='/login/')
 @user_uploaded

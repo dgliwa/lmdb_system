@@ -15,7 +15,15 @@
     {% endif %}
     {% if permit.description %}
         <li>Description:  {{permit.description}}</li>
-    {% endif %}    
+    {% endif %}
 </ul>
+{% if projects %}
+Projects Associated with Permit
+<ul>
+{% for p in projects %}
+    <li><a href="{% url 'lmdb:projectDetail' p.objectid %}">{{p.projectname}}</a></li>
+{% endfor %}
+</ul>
+{% endif %}
 <h4><a href="{% url 'lmdb:permits' %}">Go Back</a> to all Permits</h4>
 {% endblock %}

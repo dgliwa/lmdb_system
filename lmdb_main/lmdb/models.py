@@ -180,7 +180,6 @@ class Permit(models.Model):
 
 class Project(models.Model):
     objectid = models.IntegerField(primary_key=True,unique=True)
-    locationid = models.IntegerField()
     projectname = models.CharField(max_length=100)
     projectdescription = models.CharField(max_length=255)
     projectobjective = models.CharField(max_length=255)

@@ -45,7 +45,6 @@ class ProjectForm(forms.ModelForm):
     projectname = forms.CharField()
     projectdescription = forms.CharField()
     projectobjective = forms.CharField()
-    locationid = forms.IntegerField()
     eventid = forms.ModelChoiceField(queryset=Event.objects.all())
     permitid = forms.ModelChoiceField(queryset=Permit.objects.all())
     projectstartdate = forms.DateTimeField()
