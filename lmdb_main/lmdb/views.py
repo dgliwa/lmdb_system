@@ -753,6 +753,13 @@ def classFilter(request, class_id):
 	b = Organism.objects.filter(class_field=class_id).values('order_field').distinct()  
 	data = json.dumps([dict(order_field = org['order_field']) for org in b])
 	return HttpResponse(data, mimetype="application/javascript")
+
+@login_required(login_url='/login/')
+def plantClassFilter(request, class_id):
+    from django.core import serializers
+    b = Organism.objects.filter(class_field=class_id).values('family').distinct()  
+    data = json.dumps([dict(family = org['family']) for org in b])
+    return HttpResponse(data, mimetype="application/javascript")
 	
 @login_required(login_url='/login/')
 def orderFilter(request, order_id):
