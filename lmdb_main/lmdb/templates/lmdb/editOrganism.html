@@ -5,6 +5,8 @@
     <script type="text/javascript" src="{% static "datepicker/jquery.simple-dtpicker.js" %}"></script>
 	<link type="text/css" href="{% static "datepicker/jquery.simple-dtpicker.css" %}" rel="stylesheet" />
 
+
+
 {% endblock %}
 {% block content %}
 <form action="{% url 'lmdb:editOrganism' organism.objectid %}" method="post">
@@ -28,8 +30,21 @@ Organism Family:  {{form.family}}<br>
 Organism Genus:  {{form.genus}}<br>
 {{form.species.errors}}
 Organism Species:  {{form.species}}<br>
+<div id="plantDiv" style="display:none">
+Wetland Designation:  {{form.wetland_designation}}<br>
+Cvalue:  {{form.cvalue}}<br>
+Introduced:  {{form.introduced}}<br>
+</div>
 <input type="submit" value="Edit Organism" />
 </form>
+
+
+
+<script>
+if($('#id_kingdom').val()==='Plantae'){
+	$('#plantDiv').css('display','inline');
+}
+</script
 {% endblock %}
 
 

@@ -684,7 +684,9 @@ def organisms(request):
 @user_uploaded   
 def organismDetail(request, org_id):
     organism = get_object_or_404(Organism, pk=org_id)
-    return render(request, 'lmdb/organismDetail.html', {'organism' : organism})
+    collections = Collection.objects.filter(organismid=organism)
+    sightings = Sighting.objects.filter(organismid=organism)
+    return render(request, 'lmdb/organismDetail.html', {'organism' : organism, 'collections':collections, 'sightings':sightings})
 
 @login_required(login_url='/login/')
 @user_uploaded

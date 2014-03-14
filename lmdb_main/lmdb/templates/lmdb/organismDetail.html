@@ -13,6 +13,31 @@
     <li>Family:  {{organism.family}}</li>
     <li>Genus:  {{organism.genus}}</li>
     <li>Species: {{organism.species}}</li>
+    {% if organism.wetland_designation %}
+    <li>Wetland Designation:  {{organism.wetland_designation}}</li>
+    {% endif %}
+    {% if organism.cvalue %}
+    <li>C-Value:  {{organism.cvalue}}</li>
+    {% endif %}
+    {% if organism.introduced %}
+    <li>Introduced:  {{organism.introduced}}</li>
+    {% endif %}
 </ul>
+    {% if sightings %}
+    <h3>Sightings of this Organism:</h3>
+    <ul>
+        {% for s in sightings %}
+        <li><a href="{% url 'lmdb:sightingDetail' s.objectid %}">{{s.objectid}}</a></li>
+        {% endfor %}
+    </ul>
+    {% endif %}
+    {% if collections %}
+        <h3>Collections of this Organism:</h3>
+            <ul>
+                {% for c in collections %}
+                <li><a href="{% url 'lmdb:collectionDetail' c.objectid %}">{{c.objectid}}</a></li>
+                {% endfor %}
+            </ul>
+    {% endif %}
 <h4><a href="{% url 'lmdb:organisms' %}">Go Back</a> to all Organisms</h4>
 {% endblock %}
