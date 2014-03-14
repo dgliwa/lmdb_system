@@ -18,7 +18,12 @@ $(function(){
        $('#plantDiv').css('display','inline')
 
       }
+      else{
       $("input:radio").removeAttr("checked");
+      $("#plantDiv input").val('');
+       $('#plantDiv').css('display','none')
+        
+      }
       $("#id_class_field").html('');
       $("#id_class_field").attr('disabled',true);
       $("#id_order_field").html('');
@@ -28,8 +33,6 @@ $(function(){
       $("#id_genus").html('');
       $("#id_genus").attr('disabled',true);
 
-      $("#plantDiv input").val('');
-       $('#plantDiv').css('display','none')
 
       $.getJSON("/reference/organisms/kingdomFilter/"+$(this).val()+"/", function(j) {
         var options = '<option value="">---------- </option>';
