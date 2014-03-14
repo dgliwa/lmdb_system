@@ -4,22 +4,34 @@
 {% block customjs %}
  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.7/jquery.js"></script> 
  <script>
+
+ $(document).ready(function() { 
+            // bind 'latlonform' and provide a simple callback function 
+            $('#orgButton').click(function() {
+              $('#orgForm').submit(); 
+            }); 
+        }); 
 $(function(){
     $("select#id_kingdom").change(function(){
       if($(this).val() === "Plantae"){
       var options = '<option value="Anthophyta">Anthophyta</option>';
-       
+      $("#id_phylum").html(options);
+        $("#id_phylum option:first").attr('selected', 'selected');
+        $("#id_phylum").attr('disabled', false);
 
       var options2 = '<option value="Dicotyledonae">Dicotyledonae</option>'
         $("#id_class_field").html(options2);
         $("#id_class_field option:first").attr('selected', 'selected');
         $("#id_class_field").attr('disabled', false);
 
-         $("#id_order_field").html(options);
+      var options3 = '<option value="NA">N/A</option>'
+        $("#id_order_field").html(options3);
         $("#id_order_field option:first").attr('selected', 'selected');
         $("#id_order_field").attr('disabled', false);
 
-        $.getJSON("/reference/organisms/orderFilter/Anthophyta/", function(j) {
+         
+
+        $.getJSON("/reference/organisms/orderFilter/NA/", function(j) {
         var options3 = '<option value="">---------- </option>';
         for (var i = 0; i < j.length; i++) {
           options3 += '<option value="' + j[i].family + '">' + j[i].family + '</option>';
@@ -28,10 +40,15 @@ $(function(){
         $("#id_family option:first").attr('selected', 'selected');
         $("#id_family").attr('disabled', false);
       })
-        
+      
+       $('#plantDiv').css('display','inline')
 
       }
       else{
+      $("input:radio").removeAttr("checked");
+      $("#plantDiv input").val('');
+       $('#plantDiv').css('display','none')
+
       $.getJSON("/reference/organisms/kingdomFilter/"+$(this).val()+"/", function(j) {
         var options = '<option value="">---------- </option>';
         for (var i = 0; i < j.length; i++) {
@@ -288,7 +305,7 @@ try{
 <tbody>
 <tr>
 <td style='vertical-align:text-top;'>
-<form action="{% url 'lmdb:createOrganism' %}" method="post">
+<form id="orgForm" action="{% url 'lmdb:createOrganism' %}" method="post">
 {% csrf_token %}
 {{form.non_field_errors}}
 {{form.objectid.errors}}
@@ -309,7 +326,11 @@ Organism Family:  {{form.family}}<br>
 Organism Genus:  {{form.genus}}<br>
 {{form.species.errors}}
 Organism Species:  {{form.species}}<br>
-<input type="submit" value="Create Organism" />
+<div id='plantDiv' style="display: none">
+Wetland Designation:  {{form.wetland_designation}}<br>
+Cvalue:  {{form.cvalue}}<br>
+Introduced:  {{form.introduced}}<br>
+</div>
 </form>
 </td>
 <td style='vertical-align:text-top'><br>
@@ -334,5 +355,6 @@ Organism Species:  {{form.species}}<br>
 </tr>
 </tbody>
 </table>
+<input id="orgButton" type="button" value="Create Organism" />
 
 {% endblock %}

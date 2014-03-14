@@ -126,6 +126,9 @@ class Organism(models.Model):
     kingdom = models.CharField(max_length=255, blank=True)
     genus = models.CharField(max_length=255, blank=True)
     species = models.CharField(max_length=255, blank=True)
+    wetland_designation = models.CharField(max_length=10, db_column='wld_1', null=True)
+    cvalue = models.IntegerField(null=True)
+    introduced = models.SmallIntegerField(null=True)
     class Meta:
         db_table = 'organism'
     def __unicode__(self):
