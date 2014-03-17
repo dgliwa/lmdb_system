@@ -13,7 +13,7 @@ class ParamForm(forms.ModelForm):
     commonname = forms.CharField()
     casnumber = forms.IntegerField()
     epanumber = forms.IntegerField()
-    
+    category = forms.CharField(widget=Select( choices=(('Chemical','Chemical'),('Physical','Physical'),('Spatial','Spatial'),('Temporal','Temporal'),('General','General'))))
     class Meta:
         model = Parameter
     

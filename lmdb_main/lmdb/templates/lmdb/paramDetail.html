@@ -14,6 +14,9 @@
     {% endif %}
     {% if param.epanumber %}
         <li>EPA Number:  {{param.epanumber}}</li>
+    {% endif %}
+    {% if param.category %}
+    	<li>Category:  {{param.category}}</li>
     {% endif %}    
 </ul>
 <h4><a href="{% url 'lmdb:parameters' %}">Go Back</a> to all Parameters</h4>

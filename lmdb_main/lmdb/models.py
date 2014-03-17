@@ -141,6 +141,7 @@ class Parameter(models.Model):
     commonname = models.CharField(max_length=50)
     casnumber = models.CharField(max_length=10, blank=True)
     epanumber = models.CharField(max_length=10, blank=True)
+    category = models.CharField(max_length=255, blank=True)
     class Meta:
         db_table = 'parameter'
     def __unicode__(self):
