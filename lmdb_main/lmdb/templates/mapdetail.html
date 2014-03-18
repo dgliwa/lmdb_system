@@ -56,14 +56,14 @@ require([
     // This service is for development and testing purposes only. We recommend that you create your own geometry service for use within your applications. 
     esri.config.defaults.geometryService = new esri.tasks.GeometryService("http://tasks.arcgisonline.com/ArcGIS/rest/services/Geometry/GeometryServer");
 
-    var newCenter = new esri.geometry.Point([-9837000,5204182], new esri.SpatialReference({wkid: 102100 })); 
+    var newCenter = new esri.geometry.Point([-9836985,5204186], new esri.SpatialReference({wkid: 102100 })); 
     var map_spatialReference = new esri.SpatialReference({wkid: 102100 })
     var pointLayer, lineLayer, polyLayer
     map = new Map("map", {
         basemap: "satellite",
         logo: true,
         center: newCenter,
-        zoom: 14,
+        zoom: 16,
         spatialReference: map_spatialReference
     });
 
