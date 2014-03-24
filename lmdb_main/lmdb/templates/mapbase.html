@@ -1,5 +1,44 @@
-    <script>
-var featureLayer;
+{% extends "base.html" %}
+{% block mapjs %}
+<link rel="stylesheet" href="//ajax.googleapis.com/ajax/libs/jqueryui/1.8.16/themes/base/jquery-ui.css" type="text/css" media="all" />
+    <link rel="stylesheet" href="//js.arcgis.com/3.6/js/dojo/dijit/themes/claro/claro.css">
+    <link rel="stylesheet" href="//js.arcgis.com/3.6/js/esri/css/esri.css">
+<style>
+      html, body {
+        height: 100%;
+        width: 100%;
+        margin: 0; 
+        padding: 0;
+      }
+      #header {
+        border:solid 2px #462d44;
+        background:#fff;
+        color:#444;
+        -moz-border-radius: 4px;
+        border-radius: 4px;
+        font-family: sans-serif;
+        font-size: 1.1em
+        padding-left:20px;
+      }
+      #map {
+        padding:1px;
+        border:solid 2px #444;
+        -moz-border-radius: 4px;
+        border-radius: 4px;
+      }
+      #rightPane {
+        border:none;
+        padding: 0;
+        width:228px;
+      }
+      .templatePicker {
+        border: solid 2px #444;
+      }
+    </style>
+<script>
+var pointLayer;
+var lineLayer;
+var polyLayer;
 dojo.require("esri.map");
 dojo.require("esri.layers.FeatureLayer");
 dojo.require("esri.layers.FeatureEditResult");
@@ -9,7 +48,6 @@ dojo.require("dijit.layout.BorderContainer");
 dojo.require("dijit.layout.ContentPane");
 dojo.require("esri.dijit.editing.TemplatePicker-all");
 dojo.require("esri.tasks.gp");
-dojo.require("esri.IdentityManager");
 
 var map;
 require([
@@ -20,7 +58,7 @@ require([
     "esri/config",
 
     "esri/layers/FeatureLayer",
-    "esri/geometry/Point",
+
     "esri/symbols/SimpleMarkerSymbol",
     "esri/symbols/SimpleLineSymbol",
     "esri/symbols/SimpleFillSymbol",
@@ -36,10 +74,9 @@ require([
 
     "dijit/layout/BorderContainer", "dijit/layout/ContentPane",
     "dijit/form/Button", "dojo/domReady!"
-    
 ], function (
     Map, Draw, Edit, Graphic, esriConfig,
-    FeatureLayer, Point,
+    FeatureLayer,
     SimpleMarkerSymbol, SimpleLineSymbol, SimpleFillSymbol,
     ArcGISDynamicMapServiceLayer,
     ImageParameters,
@@ -50,13 +87,10 @@ require([
 
     // refer to "Using the Proxy Page" for more information:  https://developers.arcgis.com/en/javascript/jshelp/ags_proxy.html
     esriConfig.defaults.io.proxyUrl = "/proxy/";
-    //esriConfig.defaults.io.timeout = 300000;
-    //esriConfig.defaults.io.alwaysUseProxy = false
-    //esriConfig.defaults.io.postLength=100000
-    // This service is for development and testing purposes only. We recommend that you create your own geometry service for use within your applications. 
-    esri.config.defaults.geometryService = new esri.tasks.GeometryService("http://tasks.arcgisonline.com/ArcGIS/rest/services/Geometry/GeometryServer");
 
-    var pointLayer, lineLayer, polyLayer
+    // This service is for development and testing purposes only. We recommend that you create your own geometry service for use within your applications. 
+    esriConfig.defaults.geometryService = new esri.tasks.GeometryService("http://tasks.arcgisonline.com/ArcGIS/rest/services/Geometry/GeometryServer");
+
     map = new Map("map", {
         basemap: "satellite",
         logo: true,
@@ -65,17 +99,13 @@ require([
     });
 
     map.on("layers-add-result", initEditing);
+ 
+    dojo.connect(map, "onLayersAddResult", initEditing);
 
 
+ 
 
-    //dojo.connect(map, "onLayersAddResult", initEditing);
-
-    
-
-
-
-
-    dojo.connect(map, "onLoad",signIn);
+        dojo.connect(map, "onLoad",signIn);
 
 function signIn() {
         console.log('signing in')
@@ -126,7 +156,7 @@ function signIn() {
      });
          pointLayer.setDefinitionExpression(queryString);
 
-}
+
     if ({{lines}}.length != 0){
         var lineFeatureLayerURL = "https://147.126.65.155:6443/arcgis/rest/services/campus/lurec_lmdb/FeatureServer/1?token=" + response;
 
@@ -165,10 +195,9 @@ function signIn() {
     polyLayer.setDefinitionExpression(queryString);}
 
 
-       infoTemplate = new esri.InfoTemplate("Object ID : ${objectid}",
-         "<input class=\"hidden\" id = \"locId\" value=\"${objectid}\"/>" +
-         "You have selected to use this location.");
-
+       
+    infoTemplate = new esri.InfoTemplate("ObjectID : ${objectid}",
+        "Description : ${description}<br>");
 
     if (pointLayer != null){
         pointLayer.setInfoTemplate(infoTemplate);
@@ -186,7 +215,6 @@ function signIn() {
           "opacity" : 0.5,
           "imageParameters" : imageParameters
         });
-
 
            if( pointLayer == null || lineLayer == null || polyLayer == null){
          if(pointLayer!=null && lineLayer !=null){
@@ -211,247 +239,16 @@ function signIn() {
     else{
         map.addLayers([pointLayer,lineLayer,polyLayer,dynamicMapServiceLayer]);
     }
-
-
-
-    dojo.connect(pointLayer, "onEditsComplete",
-        function (addResults) {
-            if (addResults.length > 0) {
-                alert("objectid is: " + addResults[0].objectId);
-
-
-                method = "post"; // Set method to post by default, if not specified.
-
-                // The rest of this code assumes you are not using a library.
-                // It can be made less wordy if you use one.
-                var form = document.createElement("form");
-                form.setAttribute("method", method);
-                form.setAttribute("action", '/reference/locations/create/popup/');
-                form.setAttribute("target", '_blank');
-
-                var csrfToken = document.createElement("input");
-                csrfToken.setAttribute("type", "hidden");
-                csrfToken.setAttribute("name", "csrfmiddlewaretoken");
-                csrfToken.setAttribute("value", "{{ csrf_token }}");
-                form.appendChild(csrfToken);
-
-
-                var indicator = document.createElement("input");
-                indicator.setAttribute("type", "hidden");
-                indicator.setAttribute("name", "indicator");
-                indicator.setAttribute("value", "yes");
-                form.appendChild(indicator);
-
-
-                var type = document.createElement("input");
-                type.setAttribute("type", "hidden");
-                type.setAttribute("name", "type");
-                type.setAttribute("value", "point");
-                form.appendChild(type);
-
-                var hiddenField = document.createElement("input");
-                hiddenField.setAttribute("type", "hidden");
-                hiddenField.setAttribute("name", 'objectid');
-                hiddenField.setAttribute("value", addResults[0].objectId);
-
-                form.appendChild(hiddenField);
-
-
-
-                document.body.appendChild(form);
-                form.submit();
-
-
-
-                document.getElementById('id_locationid').value=addResults[0].objectId;
-
-                var graphic = pointLayer.graphics[pointLayer.graphics.length - 1];
-                graphic.attributes["additionalinformation"] = graphic.attributes["objectid"];
-                try{
-                x = graphic.geometry.x;
-                y = graphic.geometry.y;
-                sr = map.spatialReference;
-                p = new Point(x,y,sr)
-                map.infoWindow.show(p);
-                
-                map.infoWindow.setContent(graphic.getContent());
-                }
-                catch(err){
-                console.log(err);
-                }
-
-            }
-
-
-        });
-
-        dojo.connect(lineLayer, "onEditsComplete",
-        function (addResults) {
-            if (addResults.length > 0) {
-                alert("objectid is: " + addResults[0].objectId);
-
-
-                method = "post"; // Set method to post by default, if not specified.
-
-                // The rest of this code assumes you are not using a library.
-                // It can be made less wordy if you use one.
-                var form = document.createElement("form");
-                form.setAttribute("method", method);
-                form.setAttribute("action", '/reference/locations/create/popup/');
-                form.setAttribute("target", '_blank');
-
-
-                var csrfToken = document.createElement("input");
-                csrfToken.setAttribute("type", "hidden");
-                csrfToken.setAttribute("name", "csrfmiddlewaretoken");
-                csrfToken.setAttribute("value", "{{ csrf_token }}");
-                form.appendChild(csrfToken);
-
-
-                var indicator = document.createElement("input");
-                indicator.setAttribute("type", "hidden");
-                indicator.setAttribute("name", "indicator");
-                indicator.setAttribute("value", "yes");
-                form.appendChild(indicator);
-
-
-                var type = document.createElement("input");
-                type.setAttribute("type", "hidden");
-                type.setAttribute("name", "type");
-                type.setAttribute("value", "line");
-                form.appendChild(type);
-
-
-                var hiddenField = document.createElement("input");
-                hiddenField.setAttribute("type", "hidden");
-                hiddenField.setAttribute("name", 'objectid');
-                hiddenField.setAttribute("value", addResults[0].objectId);
-
-                form.appendChild(hiddenField);
-
-
-
-                document.body.appendChild(form);
-                form.submit();
-
-
-
-                document.getElementById('id_locationid').value=addResults[0].objectId;
-
-             var graphic = lineLayer.graphics[lineLayer.graphics.length - 1];
-             graphic.attributes["additionalinformation"] = graphic.attributes["objectid"];
-                try{
-                x = graphic.geometry.paths[0][0][0];
-                y = graphic.geometry.paths[0][0][1];
-                sr = map.spatialReference;
-                p = new Point(x,y,sr)
-                map.infoWindow.show(p);
-                
-                map.infoWindow.setContent(graphic.getContent());
-                }
-                catch(err){
-                console.log(err);
-                }
-            
-            
-            
-            }
-
-
-        });
-
-
-
-
-    dojo.connect(polyLayer, "onEditsComplete",
-        function (addResults) {
-            if (addResults.length > 0) {
-                alert("objectid is: " + addResults[0].objectId);
-
-
-                method = "post"; // Set method to post by default, if not specified.
-
-                // The rest of this code assumes you are not using a library.
-                // It can be made less wordy if you use one.
-                var form = document.createElement("form");
-                form.setAttribute("method", method);
-                form.setAttribute("action", '/reference/locations/create/popup/');
-                form.setAttribute("target", '_blank');
-
-                var csrfToken = document.createElement("input");
-                csrfToken.setAttribute("type", "hidden");
-                csrfToken.setAttribute("name", "csrfmiddlewaretoken");
-                csrfToken.setAttribute("value", "{{ csrf_token }}");
-                form.appendChild(csrfToken);
-
-
-                var indicator = document.createElement("input");
-                indicator.setAttribute("type", "hidden");
-                indicator.setAttribute("name", "indicator");
-                indicator.setAttribute("value", "yes");
-                form.appendChild(indicator);
-
-
-                var type = document.createElement("input");
-                type.setAttribute("type", "hidden");
-                type.setAttribute("name", "type");
-                type.setAttribute("value", "poly");
-                form.appendChild(type);
-
-
-                var hiddenField = document.createElement("input");
-                hiddenField.setAttribute("type", "hidden");
-                hiddenField.setAttribute("name", 'objectid');
-                hiddenField.setAttribute("value", addResults[0].objectId);
-
-                form.appendChild(hiddenField);
-
-
-
-                document.body.appendChild(form);
-                form.submit();
-
-
-
-                document.getElementById('id_locationid').value=addResults[0].objectId;
-
-                 var graphic = polyLayer.graphics[polyLayer.graphics.length - 1];
-             graphic.attributes["additionalinformation"] = graphic.attributes["objectid"];
-                try{
-                x = graphic.geometry.rings[0][0][0];
-                y = graphic.geometry.rings[0][0][1];
-                sr = map.spatialReference;
-                p = new Point(x,y,sr)
-                map.infoWindow.show(p);
-                
-                map.infoWindow.setContent(graphic.getContent());
-                }
-                catch(err){
-                console.log(err);
-                }
-           
-
-            }
-
-
-        });
       
   }
-
+}
 
 // for testing only
 function tokenRequestFailed(error) {
     console.log(error)
       dojo.byId("signInStatus").innerHTML = "Unable to create token. Please check your username/password";
     }
-
-
-
-    // map.addLayers([pointLayer,lineLayer,polyLayer]);
-
-
-
-
+{% block custom_map %}
     function initEditing(evt) {
         console.log("initEditing", evt);
         // var map = this;
@@ -482,17 +279,16 @@ function tokenRequestFailed(error) {
 
             layer.on("click", function (evt) {
                 event.stop(evt);
-                document.getElementById('id_locationid').value=document.getElementById('locId').value;
-               
+                
             });
         });
 
         var templatePicker = new TemplatePicker({
             featureLayers: layers,
-            rows: 1,
-            columns: 3,
-            grouping: false,
-            style: "height: auto; width: 500px; overflow: auto;"
+            rows: "auto",
+            columns: 2,
+            grouping: true,
+            style: "height: auto; overflow: auto;"
         }, "templatePickerDiv");
 
         templatePicker.startup();
@@ -526,68 +322,16 @@ function tokenRequestFailed(error) {
 
         });
     }
-    
-
+    {% endblock %}
 });
 
-function geocode(lonNum, latNum, name, desc) {
-    point = new esri.geometry.geographicToWebMercator(esri.geometry.Point(lonNum, latNum, new esri.SpatialReference({
-        wkid: 4326
-    })));
-    var myGraphic = new esri.Graphic(point);
-    myGraphic.setAttributes({
-        'description': desc
-    })
-    try {
-        lmdbPointLayer.applyEdits([myGraphic], null, null);
-    } catch (err) {
-        console.log(err);
-    }
-    addGraphic(point);
-    alert('New point location successfully created!');
-}
-
-function addGraphic(geometry) {
-    map.graphics.clear();
-    var symbol = new esri.symbol.SimpleMarkerSymbol(esri.symbol.SimpleMarkerSymbol.STYLE_SQUARE, 10);
-    map.graphics.add(new esri.Graphic(geometry, symbol));
-}
-
-
-function latlonValidation() {
-    var lat = document.forms["registration"]["latitude"].value;
-    var latNum = Number(lat);
-    var lon = document.forms["registration"]["longitude"].value;
-    var lonNum = Number(lon);
-    var name = document.forms["registration"]["name"].value;
-    var desc = document.forms["registration"]["description"].value;
 
 
 
-    var validLat = (lat.match(/^[-+]?(?:\d+\.?\d*|\.\d+)$/));
-    var validLon = (lon.match(/^[-+]?(?:\d+\.?\d*|\.\d+)$/));
 
-    if (!validLat) {
-        alert("Please enter numeric characters only for Latitude. Integers or Decimals with +/- signs are accepted.");
-        return false;
-    }
 
-    if (!validLon) {
-        alert("Please enter numeric characters only for Longitude. Integers or Decimals with +/- signs are accepted.");
-        return false;
-    }
 
-    if ((latNum <= -90) || (latNum >= 90)) {
-        alert("Please enter a value for latitude between -90.0 and 90.0");
-        return false;
-    }
-    if ((lonNum <= -180) || (lonNum >= 180)) {
-        alert("Please enter a value for longitude between -180.0 and 180.0");
-        return false;
-    }
-    geocode(lonNum, latNum, name, desc);
-    return true;
-}
 
 
 </script>
+{% endblock %}

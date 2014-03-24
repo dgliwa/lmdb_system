@@ -1,4 +1,6 @@
-    <script>
+{% extends "base.html" %}
+{% block mapjs %}
+<script>
 var featureLayer;
 dojo.require("esri.map");
 dojo.require("esri.layers.FeatureLayer");
@@ -277,3 +279,4 @@ function tokenRequestFailed(error) {
 
 
 </script>
+{% endblock %}

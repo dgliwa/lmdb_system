@@ -1,4 +1,4 @@
-{% extends "base.html" %}
+{% extends "mapdetail.html" %}
 {% block pageName %}Location Details{% endblock %}
 {% block customjs %}
     <link rel="stylesheet" href="//js.arcgis.com/3.6/js/dojo/dijit/themes/claro/claro.css">
@@ -55,8 +55,6 @@
     </script> 
     
     
- {% include 'mapdetail.html' %}
-
 {% endblock %}
 {% block customclass %}
 class ="claro"
