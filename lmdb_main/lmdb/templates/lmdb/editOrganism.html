@@ -1,15 +1,322 @@
 {% extends "base.html" %}
 {% block pageName %}Edit Organism{% endblock %}
+
 {% block customjs %}
-{% load static %}
-    <script type="text/javascript" src="{% static "datepicker/jquery.simple-dtpicker.js" %}"></script>
-	<link type="text/css" href="{% static "datepicker/jquery.simple-dtpicker.css" %}" rel="stylesheet" />
+ <script src="//ajax.googleapis.com/ajax/libs/jquery/1.7/jquery.js"></script> 
+ <script>
+
+ $(document).ready(function() { 
+            // bind 'latlonform' and provide a simple callback function 
+            $('#orgButton').click(function() {
+              $('#orgForm').submit(); 
+            }); 
+        }); 
+$(function(){
+    $("select#id_kingdom").change(function(){
+      if($(this).val() === "Plantae"){
+
+       $('#plantDiv').css('display','inline')
+
+      }
+      else{
+      $("input:radio").removeAttr("checked");
+      $("#plantDiv input").val('');
+       $('#plantDiv').css('display','none')
+        
+      }
+      $("#id_class_field").html('');
+      $("#id_class_field").attr('disabled',true);
+      $("#id_order_field").html('');
+      $("#id_order_field").attr('disabled',true);
+      $("#id_family").html('');
+      $("#id_family").attr('disabled',true);
+      $("#id_genus").html('');
+      $("#id_genus").attr('disabled',true);
 
 
+      $.getJSON("/reference/organisms/kingdomFilter/"+$(this).val()+"/", function(j) {
+        var options = '<option value="">---------- </option>';
+        for (var i = 0; i < j.length; i++) {
+          options += '<option value="' + j[i].phylum + '">' + j[i].phylum + '</option>';
+        }
+        $("#id_phylum").html(options);
+        $("#id_phylum option:first").attr('selected', 'selected');
+        $("#id_phylum").attr('disabled', false);
+      })
+      $("#id_kingdom").attr('selected', 'selected');
+      
+    })
+  })
+  
+  
+$(function(){
+    $("select#id_phylum").change(function(){
+      $("#id_order_field").html('');
+      $("#id_order_field").attr('disabled',true);
+      $("#id_family").html('');
+      $("#id_family").attr('disabled',true);
+      $("#id_genus").html('');
+      $("#id_genus").attr('disabled',true);
+      $.getJSON("/reference/organisms/phylumFilter/"+$(this).val()+"/", function(j) {
+        var options = '<option value="">---------- </option>';
+        for (var i = 0; i < j.length; i++) {
+          options += '<option value="' + j[i].class_field + '">' + j[i].class_field + '</option>';
+        }
+        $("#id_class_field").html(options);
+        $("#id_class_field option:first").attr('selected', 'selected');
+        $("#id_class_field").attr('disabled', false);
+      })
+      $("#id_phylum").attr('selected', 'selected');
+    })
+  })
+  
+$(function(){
+    $("select#id_class_field").change(function(){
+      $("#id_family").html('');
+      $("#id_family").attr('disabled',true);
+      $("#id_genus").html('');
+      $("#id_genus").attr('disabled',true);
+      if($("#id_kingdom").val()==='Plantae'){
+        $("#id_order_field").html("<option value='NA'>N/A</option>");
+        $("#id_order_field option:first").attr('selected', 'selected');
+        $("#id_order_field").attr('disabled', false);
+        $.getJSON("/reference/organisms/plant/classFilter/"+$(this).val()+"/", function(j) {
+        var options = '<option value="">---------- </option>';
+        for (var i = 0; i < j.length; i++) {
+          options += '<option value="' + j[i].family + '">' + j[i].family + '</option>';
+        }
+        $("#id_family").html(options);
+        $("#id_family option:first").attr('selected', 'selected');
+        $("#id_family").attr('disabled', false);
+      })
+      }
+      else{
+      $.getJSON("/reference/organisms/classFilter/"+$(this).val()+"/", function(j) {
+        var options = '<option value="">---------- </option>';
+        for (var i = 0; i < j.length; i++) {
+          options += '<option value="' + j[i].order_field + '">' + j[i].order_field + '</option>';
+        }
+        $("#id_order_field").html(options);
+        $("#id_order_field option:first").attr('selected', 'selected');
+        $("#id_order_field").attr('disabled', false);
+      })
+    }
+      $("#id_class_field").attr('selected', 'selected');
+    })
+  })
+  
+$(function(){
+    $("select#id_order_field").change(function(){
+      $("#id_genus").html('');
+      $("#id_genus").attr('disabled',true);
+      $.getJSON("/reference/organisms/orderFilter/"+$(this).val()+"/", function(j) {
+        var options = '<option value="">---------- </option>';
+        for (var i = 0; i < j.length; i++) {
+          options += '<option value="' + j[i].family + '">' + j[i].family + '</option>';
+        }
+        $("#id_family").html(options);
+        $("#id_family option:first").attr('selected', 'selected');
+        $("#id_family").attr('disabled', false);
+      })
+      $("#id_order_field").attr('selected', 'selected');
+    })
+  })
+  
+$(function(){
+    $("select#id_family").change(function(){
+      $.getJSON("/reference/organisms/familyFilter/"+$(this).val()+"/", function(j) {
+        var options = '<option value="">---------- </option>';
+        for (var i = 0; i < j.length; i++) {
+          options += '<option value="' + j[i].genus + '">' + j[i].genus + '</option>';
+        }
+        $("#id_genus").html(options);
+        $("#id_genus option:first").attr('selected', 'selected');
+        $("#id_genus").attr('disabled', false);
+      })
+      $("#id_family").attr('selected', 'selected');
+    })
+  })
+
+function manClassUpdate(phyl){
+jQuery.getJSON("/reference/organisms/phylumFilter/"+phyl+"/", function(j) {
+        var options = '<option value="">---------- </option>';
+        for (var i = 0; i < j.length; i++) {
+          options += '<option value="' + j[i].class_field + '">' + j[i].class_field + '</option>';
+        }
+        $("#id_class_field").html(options);
+        $("#id_class_field option:first").attr('selected', 'selected');
+        $("#id_class_field").attr('disabled', false);
+      })
+      $("#id_phylum").attr('selected', 'selected');
+
+};
+
+
+function manOrderUpdate(class_field){
+jQuery.getJSON("/reference/organisms/classFilter/"+class_field+"/", function(j) {
+        var options = '<option value="">---------- </option>';
+        for (var i = 0; i < j.length; i++) {
+          options += '<option value="' + j[i].order_field + '">' + j[i].order_field + '</option>';
+        }
+        $("#id_order_field").html(options);
+        $("#id_order_field option:first").attr('selected', 'selected');
+        $("#id_order_field").attr('disabled', false);
+      })
+      $("#id_class_field").attr('selected', 'selected');
+
+};
+
+function manFamilyUpdate(order_field){
+jQuery.getJSON("/reference/organisms/orderFilter/"+order_field+"/", function(j) {
+        var options = '<option value="">---------- </option>';
+        for (var i = 0; i < j.length; i++) {
+          options += '<option value="' + j[i].family + '">' + j[i].family + '</option>';
+        }
+        $("#id_family").html(options);
+        $("#id_family option:first").attr('selected', 'selected');
+        $("#id_family").attr('disabled', false);
+      })
+      $("#id_order_field").attr('selected', 'selected');
+
+};
+
+
+function manGenusUpdate(family){
+jQuery.getJSON("/reference/organisms/familyFilter/"+family+"/", function(j) {
+        var options = '<option value="">---------- </option>';
+        for (var i = 0; i < j.length; i++) {
+          options += '<option value="' + j[i].genus + '">' + j[i].genus + '</option>';
+        }
+        $("#id_genus").html(options);
+        $("#id_genus option:first").attr('selected', 'selected');
+        $("#id_genus").attr('disabled', false);
+      })
+      $("#id_family").attr('selected', 'selected');
+
+};
+
+
+
+function addPhylum(){
+try{
+
+    var phylum = document.forms["phylumForm"]["newPhylum"].value;
+    var select = document.getElementById('id_phylum');
+    var option = document.createElement("option");
+    option.text = phylum;
+    option.value = phylum;
+    select.appendChild(option);
+    $("#id_phylum").attr('disabled', false);
+    $('#id_phylum option:last-child').attr('selected', 'selected'); 
+    manClassUpdate(phylum);
+
+    }
+    catch(err){
+    console.log(err);
+    }
+    return false;   
+
+};
+
+function addClass(){
+try{
+
+    var class_field = document.forms["classForm"]["newClass"].value;
+    var select = document.getElementById('id_class_field');
+    var option = document.createElement("option");
+    option.text = class_field;
+    option.value = class_field;
+    select.appendChild(option);
+    $("#id_class_field").attr('disabled', false);
+
+    $('#id_class_field option:last-child').attr('selected', 'selected'); 
+    manOrderUpdate(class_field);
+
+    }
+    catch(err){
+    console.log(err);
+    }
+    return false;   
+
+};
+
+
+function addOrder(){
+try{
+
+    var order_field = document.forms["orderForm"]["newOrder"].value;
+    var select = document.getElementById('id_order_field');
+    var option = document.createElement("option");
+    option.text = order_field;
+    option.value = order_field;
+    select.appendChild(option);
+    $("#id_order_field").attr('disabled', false);
+
+    $('#id_order_field option:last-child').attr('selected', 'selected'); 
+    manFamilyUpdate(order_field);
+
+    }
+    catch(err){
+    console.log(err);
+    }
+    return false;   
+
+};
+
+function addFamily(){
+try{
+
+    var family = document.forms["familyForm"]["newFamily"].value;
+    var select = document.getElementById('id_family');
+    var option = document.createElement("option");
+    option.text = family;
+    option.value = family;
+    select.appendChild(option);
+    $("#id_family").attr('disabled', false);
+
+    $('#id_family option:last-child').attr('selected', 'selected'); 
+    manGenusUpdate(family);
+
+    }
+    catch(err){
+    console.log(err);
+    }
+    return false;   
+
+};
+
+function addGenus(){
+try{
+
+    var genus = document.forms["genusForm"]["newGenus"].value;
+    var select = document.getElementById('id_genus');
+    var option = document.createElement("option");
+    option.text = genus;
+    option.value = genus;
+    select.appendChild(option);
+    $("#id_genus").attr('disabled', false);
+
+    $('#id_genus option:last-child').attr('selected', 'selected'); 
+    }
+    catch(err){
+    console.log(err);
+    }
+    return false;   
+
+};
+
+
+</script>
 
 {% endblock %}
+
 {% block content %}
-<form action="{% url 'lmdb:editOrganism' organism.objectid %}" method="post">
+
+<table>
+<tbody>
+<tr>
+<td style='vertical-align:text-top;'>
+<form id="orgForm" action="{% url 'lmdb:createOrganism' %}" method="post">
 {% csrf_token %}
 {{form.non_field_errors}}
 {{form.objectid.errors}}
@@ -30,25 +337,35 @@ Organism Family:  {{form.family}}<br>
 Organism Genus:  {{form.genus}}<br>
 {{form.species.errors}}
 Organism Species:  {{form.species}}<br>
-<div id="plantDiv" style="display:none">
+<div id='plantDiv' style="display: none">
 Wetland Designation:  {{form.wetland_designation}}<br>
 Cvalue:  {{form.cvalue}}<br>
 Introduced:  {{form.introduced}}<br>
 </div>
-<input type="submit" value="Edit Organism" />
 </form>
+</td>
+<td style='vertical-align:text-top'><br>
+<br>
+<form style = " margin-bottom: 0px; margin-top: 15px" id="phylumForm" name="phylumForm" onSubmit="return addPhylum()">
 
+                            <input type="text" name="newPhylum"/> <input style="margin-bottom: 10px" type="submit" name="submit" value="Add Phylum"/>
+                                </form>         
+<form style = " margin: 0px" id="classForm" name="classForm" onSubmit="return addClass()">
+                                <input type="text" name="newClass"/> <input style="margin-bottom: 10px" type="submit" name="submit" value="Add Class"/>
+                                </form>
+<form style = " margin: 0px" id="orderForm" name="orderForm" onSubmit="return addOrder()">
+                                <input type="text" name="newOrder"/> <input style="margin-bottom: 10px" type="submit" name="submit" value="Add Order"/>
+                                </form>
+<form style = " margin: 0px" id="familyForm" name="familyForm" onSubmit="return addFamily()">
+                                <input type="text" name="newFamily"/> <input style="margin-bottom: 10px" type="submit" name="submit" value="Add Family"/>
+                                </form>
+<form style = " margin: 0px" id="genusForm" name="genusForm" onSubmit="return addGenus()">
+                                <input type="text" name="newGenus"/> <input style="margin-bottom: 10px" type="submit" name="submit" value="Add Genus"/>
+                                </form>
+</td>
+</tr>
+</tbody>
+</table>
+<input id="orgButton" type="button" value="Create Organism" />
 
-
-<script>
-if($('#id_kingdom').val()==='Plantae'){
-	$('#plantDiv').css('display','inline');
-}
-</script
 {% endblock %}
-
-
-
-
-
-
