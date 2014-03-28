@@ -4,12 +4,19 @@
 {% block customjs %}
  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.7/jquery.js"></script> 
  <script>
-
+var originalForm;
  $(document).ready(function() { 
             // bind 'latlonform' and provide a simple callback function 
             $('#orgButton').click(function() {
               $('#orgForm').submit(); 
-            }); 
+            });
+            if($("select#id_kingdom").val()==="Plantae"){
+              $('#plantDiv').css('display','inline')
+            }
+            originalForm=$("#orgForm").html()
+            $('#resetButton').click(function() {
+              $('#orgForm').html(originalForm); 
+            });
         }); 
 $(function(){
     $("select#id_kingdom").change(function(){
@@ -366,6 +373,6 @@ Introduced:  {{form.introduced}}<br>
 </tr>
 </tbody>
 </table>
-<input id="orgButton" type="button" value="Create Organism" />
+<input id="orgButton" type="button" value="Edit Organism" />  <button id="resetButton" type="button">Reset Fields</button>
 
 {% endblock %}
