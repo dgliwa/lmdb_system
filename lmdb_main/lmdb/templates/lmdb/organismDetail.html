@@ -16,7 +16,7 @@
     {% if organism.wetland_designation %}
     <li>Wetland Designation:  {{organism.wetland_designation}}</li>
     {% endif %}
-    {% if organism.cvalue %}
+    {% if organism.cvalue > 0 %}
     <li>C-Value:  {{organism.cvalue}}</li>
     {% endif %}
     {% if organism.introduced %}

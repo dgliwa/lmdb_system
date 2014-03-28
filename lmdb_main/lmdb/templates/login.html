@@ -72,7 +72,7 @@
       <p>This is an application designed to be a single source for all data and information regarding research and operations at LUREC.</p>
       <p>Please login to continue to the application or send a request for your credentials to the faculty member who asked you to participate. Contact David Treering at <a href="mailto:dgoldb2@luc.edu">dgoldb2@luc.edu</a> for permission to use LMDB as a guest.</p>
 
-      <form class="form-signin" action='/login/' method='post'>
+      <form class="form-signin" action='/login/?next={{ redirect_to }}' method='post'>
       {% csrf_token %}
 
         <h2 class="form-signin-heading">Please sign in</h2>

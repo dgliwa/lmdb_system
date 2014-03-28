@@ -21,9 +21,10 @@
 $(document).ready(function(){
 	$('#submit').click(function(){
 		//validation
+		var a = $("#add_users")
 		$('#add_users').submit();
 	})
-	$("#1").attr('checked', true);
+	//$("#1").attr('checked', true);
 
 })
 
@@ -71,12 +72,10 @@ function anotheruser(){
 {% block content %}
 
 <form id='add_users' action="/admin/auth/user/add/test/" method='post'>
-	{% csrf_token %}
-	<input id='size' name='size' type="hidden" value="1">
-	 
+	{% csrf_token %}	 
 	{% for g in groups %}
 	    <label for="{{g.id}}">{{g}}</label>
-		<input type='radio' name='group' id='{{g.id}}'></input><br>
+		<input type='radio' name='group' value='{{g.id}}' id='{{g.id}}'></input><br>
 	{% endfor %}
 
 	<div>

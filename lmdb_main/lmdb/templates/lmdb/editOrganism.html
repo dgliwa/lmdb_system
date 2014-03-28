@@ -318,7 +318,31 @@ try{
 {% endblock %}
 
 {% block content %}
-
+<table class="table table-striped table-bordered table-condensed">
+<tbody>
+<tr>
+  <td>{{organism.organismname}}</td>
+  <td>{{organism.kingdom}}</td>
+  <td>{{organism.phylum}}</td>
+  <td>{{organism.class_field}}</td>
+  <td>{{organism.order_field}}</td>
+  <td>{{organism.family}}</td>
+  <td>{{organism.genus}}</td>
+  <td>{{organism.species}}</td>
+</tr>
+{% if organism.kingdom == "Plantae" %}
+<tr>
+  <td>Wetland Designation: {{organism.wetland_designation}}</td>
+  <td>Cvalue: {{organism.cvalue}}</td>
+  <td>Introduced: {{organism.introduced}}</td>
+  <td></td>
+  <td></td>
+  <td></td>
+  <td></td>
+  <td></td>
+</tr>{% endif %}
+</tbody>
+</table>
 <table>
 <tbody>
 <tr>

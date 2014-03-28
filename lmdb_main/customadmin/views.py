@@ -21,34 +21,39 @@ def addUsers(request):
 	if request.POST:
 		failed = []
 		vals = request.POST.copy()
-		size = int(vals['size'])
-		print request.POST['username']
-		print vals['username']
-		print vals
-		for i in range(0,size):
-			print vals
-			form = UserCreateForm()
-			x = int(vals['size'])
-			vals.pop('size')
-			if x == 1:
-				form = UserCreateForm(vals)
-				print '1'
-				#form = UserCreationForm(username=request.POST['username'], password1 = request.POST['password1'], password2 = request.POST['password2'])
-			    # form.initial['username'] = request.POST['username']
-			    # form.initial['password1'] = request.POST['password1']
-			    # form.initial['password2'] = request.POST['password2']
-			else:
-				for j in range(x):
-					print j
-					userform = {'username' : vals.getlist('username')[j], 'password1' : vals.getlist('password1')[j], 'password2' : vals.getlist('password2')[j], 'first_name':vals.getlist('first_name')[j], 'last_name' : vals.getlist('last_name')[j], 'email' : vals.getlist('email')[j]}
-					form = UserCreateForm(userform)
-					print 'not 1'
-			#print form.initial['password1']
+		size = len(vals.getlist('username'))
+		#vals.pop('size')
+		group = int(vals['group'])
+		#print group
+		vals.pop('group')
+		if size == 1:
+			form = UserCreateForm(vals)
 			if form.is_valid():
-				form.save()
-				return HttpResponseRedirect('/admin/auth/user/')
+					form.save()
+					user = User.objects.get(username=vals['username'])
+					g = Group.objects.get(id=group)
+					user.groups.add(g)
+					user.save()
 			else:
-				print 'fail'
-				#print form.errors
-		return render(request,'customadmin/addUsers.html',{'groups' : groups})
+				failed.append(form)
+		else:
+			for j in range(size):
+				userform = {'username' : vals.getlist('username')[j], 'password1' : vals.getlist('password1')[j], 'password2' : vals.getlist('password2')[j], 'first_name':vals.getlist('first_name')[j], 'last_name' : vals.getlist('last_name')[j], 'email' : vals.getlist('email')[j]}
+				print userform
+				form = UserCreateForm(userform)
+				print 'not 1'
+				if form.is_valid():
+					form.save()
+					user = User.objects.get(username=userform['username'])
+					g = Group.objects.get(id=group)
+					print g
+					user.groups.add(g)
+					user.save()
+				else:
+					failed.append(form)
+		
+		if len(failed) > 0:
+			return HttpResponse('some failed')
+
+		return HttpResponseRedirect('/admin/auth/user/')
 	return render(request,'customadmin/addUsers.html',{'groups' : groups})

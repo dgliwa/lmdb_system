@@ -1171,18 +1171,20 @@ from django.contrib.auth.decorators import login_required
 
 
 def login_user(request):
+    redirect_to = request.REQUEST.get('next', '')
     if request.user.is_authenticated():
         return HttpResponseRedirect('/')
     username = password = ''
     if request.POST:
+        print request.POST
         username = request.POST['username']
         password = request.POST['password']
     user = authenticate(username=username, password=password)
     if user is not None:
         if user.is_active:
             login(request, user)
-            return HttpResponseRedirect('/')
-    return render_to_response('login.html', context_instance=RequestContext(request))
+            return HttpResponseRedirect(redirect_to)
+    return render_to_response('login.html',{'redirect_to':redirect_to}, context_instance=RequestContext(request))
     
 def userlogout(request):
     logout(request)
