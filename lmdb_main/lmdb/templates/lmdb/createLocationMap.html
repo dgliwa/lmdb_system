@@ -136,7 +136,7 @@ function signIn() {
       // Get token from the ArcGIS Server Token Service.
       //
       esri.request({
-        url: "https://147.126.65.155:6443/arcgis/tokens/",
+        url: "https://jeez.etl.luc.edu/arcgis/tokens/",
         content: {
           request: "getToken",
           username: "lmdb_user",
@@ -157,7 +157,7 @@ function signIn() {
       // Note that the token is appended to the URL
       // when constructing the layer.
     console.log('token acquired')
-    var pointFeatureLayerURL = "https://147.126.65.155:6443/arcgis/rest/services/campus/lurec_lmdb/FeatureServer/0?token=" + response;
+    var pointFeatureLayerURL = "https://jeez.etl.luc.edu/arcgis/rest/services/campus/lurec_lmdb/FeatureServer/0?token=" + response;
 
 
 
@@ -168,7 +168,7 @@ function signIn() {
 
 
    
-    var lineFeatureLayerURL = "https://147.126.65.155:6443/arcgis/rest/services/campus/lurec_lmdb/FeatureServer/1?token=" + response;
+    var lineFeatureLayerURL = "https://jeez.etl.luc.edu/arcgis/rest/services/campus/lurec_lmdb/FeatureServer/1?token=" + response;
 
     lineLayer = new FeatureLayer(lineFeatureLayerURL, {
         mode: FeatureLayer.MODE_SNAPSHOT,
@@ -176,7 +176,7 @@ function signIn() {
     });
 
 
-    var polyFeatureLayerURL = "https://147.126.65.155:6443/arcgis/rest/services/campus/lurec_lmdb/FeatureServer/2?token=" + response;
+    var polyFeatureLayerURL = "https://jeez.etl.luc.edu/arcgis/rest/services/campus/lurec_lmdb/FeatureServer/2?token=" + response;
 
     polyLayer = new FeatureLayer(polyFeatureLayerURL, {
         mode: FeatureLayer.MODE_SNAPSHOT,
@@ -385,7 +385,7 @@ function signIn() {
         imageParameters.format = "jpeg";
 
 
-     var dynamicMapServiceLayer = new ArcGISDynamicMapServiceLayer("https://147.126.65.155:6443/arcgis/rest/services/campus/lurec_lmdb_base/MapServer/?token=" + response, {
+     var dynamicMapServiceLayer = new ArcGISDynamicMapServiceLayer("https://jeez.etl.luc.edu/arcgis/rest/services/campus/lurec_lmdb_base/MapServer/?token=" + response, {
           "opacity" : 0.5,
           "imageParameters" : imageParameters
         });

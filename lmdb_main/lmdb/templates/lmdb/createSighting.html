@@ -1,9 +1,9 @@
-{% extends "mapcreate.html" %}
+{% extends "base.html" %}
 {% block pageName %}Create Sighting{% endblock %}
 {% block customjs %}
     {% load static %}
     <script type="text/javascript" src="{% static "datepicker/jquery.simple-dtpicker.js" %}"></script>
-	<link type="text/css" href="{% static "datepicker/jquery.simple-dtpicker.css" %}" rel="stylesheet" />
+  <link type="text/css" href="{% static "datepicker/jquery.simple-dtpicker.css" %}" rel="stylesheet" />
     <link rel="stylesheet" href="//js.arcgis.com/3.6/js/dojo/dijit/themes/claro/claro.css">
     <link rel="stylesheet" href="//js.arcgis.com/3.6/js/esri/css/esri.css">
     <style>
@@ -280,6 +280,7 @@ function addOrganism(){
     </script> 
     
     
+{% include 'mapbase.html' %}
 
 {% endblock %}
 {% block customclass %}
@@ -330,11 +331,11 @@ Project:  {{form.projectid}} <br>
 Number:  {{form.number}} <br>
 Sighting Date:  {{form.date}} <br>
 <script type="text/javascript">
-		$.noConflict();
-		jQuery($(function(){
-			$('#id_date').appendDtpicker();
-		}));
-	</script>
+    $.noConflict();
+    jQuery($(function(){
+      $('#id_date').appendDtpicker();
+    }));
+  </script>
 
 {{form.notes.errors}}
 Sighting Notes:  {{form.notes}} <br>

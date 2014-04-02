@@ -37,7 +37,6 @@
     </style>
     
     {% block customjs %}{% endblock %}
-    {% block mapjs %} {% block custom_map %} {% endblock %} {% endblock %}
 </head>
 
 <body {% block customclass %} {% endblock %}>
@@ -45,7 +44,7 @@
 
     <div class="navbar navbar-inverse navbar-fixed-top">
       <img src="{% static "images/banner.jpg" %}" width=100%>
-	<div class="navbar-inner">
+  <div class="navbar-inner">
         <div class="container-fluid">
           <button type="button" class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
             <span class="icon-bar"></span>
