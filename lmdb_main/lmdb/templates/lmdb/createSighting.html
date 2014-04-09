@@ -270,11 +270,18 @@ jQuery.getJSON("/reference/organisms/familyFilter/"+family+"/", function(j) {
 function addOrganism(){
     $("#organismSubmit").css('visibility','visible')
     $("#kingdom").val($("#id_kingdom").val());
+    if($("#kingdom").val() === "Plantae"){
+
+       $('#plantDiv').css('display','inline')
+
+      }
+
     $("#phylum").val($("#id_phylum").val());
     $("#class_field").val($("#id_class_field").val());
     $("#order_field").val($("#id_order_field").val());
     $("#family").val($("#id_family").val());
     $("#genus").val($("#id_genus").val());
+
     
     }
     </script> 

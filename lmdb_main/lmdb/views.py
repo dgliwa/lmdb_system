@@ -21,6 +21,7 @@ import json
 @login_required(login_url='/login/')
 @user_uploaded
 def index(request):
+    print request.user
     id = request.user.id
     person = People.objects.get(objectid=id)
     projects = Project.objects.get_query_set().filter(personid=person)
@@ -167,24 +168,38 @@ def dataUpdateForm(request):
 #########################################################################################
 @login_required(login_url='/login/')
 def updateUser(request):
+    try:
+        p = People.objects.get(objectid=request.user.id)
+    except People.DoesNotExist:
+        #u = User.objects.get(pk = request.user.id)
+        p = People(objectid=request.user.id, firstname=request.user.first_name,lastname=request.user.last_name)
+        p.save()
     if request.POST:
         postVals = request.POST.copy()
+        
         postVals['objectid'] = request.user.id
-        postVals['firstname'] = request.user.first_name
-        postVals['lastname'] = request.user.last_name
-        form = PeopleForm(postVals)
+        if request.user.first_name:
+            postVals['firstname'] = request.user.first_name
+        else:
+            u = User.objects.get(pk = request.user.id)
+            u.first_name = postVals['firstname']
+            u.save()
+        if request.user.first_name:
+            postVals['lastname'] = request.user.last_name
+        else:
+            u = User.objects.get(pk = request.user.id)
+            u.last_name = postVals['lastname']
+            u.save()
+
+        form = PeopleForm(postVals, instance = p)
         if form.is_valid():
             form.save()
             return HttpResponseRedirect('/')
     else:   
         updater = request.user
         person = User.objects.get(id = updater.id)
-        form = PeopleForm()
-        form.initial['objectid'] = updater.id
-        form.initial['firstname'] = updater.first_name
-        form.initial['lastname'] = updater.last_name
-        form.initial['displayname'] = updater.first_name + ' ' + updater.last_name
-        form.initial['email'] = updater.email
+        form = PeopleForm(instance=p)
+        
     return render(request,'lmdb/updateUser.html',{'form' : form})
 # @login_required(login_url='/login/')
 # @permission_required('users.can_add')
@@ -716,6 +731,7 @@ def createOrganismFromData(request):
         org.family = request.POST['family']
         org.genus = request.POST['genus']
         org.species = request.POST['species']
+        org.wetland_designation = request.POST['wetland_designation']
         org.save()
         return HttpResponse(json.dumps({'id': org.objectid, 'organismname' : org.organismname}))
     return HttpResponse('failed')

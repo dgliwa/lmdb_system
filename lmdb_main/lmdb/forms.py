@@ -246,8 +246,8 @@ class PeopleForm(forms.ModelForm):
     displayname = forms.CharField(max_length=50, required=False)
     email = forms.CharField(max_length=80)
     phonenumber = forms.CharField(max_length=10, required=False, validators=[is_num])
-    affiliation = forms.CharField(max_length=100)
-    position = forms.CharField(max_length=50)
+    affiliation = forms.CharField(max_length=100, required=False)
+    position = forms.CharField(max_length=50, required=False)
     department = forms.CharField(max_length=50, required=False)
     password = forms.CharField(max_length=100, required=False)
     class Meta:

@@ -210,6 +210,11 @@ $(function(){
 function addOrganism(){
     $("#organismSubmit").css('visibility','visible')
     $("#kingdom").val($("#id_kingdom").val());
+    if($("#kingdom").val() === "Plantae"){
+
+       $('#plantDiv').css('display','inline')
+
+      }
     $("#phylum").val($("#id_phylum").val());
     $("#class_field").val($("#id_class_field").val());
     $("#order_field").val($("#id_order_field").val());
@@ -317,6 +322,16 @@ Organism Genus:  <input type="text" id="genus" name="genus"/>
 Organism Species <input type="text" id = "species" name="species"/>
 
 Organism Name:  <input type="text" id = "organismname" name="organismname"/>
+
+<div id='plantDiv' style="display: none">
+Wetland Designation:  <input id="wetland_designation" maxlength="10" name="wetland_designation" type="text" /><br>
+Cvalue:  <input id="cvalue" name="cvalue" type="text" /><br>
+Introduced:  <ul>
+<li><label for="introduced_0"><input id="introduced_0" name="introduced" type="radio" value="1" /> Yes</label></li>
+<li><label for="introduced_1"><input id="introduced_1" name="introduced" type="radio" value="0" /> No</label></li>
+</ul><br>
+</div>
+
 
 <input class="btn btn-lg btn-primary" type="submit" value="Submit"/>
 </form>

@@ -1,5 +1,18 @@
 {% extends "base.html" %}
 {% block pageName %}User Management{% endblock %}
+{% block customjs %}
+<script>
+$(document).ready(function() { 
+            // bind 'latlonform' and provide a simple callback function 
+            if($('#id_firstname').val()===''){
+            	$('#id_firstname').attr('readonly', false);
+            }
+            if($('#id_lastname').val()===''){
+            	$('#id_lastname').attr('readonly', false);
+            }  
+        });
+</script> 
+{% endblock %}
 {% block content %}
 <form action="{% url 'lmdb:updateUser' %}" method="post">
 
