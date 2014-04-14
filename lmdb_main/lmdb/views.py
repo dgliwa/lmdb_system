@@ -13,7 +13,7 @@ from django.contrib.auth.models import User
 
 from django.contrib.auth.decorators import permission_required
 from lmdb.decorators import user_uploaded 
-
+from django.contrib.auth.forms import PasswordChangeForm
 
 from forms import *
 import json
@@ -176,7 +176,6 @@ def updateUser(request):
         p.save()
     if request.POST:
         postVals = request.POST.copy()
-        
         postVals['objectid'] = request.user.id
         if request.user.first_name:
             postVals['firstname'] = request.user.first_name
@@ -184,11 +183,17 @@ def updateUser(request):
             u = User.objects.get(pk = request.user.id)
             u.first_name = postVals['firstname']
             u.save()
-        if request.user.first_name:
+        if request.user.last_name:
             postVals['lastname'] = request.user.last_name
         else:
             u = User.objects.get(pk = request.user.id)
             u.last_name = postVals['lastname']
+            u.save()
+        if request.user.email:
+            postVals['email'] = request.user.email
+        else:
+            u = User.objects.get(pk = request.user.id)
+            u.email = postVals['email']
             u.save()
 
         form = PeopleForm(postVals, instance = p)
@@ -201,52 +206,19 @@ def updateUser(request):
         form = PeopleForm(instance=p)
         
     return render(request,'lmdb/updateUser.html',{'form' : form})
-# @login_required(login_url='/login/')
-# @permission_required('users.can_add')
-# def userMan(request):
-#     users = User.objects.all().order_by('id')
-#     people = People.objects.all().order_by('objectid')
-#     userArr = []
-#     peopleArr = []
-#     unsyncedUsers = []
-#     unsyncedPeople = []
-#     for user in users:
-#         userArr.append(user.id)
-#     for person in people:
-#         peopleArr.append(person.objectid)
-#     #print peopleArr
-#     #print userArr
-#     for i in range(len(userArr)):
-#         if userArr[i] not in peopleArr:
-#             unsyncedUsers.append(users[i])
-#     for i in range(len(peopleArr)):
-#         if peopleArr[i] not in userArr:
-#             unsyncedPeople.append(people[i])
-#             #u = users[i]
-#             #p = Person(objectid=u.id, firstname=u.first_name,lastname=u.last_name, email=u.email,)
-#     if len(unsyncedPeople)==0:
-#         unsyncedPeople = None
-#     if len(unsyncedUsers)==0:
-#         unsyncedUsers = None
-#     #print unsyncedUsers
-#     return render(request, 'lmdb/userMan.html',{'users' : unsyncedUsers, 'people' : unsyncedPeople})
-# 
-# @login_required(login_url='/login/')
-# @permission_required('users.can_add')
-# def userManForm(request):
-#     if request.POST:
-#         peopleForms = []
-#         dict = request.POST
-#         vals = dict.keys()
-#         print vals
-#         for val in vals:
-#             if val != 'csrfmiddlewaretoken':
-#                 user = User.objects.get(id=val)
-#                 print user
-#         return render(request, 'lmdb/userManForm.html',{'peopleForms' : peopleForms})
-#     else:
-#         return HttpResponseRedirect('/userMan/')
 
+@login_required(login_url='/login/')
+@user_uploaded
+def passwordreset(request):
+    form = PasswordChangeForm(user=request.user)
+    print form
+    if request.POST:
+        form = PasswordChangeForm(data=request.POST, user=request.user)
+        print form.is_valid()
+        if form.is_valid():
+            form.save()
+            return HttpResponseRedirect('/updateUser/')
+    return render(request, 'passwordreset.html',{'form':form})
 #########################################################################################
 #   BEGINNING OF FUNCTIONS FOR EVENTS #
 #########################################################################################

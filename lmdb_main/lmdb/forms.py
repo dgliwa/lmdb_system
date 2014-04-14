@@ -240,7 +240,7 @@ class ChangeForm(forms.ModelForm):
         
 class PeopleForm(forms.ModelForm):
     objectid = forms.IntegerField(widget=forms.HiddenInput())
-    title = forms.CharField(max_length=10)
+    title = forms.CharField(max_length=10, required=False)
     firstname = forms.CharField(widget=forms.TextInput(attrs={'readonly' : 'True'}), max_length=50)
     lastname = forms.CharField(widget=forms.TextInput(attrs={'readonly' : 'True'}), max_length=50)
     displayname = forms.CharField(max_length=50, required=False)

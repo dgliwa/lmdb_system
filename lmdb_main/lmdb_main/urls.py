@@ -22,5 +22,11 @@ urlpatterns = patterns('',
      url(r'^login/$', 'lmdb.views.login_user'),
      url(r'^proxy/(?P<path>.*)$', proxy_to),
      url(r'^reporting/', include('reporting.urls', namespace='reporting')),
+     url(r'^accounts/password/reset/$', 'django.contrib.auth.views.password_reset', 
+        {'post_reset_redirect' : '/accounts/password/reset/done/'}),
+    url(r'^accounts/password/reset/done/$', 'django.contrib.auth.views.password_reset_done'),
+    url(r'^accounts/password/reset/(?P<uidb36>[0-9A-Za-z]+)-(?P<token>.+)/$', 'django.contrib.auth.views.password_reset_confirm', 
+        {'post_reset_redirect' : '/accounts/password/done/'}),
+    url(r'^accounts/password/done/$', 'django.contrib.auth.views.password_reset_complete'),
 
 )
