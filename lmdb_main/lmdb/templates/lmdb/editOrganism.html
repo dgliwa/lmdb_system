@@ -6,6 +6,7 @@
  <script>
 var originalForm;
  $(document).ready(function() { 
+            bindActions();
             // bind 'latlonform' and provide a simple callback function 
             $('#orgButton').click(function() {
               $('#orgForm').submit(); 
@@ -15,9 +16,11 @@ var originalForm;
             }
             originalForm=$("#orgForm").html()
             $('#resetButton').click(function() {
-              $('#orgForm').html(originalForm); 
+              $('#orgForm').html(originalForm);
+              bindActions()
             });
-        }); 
+        });
+ function bindActions(){
 $(function(){
     $("select#id_kingdom").change(function(){
       if($(this).val() === "Plantae"){
@@ -143,6 +146,7 @@ $(function(){
       $("#id_family").attr('selected', 'selected');
     })
   })
+}
 
 function manClassUpdate(phyl){
 jQuery.getJSON("/reference/organisms/phylumFilter/"+phyl+"/", function(j) {
