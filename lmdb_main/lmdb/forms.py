@@ -98,7 +98,7 @@ class EditOrganismForm(forms.ModelForm):
     class Meta:
         model = Organism
     def __init__(self, *args, **kwargs):
-        instance = kwargs.pop('instance')
+        instance = kwargs['instance']
         #print instance
         super(EditOrganismForm, self).__init__(*args, **kwargs)
         self.fields['objectid'] = forms.IntegerField(widget=forms.HiddenInput(),initial=instance.objectid)
@@ -111,7 +111,6 @@ class EditOrganismForm(forms.ModelForm):
         tuple(choices)
         self.fields['phylum'] = forms.CharField(initial=instance.phylum, widget=Select(choices=choices))
         class_fields = Organism.objects.filter(phylum=instance.phylum).values('class_field').distinct()
-        print class_fields
         choices = []
         for cl in class_fields:
             choices.append((cl['class_field'],cl['class_field']))

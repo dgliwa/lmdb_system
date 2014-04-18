@@ -703,7 +703,12 @@ def createOrganismFromData(request):
         org.family = request.POST['family']
         org.genus = request.POST['genus']
         org.species = request.POST['species']
-        org.wetland_designation = request.POST['wetland_designation']
+        if request.POST['wetland_designation'] != '':
+            org.wetland_designation = request.POST['wetland_designation']
+        if request.POST['cvalue'] != '':
+            org.cvalue = request.POST['cvalue']
+        if request.POST.has_key('introduced'):
+            org.introduced = request.POST['introduced']
         org.save()
         return HttpResponse(json.dumps({'id': org.objectid, 'organismname' : org.organismname}))
     return HttpResponse('failed')
@@ -711,7 +716,8 @@ def createOrganismFromData(request):
 @login_required(login_url='/login/')
 @user_uploaded
 def editOrganism(request, org_id):
-    organism = Organism.objects.get(objectid=org_id)    
+    organism = Organism.objects.get(objectid=org_id)
+    print organism    
     if request.POST:
         form = EditOrganismForm(request.POST, instance = organism)
         if form.is_valid():

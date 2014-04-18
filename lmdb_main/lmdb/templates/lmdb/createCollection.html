@@ -11,6 +11,9 @@
         margin: 0; 
         padding: 0;
       }
+      td{
+        vertical-align: top
+      }
       #header {
         border:solid 2px #462d44;
         background:#fff;
@@ -66,11 +69,27 @@
        },'json');
     console.log(a);
     this.reset();
-        $("#organismSubmit").css('visibility','hidden')
+        $("#organismSubmit").css('display','none')
 
     });
 
         }); 
+
+    $(function(){
+    $("select#kingdom").change(function(){
+      if($(this).val() === "Plantae"){
+
+       $('#plantDiv').css('display','inline')
+
+      }
+      else{
+      $("#plantDiv input:radio").removeAttr("checked");
+      $("#plantDiv input: text").val('');
+       $('#plantDiv').css('display','none')
+        
+      }
+    })
+  })
         
     $(function(){
     $("select#id_kingdom").change(function(){
@@ -206,7 +225,7 @@ $(function(){
 
 
 function addOrganism(){
-    $("#organismSubmit").css('visibility','visible')
+    $("#organismSubmit").css('display','inline')
     $("#kingdom").val($("#id_kingdom").val());
     if($("#kingdom").val() === "Plantae"){
 
@@ -235,7 +254,7 @@ class ="claro"
 <tbody>
 <tr>
 <td style="width:75%">
-<form id = "collectionForm" action="{% url 'lmdb:createCollection' %}" method="post">
+<form id = "collectionForm" style="padding-right:10px" action="{% url 'lmdb:createCollection' %}" method="post">
 {% csrf_token %}
 {{form.non_field_errors}}
 {{form.objectid.errors}}
@@ -293,7 +312,7 @@ Location:  {{form.locationid}} <br>
 </td>
 <td>
 <div>
-<form style="visibility:hidden" id="organismSubmit">
+<form style="display:none;" id="organismSubmit">
 {% csrf_token %}
 
 Organism Kingdom:  <select id="kingdom" name="kingdom">

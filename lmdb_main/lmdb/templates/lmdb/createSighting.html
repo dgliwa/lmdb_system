@@ -12,6 +12,9 @@
         margin-top: 0; 
         padding: 0;
       }
+      td{
+        vertical-align: top
+      }
       #header {
         border:solid 2px #462d44;
         background:#fff;
@@ -70,11 +73,27 @@
        },'json');
     console.log(a);
     this.reset();
-    $("#organismSubmit").css('visibility','hidden')
+    $("#organismSubmit").css('display','none')
 
     });
 
         }); 
+
+    $(function(){
+    $("select#kingdom").change(function(){
+      if($(this).val() === "Plantae"){
+
+       $('#plantDiv').css('display','inline')
+
+      }
+      else{
+      $("#plantDiv input:radio").removeAttr("checked");
+      $("#plantDiv input: text").val('');
+       $('#plantDiv').css('display','none')
+        
+      }
+    })
+  })
         
     $(function(){
     $("select#id_kingdom").change(function(){
@@ -268,7 +287,7 @@ jQuery.getJSON("/reference/organisms/familyFilter/"+family+"/", function(j) {
 };    
 
 function addOrganism(){
-    $("#organismSubmit").css('visibility','visible')
+    $("#organismSubmit").css('display','inline')
     $("#kingdom").val($("#id_kingdom").val());
     if($("#kingdom").val() === "Plantae"){
 
@@ -299,7 +318,7 @@ class ="claro"
 <tbody>
 <tr>
 <td style="width:75%">
-<form id = "sightingForm" action="{% url 'lmdb:createSighting' %}" method="post">
+<form id = "sightingForm" style="padding-right:10px" action="{% url 'lmdb:createSighting' %}" method="post">
 
 
 {% csrf_token %}
@@ -357,7 +376,7 @@ Location:  {{form.locationid}} <br>
 </td>
 <td>
 <div>
-<form style="visibility:hidden" id="organismSubmit">
+<form style="display:none" id="organismSubmit">
 Organism Kingdom:  <select id="kingdom" name="kingdom">
 <option value="" selected="selected">---------- </option>
 <option value="Bacteria">Bacteria</option>
@@ -382,6 +401,15 @@ Organism Genus:  <input type="text" id="genus" name="genus"/>
 Organism Species <input type="text" id = "species" name="species"/>
 
 Organism Name:  <input type="text" id = "organismname" name="organismname"/>
+
+<div id='plantDiv' style="display: none">
+Wetland Designation:  <input id="wetland_designation" maxlength="10" name="wetland_designation" type="text" /><br>
+Cvalue:  <input id="cvalue" name="cvalue" type="text" /><br>
+Introduced:  <ul>
+<li><label for="introduced_0"><input id="introduced_0" name="introduced" type="radio" value="1" /> Yes</label></li>
+<li><label for="introduced_1"><input id="introduced_1" name="introduced" type="radio" value="0" /> No</label></li>
+</ul><br>
+</div>
 
 <input type="submit" value="Submit"/>
 </form>

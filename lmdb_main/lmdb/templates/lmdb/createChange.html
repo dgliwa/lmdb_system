@@ -122,7 +122,7 @@ background:  white;
        },'json');
     console.log(a);
     this.reset();
-        $("#paramSubmit").css('visibility','hidden')
+        $("#paramSubmit").css('display','none')
 
     });
             
@@ -135,7 +135,7 @@ background:  white;
 
 <script>
 function addParameter(){
-    $("#paramSubmit").css('visibility','visible')
+    $("#paramSubmit").css('display','inline')
 // jQuery.getJSON("/reference/organisms/orderFilter/"+order_field+"/", function(j) {
 //         var options = '<option value="">---------- </option>';
 //         for (var i = 0; i < j.length; i++) {
@@ -207,7 +207,7 @@ Location:  {{form.locationid}} <br>
 </form>
 </td>
 <td>
-<form id = "paramSubmit" style = "visibility:hidden;" id="paramForm" name="paramForm" >
+<form id = "paramSubmit" style = "display:none;" id="paramForm" name="paramForm" >
 {% csrf_token %}
 <p>To assist in standardizing our chemical Parameters, we ask that you use the <a href="http://ofmpub.epa.gov/sor_internet/registry/substreg/searchandretrieve/substancesearch/search.do" target="_blank">USEPA's Substance Registry Services</a> to find the CAS or EPA Number(s) for your parameter.  On that page, you can enter what you know about your Parameter and select from a list of search results.</p>
 

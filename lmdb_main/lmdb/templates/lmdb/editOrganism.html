@@ -351,7 +351,7 @@ try{
 <tbody>
 <tr>
 <td style='vertical-align:text-top;'>
-<form id="orgForm" action="{% url 'lmdb:createOrganism' %}" method="post">
+<form id="orgForm" action="{% url 'lmdb:editOrganism' organism.objectid %}" method="post">
 {% csrf_token %}
 {{form.non_field_errors}}
 {{form.objectid.errors}}
