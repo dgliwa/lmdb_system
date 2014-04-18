@@ -1183,3 +1183,6 @@ def login_user(request):
 def userlogout(request):
     logout(request)
     return HttpResponseRedirect('/login/')
+
+def done(request):
+    return render_to_response('done.html',{})
