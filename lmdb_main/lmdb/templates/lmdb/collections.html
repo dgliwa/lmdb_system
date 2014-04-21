@@ -48,10 +48,10 @@
         <tr>
         <td><a href="{% url 'lmdb:collectionDetail' c.objectid %}">Collection</a></td>
         <td>{{ c.objectid }}</td>
-        <td>{{ c.projectid_id }}</td>
-        <td>{{ c.organismid_id }}</td>
+        <td>{{ c.projectid.projectname }}</td>
+        <td>{{ c.organismid.organismname }}</td>
         <td>{{ c.locationid }}</td>
-        <td>{{ c.personid_id }}</td>
+        <td>{{ c.personid.displayname }}</td>
         <td>{{ c.datecollect|date:"m/d/Y" }}</td>
         </tr>
     {% endfor %}

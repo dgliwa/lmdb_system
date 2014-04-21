@@ -49,10 +49,10 @@
         <tr>
         <td><a href="{% url 'lmdb:measurementDetail' m.objectid %}">Measurement</a></td>
         <td>{{ m.objectid }}</td>
-        <td>{{ m.projectid_id }}</td>
-        <td>{{ m.parameterid_id }}</td>
+        <td>{{ m.projectid.projectname }}</td>
+        <td>{{ m.parameterid.commonname }}</td>
         <td>{{ m.locationid }}</td>
-        <td>{{ m.personid_id }}</td>
+        <td>{{ m.personid.displayname }}</td>
         <td>{{ m.date|date:"m/d/Y" }}</td>
         </tr>
     {% endfor %}

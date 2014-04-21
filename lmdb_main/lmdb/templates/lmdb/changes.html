@@ -50,10 +50,10 @@
         <tr>
         <td><a href="{% url 'lmdb:changeDetail' c.objectid %}">Change</a></td>
         <td>{{ c.objectid }}</td>
-        <td>{{ c.projectid_id }}</td>
-        <td>{{ c.parameterid_id }}</td>
+        <td>{{ c.projectid.projectname }}</td>
+        <td>{{ c.parameterid.commonname }}</td>
         <td>{{ c.locationid }}</td>
-        <td>{{ c.personid_id }}</td>
+        <td>{{ c.personid.displayname }}</td>
         <td>{{ c.date|date:"m/d/Y" }}</td>
         </tr>
     {% endfor %}

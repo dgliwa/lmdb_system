@@ -808,12 +808,13 @@ def species(request,column, filter):
 @login_required(login_url='/login/')
 @user_uploaded
 def sightings(request):    # !!!!!!   NEED TO APPLY FKEY RESTRAINTS
-    sightings = Sighting.objects.values()
+    sightings = Sighting.objects.all()
+    print sightings
     points = []
     lines = []
     polys = []
     for s in sightings:
-        location = Location.objects.get(pk = s['locationid'])
+        location = Location.objects.get(pk = s.locationid)
         if location.pointid != None:
             points.append(location.pointid)
         elif location.lineid != None:
@@ -893,12 +894,12 @@ def dataUpdateSighting(request, id):
 @login_required(login_url='/login/')
 @user_uploaded
 def changes(request):     # !!!!!!   NEED TO APPLY FKEY RESTRAINTS
-    changes = Change.objects.values()
+    changes = Change.objects.all()
     points = []
     lines = []
     polys = []
     for c in changes:
-        location = Location.objects.get(pk = c['locationid'])
+        location = Location.objects.get(pk = c.locationid)
         if location.pointid != None:
             points.append(location.pointid)
         elif location.lineid != None:
@@ -979,12 +980,12 @@ def dataUpdateChange(request, id):
 @login_required(login_url='/login/')
 @user_uploaded
 def measurements(request):
-    measurements = Measurement.objects.values()
+    measurements = Measurement.objects.all()
     points = []
     lines = []
     polys = []
     for m in measurements:
-        location = Location.objects.get(pk = m['locationid'])
+        location = Location.objects.get(pk = m.locationid)
         if location.pointid != None:
             points.append(location.pointid)
         elif location.lineid != None:
@@ -1062,13 +1063,13 @@ def dataUpdateMeasurement(request, id):
 
 @login_required(login_url='/login/')
 @user_uploaded
-def collections(request):    # !!!!!!   NEED TO APPLY FKEY RESTRAINTS
-    collections = Collection.objects.values()
+def collections(request):    
+    collections = Collection.objects.all()
     points = []
     lines = []
     polys = []
     for c in collections:
-        location = Location.objects.get(pk = c['locationid'])
+        location = Location.objects.get(pk = c.locationid)
         if location.pointid != None:
             points.append(location.pointid)
         elif location.lineid != None:
