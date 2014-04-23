@@ -56,9 +56,9 @@
             // bind 'latlonform' and provide a simple callback function 
 
             
-       $("#createSighting").click(function() {
-           $("#sightingForm").submit();
-       });
+       // $("#createSighting").click(function() {
+       //     $("#sightingForm").submit();
+       // });
        
         $("#organismSubmit").submit(function(e){
             e.preventDefault();
@@ -318,7 +318,7 @@ class ="claro"
 <tbody>
 <tr>
 <td style="width:75%">
-<form id = "sightingForm" style="padding-right:20px" action="{% url 'lmdb:createSighting' %}" method="post">
+<form id = "form" style="padding-right:20px" action="{% url 'lmdb:createSighting' %}" method="post">
 
 
 {% csrf_token %}
@@ -448,7 +448,7 @@ Introduced:  <ul>
 
           </div>
           </div>
-<input id="createSighting" type="submit" value="Create Sighting" />
+<input id="create" type="submit" value="Create Sighting" />
 
 {% endblock %}
 

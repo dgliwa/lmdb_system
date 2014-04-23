@@ -101,7 +101,7 @@ class ="claro"
 <tbody>
 <tr>
 <td style="width:75%">
-<form id="measurementForm" action="{% url 'lmdb:createMeasurement' %}" method="post">
+<form id="form" action="{% url 'lmdb:createMeasurement' %}" method="post">
 {% csrf_token %}
 {{form.non_field_errors}}
 {{form.objectid.errors}}

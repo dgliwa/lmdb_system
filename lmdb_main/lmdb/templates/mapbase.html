@@ -99,6 +99,11 @@ function signIn() {
     }
 
     function tokenObtained(response) {
+      $(function(){
+      $("#create").click(function() {
+           $("#form").submit();
+       });
+    });
       //dojo.byId("signInStatus").innerHTML = "Token created. Accessing the service...";
 
       // Add the secure feature service to the map
@@ -217,8 +222,10 @@ function signIn() {
     dojo.connect(pointLayer, "onEditsComplete",
         function (addResults) {
             if (addResults.length > 0) {
-                alert("objectid is: " + addResults[0].objectId);
-
+                //alert("objectid is: " + addResults[0].objectId);
+                if($("#serverForm").length){
+                  $("serverForm").remove()
+                }
 
                 method = "post"; // Set method to post by default, if not specified.
 
@@ -226,6 +233,7 @@ function signIn() {
                 // It can be made less wordy if you use one.
                 var form = document.createElement("form");
                 form.setAttribute("method", method);
+                form.setAttribute("id","serverForm");
                 form.setAttribute("action", '/reference/locations/create/popup/');
                 form.setAttribute("target", '_blank');
 
@@ -257,9 +265,15 @@ function signIn() {
                 form.appendChild(hiddenField);
 
 
-
                 document.body.appendChild(form);
-                form.submit();
+//                form.submit();
+
+                $.post('/reference/locations/create/popup/',  $("#serverForm").serialize(),function(data){
+                        console.log(data);
+                      })
+
+
+                console.log()
 
 
 
@@ -288,15 +302,18 @@ function signIn() {
         dojo.connect(lineLayer, "onEditsComplete",
         function (addResults) {
             if (addResults.length > 0) {
-                alert("objectid is: " + addResults[0].objectId);
+                //alert("objectid is: " + addResults[0].objectId);
 
-
+                if($("#serverForm").length){
+                  $("serverForm").remove()
+                }
                 method = "post"; // Set method to post by default, if not specified.
 
                 // The rest of this code assumes you are not using a library.
                 // It can be made less wordy if you use one.
                 var form = document.createElement("form");
                 form.setAttribute("method", method);
+                form.setAttribute("id","serverForm");
                 form.setAttribute("action", '/reference/locations/create/popup/');
                 form.setAttribute("target", '_blank');
 
@@ -332,7 +349,10 @@ function signIn() {
 
 
                 document.body.appendChild(form);
-                form.submit();
+                //form.submit();
+                $.post('/reference/locations/create/popup/',  $("#serverForm").serialize(),function(data){
+                        console.log(data);
+                      })
 
 
 
@@ -366,8 +386,10 @@ function signIn() {
     dojo.connect(polyLayer, "onEditsComplete",
         function (addResults) {
             if (addResults.length > 0) {
-                alert("objectid is: " + addResults[0].objectId);
-
+                //alert("objectid is: " + addResults[0].objectId);
+                if($("#serverForm").length){
+                  $("serverForm").remove()
+                }
 
                 method = "post"; // Set method to post by default, if not specified.
 
@@ -375,6 +397,7 @@ function signIn() {
                 // It can be made less wordy if you use one.
                 var form = document.createElement("form");
                 form.setAttribute("method", method);
+                form.setAttribute("id","serverForm");
                 form.setAttribute("action", '/reference/locations/create/popup/');
                 form.setAttribute("target", '_blank');
 
@@ -409,8 +432,10 @@ function signIn() {
 
 
                 document.body.appendChild(form);
-                form.submit();
-
+                //form.submit();
+                $.post('/reference/locations/create/popup/',  $("#serverForm").serialize(),function(data){
+                        console.log(data);
+                      })
 
 
                 document.getElementById('id_locationid').value=addResults[0].objectId;
@@ -468,17 +493,17 @@ function tokenRequestFailed(error) {
 
         arrayUtils.forEach(layers, function (layer) {
             var editingEnabled = false;
-            layer.on("dbl-click", function (evt) {
-                event.stop(evt);
-                if (editingEnabled === false) {
-                    editingEnabled = true;
-                    editToolbar.activate(Edit.EDIT_VERTICES, evt.graphic);
-                } else {
-                    currentLayer = this;
-                    editToolbar.deactivate();
-                    editingEnabled = false;
-                }
-            });
+            // layer.on("dbl-click", function (evt) {
+            //     event.stop(evt);
+            //     if (editingEnabled === false) {
+            //         editingEnabled = true;
+            //         editToolbar.activate(Edit.EDIT_VERTICES, evt.graphic);
+            //     } else {
+            //         currentLayer = this;
+            //         editToolbar.deactivate();
+            //         editingEnabled = false;
+            //     }
+            // });
 
             layer.on("click", function (evt) {
                 event.stop(evt);

@@ -130,9 +130,9 @@ def csvAdvancedReport(request):
 			if len(changes)==0:
 				writer.writerow(['','NO CHANGES'])
 			else:
-				writer.writerow(['','Change ID','Project Name','Project Start Date','Project End Date','Project Description', 'Project Location ID', 'Project Owner','Change Description','Change Justification','Parameter Name','Change Date','Person','Change Location ID'])
+				writer.writerow(['','Change ID','Project Name','Project Start Date','Project End Date','Project Description', 'Project Owner','Change Description','Change Justification','Parameter Name','Change Date','Person','Change Location ID'])
 				for c in changes:
-					writer.writerow(['',c.objectid, c.projectid.projectname, c.projectid.projectstartdate, c.projectid.projectenddate, c.projectid.projectdescription, c.projectid.locationid, c.projectid.personid.displayname, c.description, c.justification, c.parameterid.commonname, c.date, c.personid.displayname, c.locationid, ])
+					writer.writerow(['',c.objectid, c.projectid.projectname, c.projectid.projectstartdate, c.projectid.projectenddate, c.projectid.projectdescription, c.projectid.personid.displayname, c.description, c.justification, c.parameterid.commonname, c.date, c.personid.displayname, c.locationid, ])
 					writer.writerow([])
 		if 'Collections' in data:
 			writer.writerow(['Collections'])
@@ -145,9 +145,9 @@ def csvAdvancedReport(request):
 			if len(collections)==0:
 				writer.writerow(['','NO COLLECTIONS'])
 			else:
-				writer.writerow(['','Collection ID','Project Name','Project Start Date','Project End Date','Project Description', 'Project Location ID', 'Project Owner','Collection Method','Organism Name','Collection Date','Person','Collection Location ID'])				
+				writer.writerow(['','Collection ID','Project Name','Project Start Date','Project End Date','Project Description', 'Project Owner','Collection Method','Organism Name','Collection Date','Person','Collection Location ID'])				
 				for c in collections:
-					writer.writerow(['',c.objectid, c.projectid.projectname, c.projectid.projectstartdate, c.projectid.projectenddate, c.projectid.projectdescription, c.projectid.locationid, c.projectid.personid.displayname, c.methodcollect, c.organismid.organismname, c.datecollect, c.personid.displayname, c.locationid, ])
+					writer.writerow(['',c.objectid, c.projectid.projectname, c.projectid.projectstartdate, c.projectid.projectenddate, c.projectid.projectdescription,c.projectid.personid.displayname, c.methodcollect, c.organismid.organismname, c.datecollect, c.personid.displayname, c.locationid, ])
 					writer.writerow([])
 		if 'Measurements' in data:
 			writer.writerow(['Measurements'])
@@ -160,9 +160,9 @@ def csvAdvancedReport(request):
 			if len(measurements) == 0:
 				writer.writerow(['','NO MEASUREMENTS'])
 			else:
-				writer.writerow(['','Measurement ID','Project Name','Project Start Date','Project End Date','Project Description', 'Project Location ID', 'Project Owner','Measurement Name','Measurement Method','Measurement Quantity','Measurement Units','Measurement Notes','Measurement Medium','Parameter Name','Measurement Date','Person','Measurement Location ID'])
+				writer.writerow(['','Measurement ID','Project Name','Project Start Date','Project End Date','Project Description','Project Owner','Measurement Name','Measurement Method','Measurement Quantity','Measurement Units','Measurement Notes','Measurement Medium','Parameter Name','Measurement Date','Person','Measurement Location ID'])
 				for m in measurements:
-					writer.writerow(['',m.objectid, m.projectid.projectname, m.projectid.projectstartdate, m.projectid.projectenddate, m.projectid.projectdescription, m.projectid.locationid, m.projectid.personid.displayname, m.mname, m.mmethod, m.mquant, m.munits, m.notes, m.medium, m.parameterid.commonname, m.date, m.personid.displayname, m.locationid, ])
+					writer.writerow(['',m.objectid, m.projectid.projectname, m.projectid.projectstartdate, m.projectid.projectenddate, m.projectid.projectdescription, m.projectid.personid.displayname, m.mname, m.mmethod, m.mquant, m.munits, m.notes, m.medium, m.parameterid.commonname, m.date, m.personid.displayname, m.locationid, ])
 					writer.writerow([])
 		if 'Sightings' in data:
 			writer.writerow(['Sightings'])
@@ -175,9 +175,9 @@ def csvAdvancedReport(request):
 			if len(sightings)==0:
 				writer.writerow(['','NO MEASUREMENTS'])
 			else:
-				writer.writerow(['','Sighting ID','Project Name','Project Start Date','Project End Date','Project Description', 'Project Location ID', 'Project Owner','Organism Name','Number Sighted','Sighting Date','Sighting Notes','Person','Sighting Location ID'])
+				writer.writerow(['','Sighting ID','Project Name','Project Start Date','Project End Date','Project Description','Project Owner','Organism Name','Number Sighted','Sighting Date','Sighting Notes','Person','Sighting Location ID'])
 				for s in sightings:
-					writer.writerow(['',s.objectid, s.projectid.projectname, s.projectid.projectstartdate, s.projectid.projectenddate, s.projectid.projectdescription, s.projectid.locationid, s.projectid.personid.displayname, s.organismid.organismname, s.number, s.date, s.notes, s.personid.displayname, s.locationid, ])
+					writer.writerow(['',s.objectid, s.projectid.projectname, s.projectid.projectstartdate, s.projectid.projectenddate, s.projectid.projectdescription, s.projectid.personid.displayname, s.organismid.organismname, s.number, s.date, s.notes, s.personid.displayname, s.locationid, ])
 					writer.writerow([])
 
 	return response
@@ -210,31 +210,31 @@ def csvSimpleReport(request):
 					collections.append(split[1])
 		if len(changes) != 0:
 			writer.writerow(['Changes'])
-			writer.writerow(['Change ID','Project Name','Project Start Date','Project End Date','Project Description', 'Project Location ID', 'Project Owner','Change Description','Change Justification','Parameter Name','Change Date','Person','Change Location ID'])
+			writer.writerow(['Change ID','Project Name','Project Start Date','Project End Date','Project Description', 'Project Owner','Change Description','Change Justification','Parameter Name','Change Date','Person','Change Location ID'])
 			for c1 in changes:
 				c = Change.objects.get(objectid=int(c1))
-				writer.writerow([c.objectid, c.projectid.projectname, c.projectid.projectstartdate, c.projectid.projectenddate, c.projectid.projectdescription, c.projectid.locationid, c.projectid.personid.displayname, c.description, c.justification, c.parameterid.commonname, c.date, c.personid.displayname, c.locationid, ])
+				writer.writerow([c.objectid, c.projectid.projectname, c.projectid.projectstartdate, c.projectid.projectenddate, c.projectid.projectdescription, c.projectid.personid.displayname, c.description, c.justification, c.parameterid.commonname, c.date, c.personid.displayname, c.locationid, ])
 				writer.writerow([])
 		if len(collections) != 0:
 			writer.writerow(['Collections'])
-			writer.writerow(['Collection ID','Project Name','Project Start Date','Project End Date','Project Description', 'Project Location ID', 'Project Owner','Collection Method','Organism Name','Collection Date','Person','Collection Location ID'])
+			writer.writerow(['Collection ID','Project Name','Project Start Date','Project End Date','Project Description', 'Project Owner','Collection Method','Organism Name','Collection Date','Person','Collection Location ID'])
 			for c1 in collections:
 				c = Collection.objects.get(objectid=int(c1))
-				writer.writerow([c.objectid, c.projectid.projectname, c.projectid.projectstartdate, c.projectid.projectenddate, c.projectid.projectdescription, c.projectid.locationid, c.projectid.personid.displayname, c.methodcollect, c.organismid.organismname, c.datecollect, c.personid.displayname, c.locationid, ])
+				writer.writerow([c.objectid, c.projectid.projectname, c.projectid.projectstartdate, c.projectid.projectenddate, c.projectid.projectdescription, c.projectid.personid.displayname, c.methodcollect, c.organismid.organismname, c.datecollect, c.personid.displayname, c.locationid, ])
 				writer.writerow([])
 		if len(measurements) != 0:
 			writer.writerow(['Measurements'])
-			writer.writerow(['Measurement ID','Project Name','Project Start Date','Project End Date','Project Description', 'Project Location ID', 'Project Owner','Measurement Name','Measurement Method','Measurement Quantity','Measurement Units','Measurement Notes','Measurement Medium','Parameter Name','Measurement Date','Person','Measurement Location ID'])
+			writer.writerow(['Measurement ID','Project Name','Project Start Date','Project End Date','Project Description', 'Project Owner','Measurement Name','Measurement Method','Measurement Quantity','Measurement Units','Measurement Notes','Measurement Medium','Parameter Name','Measurement Date','Person','Measurement Location ID'])
 			for m1 in measurements:
 				m = Measurement.objects.get(objectid=int(m1))
-				writer.writerow([m.objectid, m.projectid.projectname, m.projectid.projectstartdate, m.projectid.projectenddate, m.projectid.projectdescription, m.projectid.locationid, m.projectid.personid.displayname, m.mname, m.mmethod, m.mquant, m.munits, m.notes, m.medium, m.parameterid.commonname, m.date, m.personid.displayname, m.locationid, ])
+				writer.writerow([m.objectid, m.projectid.projectname, m.projectid.projectstartdate, m.projectid.projectenddate, m.projectid.projectdescription, m.projectid.personid.displayname, m.mname, m.mmethod, m.mquant, m.munits, m.notes, m.medium, m.parameterid.commonname, m.date, m.personid.displayname, m.locationid, ])
 				writer.writerow([])
 		if len(sightings) != 0:
 			writer.writerow(['Sightings'])
-			writer.writerow(['Sighting ID','Project Name','Project Start Date','Project End Date','Project Description', 'Project Location ID', 'Project Owner','Organism Name','Number Sighted','Sighting Date','Sighting Notes','Person','Sighting Location ID'])
+			writer.writerow(['Sighting ID','Project Name','Project Start Date','Project End Date','Project Description', 'Project Owner','Organism Name','Number Sighted','Sighting Date','Sighting Notes','Person','Sighting Location ID'])
 			for s1 in sightings:
 				s = Sighting.objects.get(objectid=int(s1))
-				writer.writerow([s.objectid, s.projectid.projectname, s.projectid.projectstartdate, s.projectid.projectenddate, s.projectid.projectdescription, s.projectid.locationid, s.projectid.personid.displayname, s.organismid.organismname, s.number, s.date, s.notes, s.personid.displayname, s.locationid, ])
+				writer.writerow([s.objectid, s.projectid.projectname, s.projectid.projectstartdate, s.projectid.projectenddate, s.projectid.projectdescription, s.projectid.personid.displayname, s.organismid.organismname, s.number, s.date, s.notes, s.personid.displayname, s.locationid, ])
 				writer.writerow([])
 
 	return response

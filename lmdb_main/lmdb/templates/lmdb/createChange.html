@@ -165,7 +165,7 @@ class ="claro"
 <tbody>
 <tr>
 <td style="width:75%">
-<form id= "changeForm" action="{% url 'lmdb:createChange' %}" method="post">
+<form id= "form" action="{% url 'lmdb:createChange' %}" method="post">
 {% csrf_token %}
 {{form.non_field_errors}}
 {{form.objectid.errors}}
@@ -264,7 +264,7 @@ Scientific Name:
 
           </div>
           </div>
-<input id="createChange" type="submit" value="Create Change" />
+<input id="create" type="submit" value="Create Change" />
 {% endblock %}
 
 
