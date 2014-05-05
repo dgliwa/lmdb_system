@@ -5,7 +5,7 @@
 <p>Changes in LMDB are the physical alterations to the landscape that take place.  These Changes can involve chemical applications and the reason for doing so, or physical alterations like cutting vegetation or moving soil.  Changes can be permanent or temporary and are associated with particular Projects and a responsible person.</p>
 
 <p>To add a Change, click here:</p>
-<h3> <a href="{% url 'lmdb:createChange' %}">Create Change</a></h3>
+<h3> <a href="{% url 'data:createChange' %}">Create Change</a></h3>
 
 <p>The interactive map below shows all existing Changes.  It can be filtered by typing in the Search boxes below the map.  This will also filter the data shown in the table below the Search boxes.</p>
 
@@ -48,7 +48,7 @@
     <tbody>
    {% for c in changes %}
         <tr>
-        <td><a href="{% url 'lmdb:changeDetail' c.objectid %}">Change</a></td>
+        <td><a href="{% url 'data:changeDetail' c.objectid %}">Change</a></td>
         <td>{{ c.objectid }}</td>
         <td>{{ c.projectid.projectname }}</td>
         <td>{{ c.parameterid.commonname }}</td>

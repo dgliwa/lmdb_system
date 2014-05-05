@@ -27,7 +27,7 @@
     <h3>Sightings of this Organism:</h3>
     <ul>
         {% for s in sightings %}
-        <li><a href="{% url 'lmdb:sightingDetail' s.objectid %}">{{s.objectid}}</a></li>
+        <li><a href="{% url 'data:sightingDetail' s.objectid %}">{{s.objectid}}</a></li>
         {% endfor %}
     </ul>
     {% endif %}
@@ -35,7 +35,7 @@
         <h3>Collections of this Organism:</h3>
             <ul>
                 {% for c in collections %}
-                <li><a href="{% url 'lmdb:collectionDetail' c.objectid %}">{{c.objectid}}</a></li>
+                <li><a href="{% url 'data:collectionDetail' c.objectid %}">{{c.objectid}}</a></li>
                 {% endfor %}
             </ul>
     {% endif %}

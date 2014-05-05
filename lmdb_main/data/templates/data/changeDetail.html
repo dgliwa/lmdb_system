@@ -61,7 +61,7 @@
 class ="claro"
 {% endblock %}
 {% block content %}
-<h4><a href="{% url 'lmdb:changes' %}">Go Back</a> to all Changes</h4>
+<h4><a href="{% url 'data:changes' %}">Go Back</a> to all Changes</h4>
 <br>
 <h3>Details of Change # {{change.objectid}} on {{change.date}}:</h3>
 <ul>
@@ -84,6 +84,6 @@ class ="claro"
            </div>
       <div id="map" data-dojo-type="dijit/layout/ContentPane" data-dojo-props="region:'center'"></div>
           </div>
-<h4><a href="{% url 'lmdb:changes' %}">Go Back</a> to all Changes</h4>
+<h4><a href="{% url 'data:changes' %}">Go Back</a> to all Changes</h4>
 {% endblock %}
  

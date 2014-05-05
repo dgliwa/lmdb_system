@@ -5,7 +5,7 @@
 <p>Sightings in LMDB are actual Organism observations made at LUREC.  The species can be recorded from the existing library of Organisms, or a new Organism can be entered if it has not been sighted before at LUREC.  Information recorded included the person who made the Sighting, the associated Project, the date of the sighting, and a count of the Organisms observed.</p>
 
 <p>To add a Sighting, click here:</p>
-<h3> <a href="{% url 'lmdb:createSighting' %}">Create Sighting</a></h3>
+<h3> <a href="{% url 'data:createSighting' %}">Create Sighting</a></h3>
 
 <p>The interactive map below shows all existing Sightings.  It can be filtered by typing in the Search boxes below the map.  This will also filter the data shown in the table below the Search boxes.</p>
 
@@ -46,7 +46,7 @@
     <tbody>
     {% for s in sightings %}
         <tr>
-        <td><a href="{% url 'lmdb:sightingDetail' s.objectid %}">Sighting</a></td>
+        <td><a href="{% url 'data:sightingDetail' s.objectid %}">Sighting</a></td>
         <td>{{ s.objectid }}</td>
         <td>{{ s.projectid.projectname }}</td>
         <td>{{ s.organismid.organismname }}</td>

@@ -6,16 +6,16 @@
       <div class="well sidebar-nav">
         <ul class="nav nav-list">
           <li class="nav-header">Sidebar</li>
-			<li><h4><a href="{% url 'lmdb:data' %}">Data Input</a></h4>
+			<li><h4><a href="{% url 'data:data' %}">Data Input</a></h4>
 				<ul>
-					<li><a href="{% url 'lmdb:sightings' %}">Sightings</a></li>
-					<li><a href="{% url 'lmdb:changes' %}">Changes</a></li>
-					<li><a href="{% url 'lmdb:measurements' %}">Measurements</a></li>
-					<li><a href="{% url 'lmdb:collections' %}">Collections</a></li>
+					<li><a href="{% url 'data:sightings' %}">Sightings</a></li>
+					<li><a href="{% url 'data:changes' %}">Changes</a></li>
+					<li><a href="{% url 'data:measurements' %}">Measurements</a></li>
+					<li><a href="{% url 'data:collections' %}">Collections</a></li>
 				</ul>
 			</li>
 			<br>
-			<li><a href="{% url 'lmdb:dataUpdate' %}">Update or Delete Records</a></li>
+			<li><a href="{% url 'data:dataUpdate' %}">Update or Delete Records</a></li>
 		</ul>
 	</div>
 </div>

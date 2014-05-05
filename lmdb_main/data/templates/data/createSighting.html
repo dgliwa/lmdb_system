@@ -318,7 +318,7 @@ class ="claro"
 <tbody>
 <tr>
 <td style="width:75%">
-<form id = "form" style="padding-right:20px" action="{% url 'lmdb:createSighting' %}" method="post">
+<form id = "form" style="padding-right:20px" action="{% url 'data:createSighting' %}" method="post">
 
 
 {% csrf_token %}
@@ -448,6 +448,8 @@ Introduced:  <ul>
 
           </div>
           </div>
+<input type="file" name="file" id="file"><br>
+
 <input id="create" type="submit" value="Create Sighting" />
 
 {% endblock %}

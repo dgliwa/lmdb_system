@@ -62,7 +62,7 @@
 class ="claro"
 {% endblock %}
 {% block content %}
-<h4><a href="{% url 'lmdb:measurements' %}">Go Back</a> to all Measurements</h4>
+<h4><a href="{% url 'data:measurements' %}">Go Back</a> to all Measurements</h4>
 <br>
 <h3>Details of Measurement # {{measurement.objectid}} on {{measurement.date}}:</h3>
 <ul>
@@ -82,6 +82,6 @@ class ="claro"
            </div>
       <div id="map" data-dojo-type="dijit/layout/ContentPane" data-dojo-props="region:'center'"></div>
           </div>
-<h4><a href="{% url 'lmdb:measurements' %}">Go Back</a> to all Measurements</h4>
+<h4><a href="{% url 'data:measurements' %}">Go Back</a> to all Measurements</h4>
 {% endblock %}
 

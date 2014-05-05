@@ -254,7 +254,7 @@ class ="claro"
 <tbody>
 <tr>
 <td style="width:75%">
-<form id = "collectionForm" style="padding-right:20px" action="{% url 'lmdb:createCollection' %}" method="post">
+<form id = "collectionForm" style="padding-right:20px" action="{% url 'data:createCollection' %}" method="post">
 {% csrf_token %}
 {{form.non_field_errors}}
 {{form.objectid.errors}}

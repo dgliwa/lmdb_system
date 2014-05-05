@@ -62,7 +62,7 @@
 class ="claro"
 {% endblock %}
 {% block content %}
-<h4><a href="{% url 'lmdb:collections' %}">Go Back</a> to all Collections</h4>
+<h4><a href="{% url 'data:collections' %}">Go Back</a> to all Collections</h4>
 <br>
 <h3>Details of Collection # {{collection.objectid}} on {{collection.datecollect}}:</h3>
 <ul>
@@ -83,7 +83,7 @@ class ="claro"
            </div>
       <div id="map" data-dojo-type="dijit/layout/ContentPane" data-dojo-props="region:'center'"></div>
           </div>
-<h4><a href="{% url 'lmdb:collections' %}">Go Back</a> to all Collections</h4>
+<h4><a href="{% url 'data:collections' %}">Go Back</a> to all Collections</h4>
 
 {% endblock %}
  
