@@ -39,7 +39,7 @@
 {% if changes %}
     <ul>
     {% for c in changes %}
-        <li><a href="{% url 'lmdb:changeDetail' c.objectid %}">{{ c.objectid }}</a></li>
+        <li><a href="{% url 'data:changeDetail' c.objectid %}">{{ c.objectid }}</a></li>
     {% endfor %}
     </ul>
 {% else %}
@@ -49,7 +49,7 @@
 {% if collections %}
     <ul>
     {% for c in collections %}
-        <li><a href="{% url 'lmdb:collectionDetail' c.objectid %}">{{ c.objectid }}</a></li>
+        <li><a href="{% url 'data:collectionDetail' c.objectid %}">{{ c.objectid }}</a></li>
     {% endfor %}
     </ul>
 {% else %}
@@ -59,7 +59,7 @@
 {% if measurements %}
     <ul>
     {% for m in measurements %}
-        <li><a href="{% url 'lmdb:measurementDetail' m.objectid %}">{{ m.objectid }}</a></li>
+        <li><a href="{% url 'data:measurementDetail' m.objectid %}">{{ m.objectid }}</a></li>
     {% endfor %}
     </ul>
 {% else %}
@@ -69,7 +69,7 @@
 {% if sightings %}
     <ul>
     {% for s in sightings %}
-        <li><a href="{% url 'lmdb:sightingDetail' s.objectid %}">{{ s.objectid }}</a></li>
+        <li><a href="{% url 'data:sightingDetail' s.objectid %}">{{ s.objectid }}</a></li>
     {% endfor %}
     </ul>
 {% else %}

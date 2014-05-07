@@ -95,7 +95,7 @@ class Organism(models.Model):
 Each variable in the Organism model is associated with a column in the database.  Upon retrieval from the database, those fields are populated and easily accessed from the model.
 
 ---
-The final part of the django MVC process is the rendering of a template.  Django has a special syntax that allows for django variables to be read into an html page.  Following from the organisms example above, [here is the organisms.html template that will be rendered with organism variables](https://github.com/dgliwa/lmdb_system/blob/master/lmdb_main/lmdb/templates/lmdb/organisms.html).  The {% ... %} and {{ ... }} syntax tells the template engine to read django variables.
+The final part of the django MVC process is the rendering of a template.  Django has a special syntax that allows for django variables to be read into an html page.  Following from the organisms example above, [here is the organisms.html template that will be rendered with organism variables](https://github.com/dgliwa/lmdb_system/blob/master/lmdb_main/lmdb/templates/lmdb/organisms.html).  The `{% ... %}` and `{{ ... }}` syntax tells the template engine to read django variables.
 
 Maps
 ---
@@ -103,7 +103,7 @@ ArcGIS javascript is used to graphically display the map layers of the database,
 
 Currently, the data creation pages use the mapbase.html file.  The data detail pages use the mapdetail.html file. The overall data list pages extend the tablebase.html file.  The creation and detail pages use the "include" syntax which is as follows: `{% include 'mapbase.html' %}`. This syntax simply imports the code from the mapbase or mapdetail file and inserts it where the include statement is.
 
-The data list pages use the extend syntax, which provides a skeleton with blocks to be filled.  [Here is an example of the a data list page extending the tablebase.html file](https://github.com/dgliwa/lmdb_system/blob/master/lmdb_main/data/templates/data/createChange.html).  The {% block %} ... {% endblock %} syntax allows each page that extends the tablebase.html file to put custom code inside it.
+The data list pages use the extend syntax, which provides a skeleton with blocks to be filled.  [Here is an example of the a data list page extending the tablebase.html file](https://github.com/dgliwa/lmdb_system/blob/master/lmdb_main/data/templates/data/createChange.html).  The `{% block %} ... {% endblock %}` syntax allows each page that extends the tablebase.html file to put custom code inside it.
 
 ArcGIS Code
 ---
@@ -160,17 +160,18 @@ if({{points}}.length != 0){
 
 ```
 
-The {{points}} variable is a django list of point ids that are added to a querystring.  This querystring will make a select statement that grabs all points in the {{points}} list.
+The `{{points}}` variable is a django list of point ids that are added to a querystring.  This querystring will make a select statement that grabs all points in the `{{points}}` list.
 
 * To add the pointLayer to the actual map, the following is called:
 
 ```
 map.addLayers([lineLayer,dynamicMapServiceLayer]);
-
 ```
 The dynamicMapServiceLayer is a layer that displays boundaries and other special areas of LUREC.
 
 * The javascript then renders the map in a div of the html documents with id equal to 'map'.
 
+**_More will be added here when the map code is cleaned up_**
 
+---
 

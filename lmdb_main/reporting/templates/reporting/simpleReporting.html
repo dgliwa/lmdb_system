@@ -304,7 +304,7 @@ function printFiltered(report_type_url){
     {% if sightings %}
     {% for s in sightings %}
         <tr>
-        <td><a href="{% url 'lmdb:sightingDetail' s.objectid %}">Sighting</a></td>
+        <td><a href="{% url 'data:sightingDetail' s.objectid %}">Sighting</a></td>
         <td>{{ s.objectid }}</td>
         <td>{{ s.projectid.projectname }}</td>
         <td>{{ s.organismid.organismname }}</td>
@@ -317,7 +317,7 @@ function printFiltered(report_type_url){
     {% if measurements %}
     {% for m in measurements %}
         <tr>
-        <td><a href="{% url 'lmdb:measurementDetail' m.objectid %}">Measurement</a></td>
+        <td><a href="{% url 'data:measurementDetail' m.objectid %}">Measurement</a></td>
         <td>{{ m.objectid }}</td>
         <td>{{ m.projectid.projectname }}</td>
         <td>{{ m.parameterid.commonname }}</td>
@@ -330,7 +330,7 @@ function printFiltered(report_type_url){
     {% if collections %}
     {% for c in collections %}
         <tr>
-        <td><a href="{% url 'lmdb:collectionDetail' c.objectid %}">Collection</a></td>
+        <td><a href="{% url 'data:collectionDetail' c.objectid %}">Collection</a></td>
         <td>{{ c.objectid }}</td>
         <td>{{ c.projectid.projectname }}</td>
         <td>{{ c.organismid.organismname }}</td>
@@ -343,7 +343,7 @@ function printFiltered(report_type_url){
     {% if changes %}
     {% for c in changes %}
         <tr>
-        <td><a href="{% url 'lmdb:changeDetail' c.objectid %}">Change</a></td>
+        <td><a href="{% url 'data:changeDetail' c.objectid %}">Change</a></td>
         <td>{{ c.objectid }}</td>
         <td>{{ c.projectid.projectname }}</td>
         <td>{{ c.parameterid.commonname }}</td>

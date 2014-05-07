@@ -47,7 +47,7 @@
     <tbody>
    {% for m in measurements %}
         <tr>
-        <td><a href="{% url 'lmdb:measurementDetail' m.objectid %}">Measurement</a></td>
+        <td><a href="{% url 'data:measurementDetail' m.objectid %}">Measurement</a></td>
         <td>{{ m.objectid }}</td>
         <td>{{ m.projectid.projectname }}</td>
         <td>{{ m.parameterid.commonname }}</td>
