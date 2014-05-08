@@ -4,7 +4,7 @@
 
 Introduction to the System
 --------------------------
-###[LMDB System](lmdb.luc.edu)  
+###[LMDB System](https://lmdb.luc.edu)  
 The purpose of the LMDB System is to provide an application where users can submit data recorded on LUREC's grounds.  This data falls in to four categories:
 
 * Changes
