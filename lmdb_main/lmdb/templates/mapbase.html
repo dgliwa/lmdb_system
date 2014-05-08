@@ -1,3 +1,54 @@
+{% extends "base.html" %}
+{% block arcGISjs %}
+<script src="//ajax.googleapis.com/ajax/libs/jqueryui/1.8.16/jquery-ui.min.js" type="text/javascript"></script>
+<link rel="stylesheet" href="//ajax.googleapis.com/ajax/libs/jqueryui/1.8.16/themes/base/jquery-ui.css" type="text/css" media="all" />
+    <link rel="stylesheet" href="//js.arcgis.com/3.6/js/dojo/dijit/themes/claro/claro.css">
+    <link rel="stylesheet" href="//js.arcgis.com/3.6/js/esri/css/esri.css">
+    <style>
+      html, body {
+        height: 100%;
+        width: 100%;
+        margin: 0; 
+        padding-top: 90px;
+      }
+      #header {
+        border:solid 2px #462d44;
+        background:#fff;
+        color:#444;
+        -moz-border-radius: 4px;
+        border-radius: 4px;
+        font-family: sans-serif;
+        font-size: 1.1em
+        padding-left:20px;
+      }
+      #map {
+        padding:1px;
+        border:solid 2px #444;
+        -moz-border-radius: 4px;
+        border-radius: 4px;
+      }
+      #rightPane {
+        border:none;
+        padding: 0;
+        width:228px;
+      }
+      .templatePicker {
+        border: solid 2px #444;
+      }
+    </style>
+
+
+    <script src="//js.arcgis.com/3.6/"></script>
+    
+        <script> 
+        // wait for the DOM to be loaded    
+        var i = 0;
+        
+       
+         
+        
+        
+    </script> 
     <script>
 var featureLayer;
 dojo.require("esri.map");
@@ -218,7 +269,7 @@ function signIn() {
     }
 
 
-
+    {% block createLocations %}
     dojo.connect(pointLayer, "onEditsComplete",
         function (addResults) {
             if (addResults.length > 0) {
@@ -460,6 +511,7 @@ function signIn() {
 
 
         });
+  {% endblock %}
       
   }
 
@@ -616,3 +668,4 @@ function latlonValidation() {
 
 
 </script>
+{% endblock %}

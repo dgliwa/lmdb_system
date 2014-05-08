@@ -4,6 +4,7 @@
 
 Introduction to the System
 --------------------------
+###[LMDB System](lmdb.luc.edu)  
 The purpose of the LMDB System is to provide an application where users can submit data recorded on LUREC's grounds.  This data falls in to four categories:
 
 * Changes
@@ -174,4 +175,3 @@ The dynamicMapServiceLayer is a layer that displays boundaries and other special
 **_More will be added here when the map code is cleaned up_**
 
 ---
-

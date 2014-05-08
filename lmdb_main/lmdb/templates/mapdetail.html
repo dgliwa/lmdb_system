@@ -204,18 +204,7 @@ function tokenRequestFailed(error) {
         });
 
         arrayUtils.forEach(layers, function (layer) {
-            var editingEnabled = false;
-            layer.on("dbl-click", function (evt) {
-                event.stop(evt);
-                if (editingEnabled === false) {
-                    editingEnabled = true;
-                    editToolbar.activate(Edit.EDIT_VERTICES, evt.graphic);
-                } else {
-                    currentLayer = this;
-                    editToolbar.deactivate();
-                    editingEnabled = false;
-                }
-            });
+            
 
             layer.on("click", function (evt) {
                 event.stop(evt);

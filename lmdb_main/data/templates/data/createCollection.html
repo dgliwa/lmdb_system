@@ -1,12 +1,10 @@
-{% extends "base.html" %}
+{% extends "mapbase.html" %}
 {% block pageName %}Create Collection{% endblock %}
 {% block customjs %}
 {% load static %}
     <script type="text/javascript" src="{% static "datepicker/jquery.simple-dtpicker.js" %}"></script>
   <link type="text/css" href="{% static "datepicker/jquery.simple-dtpicker.css" %}" rel="stylesheet" />
-    <link rel="stylesheet" href="//js.arcgis.com/3.6/js/dojo/dijit/themes/claro/claro.css">
-    <link rel="stylesheet" href="//js.arcgis.com/3.6/js/esri/css/esri.css">
-    <style>
+        <style>
       html {
         margin: 0; 
         padding: 0;
@@ -40,10 +38,7 @@
       }
     </style>
 
- <script src="//ajax.googleapis.com/ajax/libs/jquery/1.7/jquery.js"></script> 
-    <script src="//malsup.github.com/jquery.form.js"></script> 
 
-    <script src="//js.arcgis.com/3.6/"></script>
     
         <script> 
         // wait for the DOM to be loaded    
@@ -241,7 +236,6 @@ function addOrganism(){
     }
     </script> 
 
-{% include 'mapbase.html' %}
 
 
 {% endblock %}
@@ -297,10 +291,9 @@ Collection Storer:  {{form.storecollect}} <br>
 {{form.datecollect.errors}}
 Collection Date:  {{form.datecollect}} <br>
 <script type="text/javascript">
-    $.noConflict();
-    jQuery($(function(){
+    $(function(){
       $('#id_datecollect').appendDtpicker();
-    }));
+    });
   </script>
 
 {{form.personid.errors}}
