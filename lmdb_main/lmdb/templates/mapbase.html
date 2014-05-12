@@ -341,7 +341,7 @@ function signIn() {
                 y = graphic.geometry.y;
                 sr = map.spatialReference;
                 p = new Point(x,y,sr)
-		map.infoWindow.setTitle("New Point Location ID: " + graphics.attributes["objectid"]);
+		map.infoWindow.setTitle("New Point Location ID: " + graphic.attributes["objectid"]);
                 map.infoWindow.show(p);
                 
                 map.infoWindow.setContent(graphic.getContent());
@@ -421,7 +421,7 @@ function signIn() {
                 y = graphic.geometry.paths[0][0][1];
                 sr = map.spatialReference;
                 p = new Point(x,y,sr)
-		map.infoWindow.setTitle("New Line Location ID: " + graphics.attributes["objectid"]);
+		map.infoWindow.setTitle("New Line Location ID: " + graphic.attributes["objectid"]);
                 map.infoWindow.show(p);
                 
                 map.infoWindow.setContent(graphic.getContent());
@@ -504,7 +504,7 @@ function signIn() {
                 y = graphic.geometry.rings[0][0][1];
                 sr = map.spatialReference;
                 p = new Point(x,y,sr)
-		map.infoWindow.setTitle("New Area Location ID: " + graphics.attributes["objectid"]);
+		map.infoWindow.setTitle("New Area Location ID: " + graphic.attributes["objectid"]);
                 map.infoWindow.show(p);
                 
                 map.infoWindow.setContent(graphic.getContent());
