@@ -48,7 +48,8 @@ urlpatterns = patterns('',
     url(r'^reference/organisms/familyFilter/(?P<family_id>[\w|\W]+)/$', views.familyFilter, name='familyFilter'),
     url(r'^reference/organisms/genusFilter/(?P<genus_id>[\w|\W]+)/$', views.genusFilter, name='genusFilter'),
     url(r'^reference/organisms/(?P<column>\w+)/(?P<filter>[\w|\W]+)/$', views.species, name='species'),
-    
+    url(r'^/reference/organisms/organismSelect/(?P<id>\d+)/$', views.organismSelect, name='organismSelect'),
+
     #url(r'^reporting/$', views.reporting, name='reporting'),
 
 )

@@ -667,7 +667,9 @@ def species(request,column, filter):
     data = json.dumps([dict(organismname = org['organismname'], objectid=org['objectid']) for org in b])
     return HttpResponse(data, mimetype="application/javascript")
 
-    
+@login_required
+def organismSelect(request, id):
+    return "ok"    
 #########################################################################################
 #   END OF FUNCTIONS FOR ORGANISMS #
 #
@@ -695,7 +697,7 @@ def login_user(request):
         return HttpResponseRedirect('/')
     username = password = ''
     if request.POST:
-        print request.POST
+        #print request.POST
         username = request.POST['username']
         password = request.POST['password']
     user = authenticate(username=username, password=password)
