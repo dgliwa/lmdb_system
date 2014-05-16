@@ -149,7 +149,7 @@ class MeasurementForm(forms.ModelForm):
     parameterid = forms.ModelChoiceField(queryset = Parameter.objects.all(), widget=forms.Select(attrs={'class':'paramfield'}))
     projectid = forms.ModelChoiceField(queryset = Project.objects.all(),required=False)
     personid = forms.ModelChoiceField(queryset = People.objects.all())
-    locationid = forms.IntegerField(widget=forms.HiddenInput())
+    locationid = forms.IntegerField(widget=forms.TextInput(attrs={"readonly" : "true"}))
     mname = forms.CharField(max_length=255)
     mmethod = forms.CharField(max_length=255, required=False)
     mquant = forms.CharField(max_length=255)
@@ -174,7 +174,7 @@ class SightingForm(forms.ModelForm):
     personid = forms.ModelChoiceField(queryset = People.objects.all())
     organismid = forms.ModelChoiceField(queryset = Organism.objects.all(), widget=forms.Select(attrs={'class':'organismfield'}))
     projectid = forms.ModelChoiceField(queryset = Project.objects.all(),required=False)
-    locationid = forms.IntegerField(widget=forms.HiddenInput())
+    locationid = forms.IntegerField(widget=forms.TextInput(attrs={"readonly" : "true"}))
     number = forms.IntegerField(required=False)
     date = forms.DateTimeField(widget=forms.TextInput(attrs={'class':'datefield'}))
     time = forms.DateTimeField(required = False, widget=forms.TextInput(attrs={'class':'datefield'}))
@@ -198,7 +198,7 @@ class CollectionForm(forms.ModelForm):
     methodcollect = forms.CharField(max_length=255)
     stored = forms.IntegerField(widget=forms.RadioSelect(choices=((1,'Yes'),(0,'No'))))
     storecollect = forms.CharField(max_length=255)
-    locationid = forms.IntegerField(widget=forms.HiddenInput())
+    locationid = forms.IntegerField(widget=forms.TextInput(attrs={"readonly" : "true"}))
     personid = forms.ModelChoiceField(queryset = People.objects.all(), required = False)
     class Meta:
         model = Collection
@@ -214,7 +214,7 @@ class CollectionForm(forms.ModelForm):
 class ChangeForm(forms.ModelForm):
     objectid = forms.IntegerField(widget=forms.HiddenInput())
     projectid = forms.ModelChoiceField(queryset = Project.objects.all())
-    locationid = forms.IntegerField(widget=forms.HiddenInput())
+    locationid = forms.IntegerField(widget=forms.TextInput(attrs={"readonly" : "true"}))
     description = forms.CharField(max_length=255)
     justification = forms.CharField(max_length=255)
     permanent = forms.IntegerField(widget=forms.RadioSelect(choices=((1,'Yes'),(0,'No'))))

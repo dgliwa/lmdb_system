@@ -667,9 +667,12 @@ def species(request,column, filter):
     data = json.dumps([dict(organismname = org['organismname'], objectid=org['objectid']) for org in b])
     return HttpResponse(data, mimetype="application/javascript")
 
-@login_required
-def organismSelect(request, id):
-    return "ok"    
+@login_required(login_url='/login/')
+def organismSelected(request, org_id):
+    organism = Organism.objects.get(objectid = org_id)
+    orgDict = {"kingdom" : organism.kingdom, "phylum": organism.phylum, "class_field" : organism.class_field, "order_field":organism.order_field,"family":organism.family,"genus":organism.genus}
+    data = json.dumps(orgDict)
+    return HttpResponse(data, mimetype="application/javascript")
 #########################################################################################
 #   END OF FUNCTIONS FOR ORGANISMS #
 #

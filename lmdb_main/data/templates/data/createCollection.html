@@ -90,6 +90,41 @@
   })
         
     $(function(){
+      $("select#id_organismid").change(function(){
+        $.getJSON("/reference/organisms/organismSelected/"+ $(this).val() + "/", function(data){
+          console.log(data);
+          if($("#id_kingdom").val()!==data.kingdom){
+            $("#id_kingdom").val(data.kingdom)
+          }
+          if($("#id_phylum").val()!==data.phylum || $("#id_phylum").is(':disabled')){
+            $("#id_phylum").html('<option value="' + data.phylum + '">' + data.phylum + '</option>')
+          }
+          
+          if($("#id_class_field").val()!==data.class_field || $("#id_class_field").is(':disabled')){
+            $("#id_class_field").attr('disabled', false);
+            $("#id_class_field").html('<option value="' + data.class_field + '">' + data.class_field + '</option>')
+          }
+          
+          if($("#id_order_field").val()!==data.order_field || $("#id_order_field").is(':disabled')){
+            $("#id_order_field").attr('disabled', false);
+            $("#id_order_field").html('<option value="' + data.order_field + '">' + data.order_field + '</option>')
+          }
+          
+          if($("#id_family").val()!==data.family || $("#id_family").is(':disabled')){
+            $("#id_family").attr('disabled', false);
+            $("#id_family").html('<option value="' + data.family + '">' + data.family + '</option>')
+          }
+          
+          if($("#id_genus").val()!==data.genus && $("#id_genus").is(':disabled')){
+            $("#id_genus").attr('disabled', false);
+            $("#id_genus").html('<option value="' + data.genus + '">' + data.genus + '</option>')
+          }  
+                
+        })
+      }) 
+    })
+
+    $(function(){
     $("select#id_kingdom").change(function(){
       $("#id_class_field").html('');
       $("#id_class_field").attr('disabled',true);
@@ -284,6 +319,21 @@ function addOrganism(){
     $("#genus").val($("#id_genus").val());
     
     }
+
+    function resetForm(){
+      $("#id_kingdom").val("");
+      $("#id_organismid").val("");
+      $("#id_phylum").html('');
+      $("#id_phylum").attr('disabled',true);
+      $("#id_class_field").html('');
+      $("#id_class_field").attr('disabled',true);
+      $("#id_order_field").html('');
+      $("#id_order_field").attr('disabled',true);
+      $("#id_family").html('');
+      $("#id_family").attr('disabled',true);
+      $("#id_genus").html('');
+      $("#id_genus").attr('disabled',true);
+    }
     </script> 
 
 
@@ -329,7 +379,7 @@ Organism Family:  <select disabled="True" id="id_family" name="family">
 Organism Genus:  <select disabled="True" id="id_genus" name="genus">
 </select><br>
 {{form.organismid.errors}}
-Organism:  {{form.organismid}}  <button class="btn btn-lg btn-primary" type="button" onclick="addOrganism();">Add Organism</button><br> 
+Organism:  {{form.organismid}}  <button type="button" onclick="resetForm();">Reset Organism Form</button><button type="button" onclick="addOrganism();">Add Organism</button><br> 
 {{form.projectid.errors}}
 Project:  {{form.projectid}} <br>
 {{form.methodcollect.errors}}
@@ -350,6 +400,7 @@ Collection Date:  {{form.datecollect}} <br>
 Person:  {{form.personid}}<br>
 {{form.locationid.errors}}
 Location:  {{form.locationid}} <br>
+Type: <input id="locType" readonly="true"></input><br>
 
 </form>
 </td>

@@ -565,8 +565,10 @@ function tokenRequestFailed(error) {
             // });
 
             layer.on("click", function (evt) {
+                $("#locType").val(evt.graphic.geometry.type);
                 event.stop(evt);
                 document.getElementById('id_locationid').value=document.getElementById('locId').value;
+
                
             });
         });
