@@ -139,7 +139,7 @@ function signIn() {
       // Get token from the ArcGIS Server Token Service.
       //
       esri.request({
-        url: "https://jeez.etl.luc.edu/arcgis103/tokens/",
+        url: "https://jeez.etl.luc.edu/arcgis/tokens/",
         content: {
           request: "getToken",
           username: "lmdb_user",
@@ -166,7 +166,7 @@ function signIn() {
       // when constructing the layer.
       console.log('token acquired')
      if({{points}}.length != 0){
-         var pointFeatureLayerURL = "https://jeez.etl.luc.edu/arcgis103/rest/services/campus/lurec_lmdb/FeatureServer/0?token=" + response;
+         var pointFeatureLayerURL = "https://jeez.etl.luc.edu/arcgis/rest/services/campus/lurec_lmdb/FeatureServer/0?token=" + response;
 
      var queryString = ""
      for( var i=0;  i<{{points}}.length; i++){
@@ -188,7 +188,7 @@ function signIn() {
 
 }
     if ({{lines}}.length != 0){
-        var lineFeatureLayerURL = "https://jeez.etl.luc.edu/arcgis103/rest/services/campus/lurec_lmdb/FeatureServer/1?token=" + response;
+        var lineFeatureLayerURL = "https://jeez.etl.luc.edu/arcgis/rest/services/campus/lurec_lmdb/FeatureServer/1?token=" + response;
 
     lineLayer = new FeatureLayer(lineFeatureLayerURL, {
         mode: FeatureLayer.MODE_SNAPSHOT,
@@ -206,7 +206,7 @@ function signIn() {
     }
     lineLayer.setDefinitionExpression(queryString);    }
     if({{polys}}.length!=0){
-        var polyFeatureLayerURL = "https://jeez.etl.luc.edu/arcgis103/rest/services/campus/lurec_lmdb/FeatureServer/2?token=" + response;
+        var polyFeatureLayerURL = "https://jeez.etl.luc.edu/arcgis/rest/services/campus/lurec_lmdb/FeatureServer/2?token=" + response;
 
     polyLayer = new FeatureLayer(polyFeatureLayerURL, {
         mode: FeatureLayer.MODE_SNAPSHOT,
@@ -242,7 +242,7 @@ function signIn() {
     var imageParameters = new ImageParameters();
         imageParameters.format = "jpeg";
 
-     var dynamicMapServiceLayer = new ArcGISDynamicMapServiceLayer("https://jeez.etl.luc.edu/arcgis103/rest/services/campus/lurec_lmdb_base/MapServer/?token=" + response, {
+     var dynamicMapServiceLayer = new ArcGISDynamicMapServiceLayer("https://jeez.etl.luc.edu/arcgis/rest/services/campus/lurec_lmdb_base/MapServer/?token=" + response, {
           "opacity" : 0.5,
           "imageParameters" : imageParameters
         });
