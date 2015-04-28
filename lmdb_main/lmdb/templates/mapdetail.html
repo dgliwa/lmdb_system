@@ -86,7 +86,7 @@ function signIn() {
       esri.request({
         url: "https://jeez.etl.luc.edu/arcgis103/tokens/",
         content: {
-          request: "getToken",
+          request: "generateToken",
           username: "lmdb_user",
           password: "lmdb",
           // clientid may not be necessary; try commented out first, but this is the correct syntax.
