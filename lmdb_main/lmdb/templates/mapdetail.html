@@ -1,16 +1,56 @@
+{% extends "base.html" %}
+{% block arcGISjs %}
+<script src="//ajax.googleapis.com/ajax/libs/jqueryui/1.8.16/jquery-ui.min.js" type="text/javascript"></script>
+<link rel="stylesheet" href="//ajax.googleapis.com/ajax/libs/jqueryui/1.8.16/themes/base/jquery-ui.css" type="text/css" media="all" />
+    <link rel="stylesheet" href="//js.arcgis.com/3.6/js/dojo/dijit/themes/claro/claro.css">
+    <link rel="stylesheet" href="//js.arcgis.com/3.6/js/esri/css/esri.css">
+    <style>
+      html, body {
+        height: 100%;
+        width: 100%;
+        margin: 0; 
+        padding-top: 90px;
+      }
+      #header {
+        border:solid 2px #462d44;
+        background:#fff;
+        color:#444;
+        -moz-border-radius: 4px;
+        border-radius: 4px;
+        font-family: sans-serif;
+        font-size: 1.1em
+        padding-left:20px;
+      }
+      #map {
+        padding:1px;
+        border:solid 2px #444;
+        -moz-border-radius: 4px;
+        border-radius: 4px;
+      }
+      #rightPane {
+        border:none;
+        padding: 0;
+        width:228px;
+      }
+      .templatePicker {
+        border: solid 2px #444;
+      }
+      #map_graphics_layer path {
+	stroke-width: 0;
+	stroke-opacity: 0;
+	}
+    </style>
+
+
+    <script src="//js.arcgis.com/3.6/"></script>
+    
+        <script> 
+        // wait for the DOM to be loaded    
+        var i = 0;
+
+    </script> 
     <script>
 var featureLayer;
-dojo.require("esri.map");
-dojo.require("esri.layers.FeatureLayer");
-dojo.require("esri.layers.FeatureEditResult");
-dojo.require("esri.geometry.Geometry");
-dojo.require("dijit.TooltipDialog");
-dojo.require("dijit.layout.BorderContainer");
-dojo.require("dijit.layout.ContentPane");
-dojo.require("esri.dijit.editing.TemplatePicker-all");
-dojo.require("esri.tasks.gp");
-dojo.require("esri.IdentityManager");
-
 
 var map;
 require([
@@ -19,7 +59,9 @@ require([
     "esri/toolbars/edit",
     "esri/graphic",
     "esri/config",
-
+    "esri/urlUtils",
+"esri/layers/FeatureEditResult",
+"esri/geometry/Geometry"
     "esri/layers/FeatureLayer",
     "esri/geometry/Point",
     "esri/symbols/SimpleMarkerSymbol",
@@ -28,7 +70,12 @@ require([
     "esri/layers/ArcGISDynamicMapServiceLayer",
     "esri/layers/ImageParameters",
     "esri/dijit/editing/TemplatePicker",
-
+"dijit/TooltipDialog",
+"dijit/layout/BorderContainer",
+"dijit/layout/ContentPane",
+"esri/dijit.editing/TemplatePicker-all",
+"esri/tasks/gp",
+"esri/IdentityManager",
     "dojo/_base/array",
     "dojo/_base/event",
     "dojo/_base/lang",
@@ -45,20 +92,22 @@ require([
     ArcGISDynamicMapServiceLayer,
     ImageParameters,
     TemplatePicker,
-    arrayUtils, event, lang, parser, registry
+    arrayUtils, event, lang, parser, registry, urlUtils
 ) {
    // parser.parse();
 
-    // refer to "Using the Proxy Page" for more information:  https://developers.arcgis.com/en/javascript/jshelp/ags_proxy.html
-    esriConfig.defaults.io.proxyUrl = "/proxy/";
-    //esriConfig.defaults.io.alwaysUseProxy = false
-    //esriConfig.defaults.io.postLength=100000
-    // This service is for development and testing purposes only. We recommend that you create your own geometry service for use within your applications. 
+ 
     esri.config.defaults.geometryService = new esri.tasks.GeometryService("http://tasks.arcgisonline.com/ArcGIS/rest/services/Geometry/GeometryServer");
 
     var newCenter = new esri.geometry.Point([-9836985,5204186], new esri.SpatialReference({wkid: 102100 })); 
     var map_spatialReference = new esri.SpatialReference({wkid: 102100 })
     var pointLayer, lineLayer, polyLayer
+
+	urlUtils.addProxyRule({
+		urlPrefix: "https://jeez.etl.luc.edu/103/rest/services/campus/",
+		proxyUrl:"http://10.19.2.243/proxy/proxy.jsp"
+	});
+
     map = new Map("map", {
         basemap: "satellite",
         logo: true,
@@ -75,7 +124,7 @@ require([
 
     
 
-    dojo.connect(map, "onLoad",signIn);
+dojo.connect(map, "onLoad",signIn);
 
 function signIn() {
         console.log('signing in')
@@ -86,7 +135,7 @@ function signIn() {
       esri.request({
         url: "https://jeez.etl.luc.edu/arcgis103/tokens/",
         content: {
-          request: "generateToken",
+          request: "getToken",
           username: "lmdb_user",
           password: "lmdb",
           // clientid may not be necessary; try commented out first, but this is the correct syntax.

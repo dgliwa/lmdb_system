@@ -59,15 +59,6 @@
 var pointLayer;
 var lineLayer;
 var polyLayer;
-dojo.require("esri.map");
-dojo.require("esri.layers.FeatureLayer");
-dojo.require("esri.layers.FeatureEditResult");
-dojo.require("esri.geometry.Geometry");
-dojo.require("dijit.TooltipDialog");
-dojo.require("dijit.layout.BorderContainer");
-dojo.require("dijit.layout.ContentPane");
-dojo.require("esri.dijit.editing.TemplatePicker-all");
-dojo.require("esri.tasks.gp");
 
 var map;
 require([
@@ -76,16 +67,23 @@ require([
     "esri/toolbars/edit",
     "esri/graphic",
     "esri/config",
-
+    "esri/urlUtils",
+"esri/layers/FeatureEditResult",
+"esri/geometry/Geometry"
     "esri/layers/FeatureLayer",
-
+    "esri/geometry/Point",
     "esri/symbols/SimpleMarkerSymbol",
     "esri/symbols/SimpleLineSymbol",
     "esri/symbols/SimpleFillSymbol",
     "esri/layers/ArcGISDynamicMapServiceLayer",
     "esri/layers/ImageParameters",
     "esri/dijit/editing/TemplatePicker",
-
+"dijit/TooltipDialog",
+"dijit/layout/BorderContainer",
+"dijit/layout/ContentPane",
+"esri/dijit.editing/TemplatePicker-all",
+"esri/tasks/gp",
+"esri/IdentityManager",
     "dojo/_base/array",
     "dojo/_base/event",
     "dojo/_base/lang",
@@ -101,15 +99,17 @@ require([
     ArcGISDynamicMapServiceLayer,
     ImageParameters,
     TemplatePicker,
-    arrayUtils, event, lang, parser, registry
+    arrayUtils, event, lang, parser, registry, urlUtils
 ) {
    // parser.parse();
 
-    // refer to "Using the Proxy Page" for more information:  https://developers.arcgis.com/en/javascript/jshelp/ags_proxy.html
-    esriConfig.defaults.io.proxyUrl = "/proxy/";
-
     // This service is for development and testing purposes only. We recommend that you create your own geometry service for use within your applications. 
     esriConfig.defaults.geometryService = new esri.tasks.GeometryService("http://tasks.arcgisonline.com/ArcGIS/rest/services/Geometry/GeometryServer");
+
+	urlUtils.addProxyRule({
+		urlPrefix: "https://jeez.etl.luc.edu/103/rest/services/campus/",
+		proxyUrl:"http://10.19.2.243/proxy/proxy.jsp"
+	});
 
     map = new Map("map", {
         basemap: "satellite",
@@ -136,7 +136,7 @@ function signIn() {
       esri.request({
         url: "https://jeez.etl.luc.edu/arcgis103/tokens/",
         content: {
-          request: "generateToken",
+          request: "getToken",
           username: "lmdb_user",
           password: "lmdb",
           // clientid may not be necessary; try commented out first, but this is the correct syntax.
