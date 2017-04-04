@@ -1,4 +1,4 @@
-# Django settings for lmdb_main project.
+2# Django settings for lmdb_main project.
 import os
 
 DEBUG = True
@@ -18,7 +18,7 @@ DATABASES = {
          'USER': 'query',
          'PASSWORD': 'qu3r7Vs#R',
          'HOST': '147.126.65.155',                      # Empty for localhost through domain sockets or '127.0.0.1' for localhost through TCP.
-         'PORT': '5434',      
+         'PORT': '5433',      
      },
     'auth_db': {
          'ENGINE': 'django.db.backends.postgresql_psycopg2', # Add 'postgresql_psycopg2', 'mysql', 'sqlite3' or 'oracle'.
